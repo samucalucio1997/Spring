@@ -9,11 +9,10 @@ public class Produto {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
   private int qtd;
-  @OneToOne(fetch = FetchType.EAGER)
-  private User Consumidor;
   private float precoUni;
   private Categorias categoria;
-  public int getId() {
+
+public int getId() {
 	return id;
 }
 public void setId(int id) {

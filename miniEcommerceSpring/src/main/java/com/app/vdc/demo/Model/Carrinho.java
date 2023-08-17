@@ -12,8 +12,9 @@ public class Carrinho {
 	private Long Id;
 	@OneToMany(fetch = FetchType.LAZY)
 	private List<Produto> produtos;
-	@OneToOne(mappedBy = "carrinho",cascade=CascadeType.ALL)
-    private User consumidor;
+
+     
+
 
 	public void setId(Long id) {
 		Id = id;
@@ -27,20 +28,10 @@ public class Carrinho {
 		this.produtos = produtos;
 	}
 
-	public User getConsumidor() {
-		return consumidor;
-	}
-
-	public void setConsumidor(User consumidor) {
-		this.consumidor = consumidor;
-	}
-
-
     public Long getId() {
 		return Id;
 	}
 
 
 
-	
 }

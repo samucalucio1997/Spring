@@ -10,11 +10,20 @@ public class Pedido {
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
    private LocalTime dataCriacao;
-
    @ManyToOne(cascade = CascadeType.ALL)
    private User cliente;
    @OneToOne(cascade = CascadeType.ALL)
    private Carrinho car;
+
+   
+
+   public Pedido(Long id, LocalTime dataCriacao, User cliente, Carrinho car, boolean is_finished) {
+      this.id = id;
+      this.dataCriacao = dataCriacao;
+      this.cliente = cliente;
+      this.car = car;
+      this.is_finished = is_finished;
+   }
 
    public Long getId() {
       return id;

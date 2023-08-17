@@ -51,4 +51,10 @@ public class ProdutoService implements ProdutoIS{
                produtos.getById(produto.getId()).setCategoria(categoria);
         }
     }
+
+    @Override
+    public boolean CadastrarProduto(Produto produto) {
+        produtos.save(produto);
+        throw new UnsupportedOperationException("Unimplemented method 'CadastrarProduto'");
+    }
 }

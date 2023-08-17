@@ -1,16 +1,29 @@
 package br.com.Pro.exerSB.Controller;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.Pro.exerSB.Models.Cliente;
+import br.com.Pro.exerSB.Models.Produtos;
+import br.com.Pro.exerSB.service.ProdutoService;
 
 @RestController
-@RequestMapping("/Consulta")
+@RequestMapping("/consulta")
 public class ClienteController {
-	@GetMapping(path = "/Clientes")
+
+     @Autowired
+    private ProdutoService produtoService; 
+
+	@GetMapping(path = "/clientes")
      public Cliente ObterCliente() {
     	 return new Cliente(28,"Carlos","004789519-62");
+     }
+     @GetMapping("/listar")
+     public List<Produtos> getLista(){
+         return produtoService.ListarProdutos(); 
      }
 }

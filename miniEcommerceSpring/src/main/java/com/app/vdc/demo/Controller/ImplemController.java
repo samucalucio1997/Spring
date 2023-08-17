@@ -22,4 +22,11 @@ public class ImplemController {
         ArrayList<Categorias> m = new ArrayList<>();
         return m;
    }
+   @PostMapping("/cadastroUser")
+   @ResponseBody
+   public void PostCadastro(@RequestParam int qtd,@RequestParam float precouni){
+        ProdutoService service = new ProdutoService();
+        service.CadastrarProduto(new Produto());
+   }
+   
 }

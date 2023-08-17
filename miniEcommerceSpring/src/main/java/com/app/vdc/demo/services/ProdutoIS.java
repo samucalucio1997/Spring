@@ -6,6 +6,9 @@ import com.app.vdc.demo.Model.User;
 
 public interface ProdutoIS {
     public boolean CadastrarProduto(Produto produto, User cadastra);
+ 
+    public boolean CadastrarProduto(Produto produto);
+
     public boolean RemoverProduto(Produto produto);
 
     public void EditarProduto(Produto produto, int qtd);

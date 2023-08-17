@@ -25,12 +25,26 @@ public class User {
  private int numcasa;
 
  private boolean is_active;
- @OneToOne(cascade=CascadeType.ALL)
- private Pedido pedido;
 
 private final boolean is_staff=false;
 
- public Carrinho getCarrinho() {
+
+
+ public User(Long id, String username, String first_name, String last_name, String email, String password,
+        Carrinho carrinho, String cEP, int numcasa, boolean is_active, Pedido pedido) {
+    this.id = id;
+    this.username = username;
+    this.first_name = first_name;
+    this.last_name = last_name;
+    this.email = email;
+    this.password = password;
+    this.carrinho = carrinho;
+    CEP = cEP;
+    this.numcasa = numcasa;
+    this.is_active = is_active;
+}
+
+public Carrinho getCarrinho() {
   return carrinho;
  }
 
@@ -109,13 +123,6 @@ private final boolean is_staff=false;
   this.is_active = is_active;
  }
 
- public Pedido getPedido() {
-  return pedido;
- }
-
- public void setPedido(Pedido pedido) {
-  this.pedido = pedido;
- }
 
 
 

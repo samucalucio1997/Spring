@@ -7,18 +7,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.Pro.exerSB.Models.ProdutoRepository;
 import br.com.Pro.exerSB.Models.Produtos;
+import br.com.Pro.exerSB.service.ProdutoService;
 
 @RestController
 @RequestMapping("/produto")
 public class ProdutoController {
-	 @Autowired
-	 private ProdutoRepository produto;
-	 @PostMapping
-     public @ResponseBody Produtos postPro(@RequestParam String nome) {//
-    	 Produtos pro = new Produtos(nome);
-    	 produto.save(pro);
-    	 return pro;
+	@Autowired
+    private ProdutoService produtoService; 
+
+	 @PostMapping("/cadastro")
+	 @ResponseBody
+     public String postPro(@RequestParam String nome) {//    	 
+		 produtoService.cadatrarProduto(nome);
+    	 return nome;
      }
 }

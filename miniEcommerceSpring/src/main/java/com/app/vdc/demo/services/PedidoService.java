@@ -24,7 +24,7 @@ public class PedidoService implements  PedidoIS{
               }
            carrinho.save(car);
         }
-        return "Pedido do Cliente " + car.getConsumidor() + " foi finalizada com sucesso." +
+        return "Pedido do Cliente "  + " foi finalizada com sucesso." +
                 " Total da compra: R$"+Total;
     }
 }
