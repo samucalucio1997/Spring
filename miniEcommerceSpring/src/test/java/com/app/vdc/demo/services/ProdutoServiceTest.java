@@ -1,5 +1,7 @@
 package com.app.vdc.demo.services;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +13,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.app.vdc.demo.Model.Carrinho;
-import com.app.vdc.demo.Model.Categorias;
 import com.app.vdc.demo.Model.Pedido;
 import com.app.vdc.demo.Model.Produto;
 import com.app.vdc.demo.Model.User;
@@ -37,13 +38,13 @@ public class ProdutoServiceTest {
 
     @Test
     void testCadastrarProduto() {
-             
+        
+        assertEquals(produtoService.CadastrarProduto(produto),true);
+
     }
     private void startProduto(){
-         produto = new Produto(1,45,user,
-         420.3f,Categorias.eletronicos);
-        //  optionalProduto= Optional.of(new Produto(1,
-        //  45,user,420.3f,Categorias.eletronicos));  
+         produto = new Produto();
+        //  optionalProduto= Optional.of(new Produto(1,45,user,420.3f,Categorias.eletronicos));  
     }
     private void startConsumer(){
         user= new User(1L,"samuca","Samuel","Farias"
@@ -53,10 +54,9 @@ public class ProdutoServiceTest {
     }
     private void startCarrinho(){
         listprodutos.add(1, produto); 
-        carrinho = new Carrinho(1L,listprodutos,user);
+        carrinho = new Carrinho();
     }
     private void startPedido(){
-        pedido = new Pedido(1L,LocalTime.now(),
-        user,carrinho,true);
+        pedido = new Pedido();
     }
 }
