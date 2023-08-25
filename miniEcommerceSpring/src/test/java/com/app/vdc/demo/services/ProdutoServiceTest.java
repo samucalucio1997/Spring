@@ -1,11 +1,10 @@
 package com.app.vdc.demo.services;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -16,6 +15,7 @@ import com.app.vdc.demo.Model.Carrinho;
 import com.app.vdc.demo.Model.Pedido;
 import com.app.vdc.demo.Model.Produto;
 import com.app.vdc.demo.Model.User;
+import com.app.vdc.demo.Model.Categorias;
 
 public class ProdutoServiceTest {
     @InjectMocks
@@ -38,23 +38,27 @@ public class ProdutoServiceTest {
 
     @Test
     void testCadastrarProduto() {
-        
-        assertEquals(produtoService.CadastrarProduto(produto),true);
+        setup();
+        startConsumer();
+        startProduto();
+        Assertions.assertTrue(produtoService.
+        CadastrarProduto(produto,user));
 
     }
+
     private void startProduto(){
-         produto = new Produto();
+         produto = new Produto(45,420.3f,Categorias.eletronicos);
         //  optionalProduto= Optional.of(new Produto(1,45,user,420.3f,Categorias.eletronicos));  
     }
     private void startConsumer(){
-        user= new User(1L,"samuca","Samuel","Farias"
+        user= new User("samuca","Samuel","Farias"
         ,"samucalucio@hotmail.com"
-        ,"#123",carrinho,"59064-290",
-        1547,true,pedido);
+        ,"#123","59064-290",
+        1547,true);
     }
     private void startCarrinho(){
         listprodutos.add(1, produto); 
-        carrinho = new Carrinho();
+        // carrinho = new Carrinho();
     }
     private void startPedido(){
         pedido = new Pedido();

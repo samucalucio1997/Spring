@@ -11,9 +11,9 @@ public interface ProdutoIS {
 
     public boolean RemoverProduto(Produto produto);
 
-    public void EditarProduto(Produto produto, int qtd);
+    public boolean EditarProduto(Produto produto, int qtd);
 
-    public void EditarProduto(Produto produto, Categorias categoria);
+    public Boolean EditarProduto(Produto produto, Categorias categoria);
 
-    public void EditarProduto(Produto produto, float preco);
+    public boolean EditarProduto(Produto produto, float preco);
 }

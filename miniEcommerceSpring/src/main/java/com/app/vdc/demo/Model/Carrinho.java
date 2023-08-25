@@ -2,19 +2,24 @@ package com.app.vdc.demo.Model;
 
 
 import javax.persistence.*;
-import java.util.List;
 
+
+import java.util.List;
 
 @Entity
 public class Carrinho {
 	@javax.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long Id;
-	@OneToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY)
 	private List<Produto> produtos;
 
      
 
+
+	public Carrinho(List<Produto> produtos) {
+		this.produtos = produtos;
+	}
 
 	public void setId(Long id) {
 		Id = id;
@@ -31,7 +36,6 @@ public class Carrinho {
     public Long getId() {
 		return Id;
 	}
-
 
 
 }

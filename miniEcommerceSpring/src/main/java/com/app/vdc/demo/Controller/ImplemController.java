@@ -26,7 +26,7 @@ public class ImplemController {
    @ResponseBody
    public void PostCadastro(@RequestParam int qtd,@RequestParam float precouni){
         ProdutoService service = new ProdutoService();
-        service.CadastrarProduto(new Produto());
+     //    service.CadastrarProduto(new Produto());
    }
    
 }

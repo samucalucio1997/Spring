@@ -31,30 +31,42 @@ public class ProdutoService implements ProdutoIS{
     }
 
     @Override
-    public void EditarProduto(Produto produto,int qtd) {
+    public boolean EditarProduto(Produto produto,int qtd) {
           if(produto!=null&&qtd>0){
             Produto pro=  produtos.getById(produto.getId());
             pro.setQtd(qtd);
+            return true;
+          }else{
+            return false;
           }
     }
     @Override
-    public void EditarProduto(Produto produto, float preco){
+    public boolean EditarProduto(Produto produto, float preco){
         if(produto!=null&&preco>0.0){
             produtos.getById(produto.getId()).setPrecoUni(preco);
+            return true;
+        }else{
+            return false;
         }
     }
     @Override
-    public void EditarProduto(Produto produto, Categorias categoria){
+    public Boolean EditarProduto(Produto produto, Categorias categoria){
         if(produto!=null&&(categoria==Categorias.roupas
                 ||categoria==Categorias.calçados||categoria==Categorias.eletronicos
                 ||categoria==Categorias.esportes)){
-               produtos.getById(produto.getId()).setCategoria(categoria);
+               produtos.getById(produto.getId()).setCategoria(categoria); 
+               return true;
+        }else{
+            return false;
         }
     }
 
     @Override
     public boolean CadastrarProduto(Produto produto) {
-        produtos.save(produto);
+        if(produtos.save(produto)!=null){
+
+            return true;  
+        }
         throw new UnsupportedOperationException("Unimplemented method 'CadastrarProduto'");
     }
 }

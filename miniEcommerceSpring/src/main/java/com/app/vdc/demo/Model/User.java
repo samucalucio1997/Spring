@@ -8,7 +8,7 @@ import javax.persistence.*;
 public class User {
  @Id
  @GeneratedValue(strategy = GenerationType.IDENTITY)
- private Long id;
+ private int id;
  private String username;
  private String first_name;
  
@@ -30,15 +30,14 @@ private final boolean is_staff=false;
 
 
 
- public User(Long id, String username, String first_name, String last_name, String email, String password,
-        Carrinho carrinho, String cEP, int numcasa, boolean is_active, Pedido pedido) {
-    this.id = id;
+ public User(String username, String first_name, 
+ String last_name, String email, String password,
+         String cEP, int numcasa, boolean is_active) {
     this.username = username;
     this.first_name = first_name;
     this.last_name = last_name;
     this.email = email;
     this.password = password;
-    this.carrinho = carrinho;
     CEP = cEP;
     this.numcasa = numcasa;
     this.is_active = is_active;
@@ -51,11 +50,11 @@ public Carrinho getCarrinho() {
  public void setCarrinho(Carrinho carrinho) {
   this.carrinho = carrinho;
  }
- public Long getId() {
+ public int getId() {
   return id;
  }
 
- public void setId(Long id) {
+ public void setId(int id) {
   this.id = id;
  }
 

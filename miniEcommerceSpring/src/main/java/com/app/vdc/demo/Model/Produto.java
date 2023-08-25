@@ -1,6 +1,8 @@
 package com.app.vdc.demo.Model;
 
 
+import java.util.List;
+
 import javax.persistence.*;
 
 @Entity
@@ -10,10 +12,17 @@ public class Produto {
   private int id;
   private int qtd;
   private float precoUni;
+  @ManyToMany(fetch = FetchType.EAGER)
+  private List<Carrinho> car;
   private Categorias categoria;
 
 public int getId() {
 	return id;
+}
+public Produto( int qtd, float precoUni, Categorias categoria) {
+	this.qtd = qtd;
+	this.precoUni = precoUni;
+	this.categoria = categoria;
 }
 public void setId(int id) {
 	this.id = id;
