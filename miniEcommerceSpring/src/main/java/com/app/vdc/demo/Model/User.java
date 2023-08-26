@@ -1,6 +1,9 @@
 package com.app.vdc.demo.Model;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.*;
 
 
@@ -26,19 +29,22 @@ public class User {
 
  private boolean is_active;
 
+
+
+
+
+
 private final boolean is_staff=false;
 
 
 
  public User(String username, String first_name, 
- String last_name, String email, String password,
-         String cEP, int numcasa, boolean is_active) {
+ String last_name, String email, String password, int numcasa, boolean is_active) {
     this.username = username;
     this.first_name = first_name;
     this.last_name = last_name;
     this.email = email;
     this.password = password;
-    CEP = cEP;
     this.numcasa = numcasa;
     this.is_active = is_active;
 }

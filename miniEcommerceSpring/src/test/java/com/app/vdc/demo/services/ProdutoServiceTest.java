@@ -39,7 +39,6 @@ public class ProdutoServiceTest {
     @Test
     void testCadastrarProduto() {
         setup();
-        startConsumer();
         startProduto();
         Assertions.assertTrue(produtoService.
         CadastrarProduto(produto,user));
@@ -50,12 +49,7 @@ public class ProdutoServiceTest {
          produto = new Produto(45,420.3f,Categorias.eletronicos);
         //  optionalProduto= Optional.of(new Produto(1,45,user,420.3f,Categorias.eletronicos));  
     }
-    private void startConsumer(){
-        user= new User("samuca","Samuel","Farias"
-        ,"samucalucio@hotmail.com"
-        ,"#123","59064-290",
-        1547,true);
-    }
+   
     private void startCarrinho(){
         listprodutos.add(1, produto); 
         // carrinho = new Carrinho();
