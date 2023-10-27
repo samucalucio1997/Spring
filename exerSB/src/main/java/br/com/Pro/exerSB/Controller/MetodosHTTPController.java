@@ -25,7 +25,7 @@ public class MetodosHTTPController {
      public String get() {
     	 return "Requisição GET";
      }	 
-	 @PostMapping
+	 @PostMapping("/po1")
 	 public String post() {
 		 return "Requisição POST";
 	 }

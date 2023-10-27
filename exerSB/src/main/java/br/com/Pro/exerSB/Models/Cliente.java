@@ -1,13 +1,20 @@
 package br.com.Pro.exerSB.Models;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class Cliente {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String nome;
     private String cpf;
     
-	public Cliente(int id, String nome, String cpf) {
+	public Cliente( String nome, String cpf) {
 		super();
-		this.id = id;
 		this.nome = nome;
 		this.cpf = cpf;
 	}

@@ -1,5 +1,6 @@
 package br.com.Pro.exerSB.Models;
 
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,31 +12,46 @@ public class Produtos {
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private int id;
-   @Column
+   @Column(name = "Modelo")
    private String nome;
-   
-   public Produtos() {}
+   @Column(name = "Valor")
+   private double price;
+   @Column(name = "Image")
+   private String image;
 
-public Produtos(String nome) {
-	super();
-	this.nome = nome;
-}
+   public Produtos() {
+   }
 
-public int getId() {
-	return id;
-}
+   public String getImage() {
+      return image;
+   }
 
-public void setId(int id) {
-	this.id = id;
-}
+   public void setImage(String image) {
+      this.image = image;
+   }
 
-public String getNome() {
-	return nome;
-}
+   public int getId() {
+      return id;
+   }
 
-public void setNome(String nome) {
-	this.nome = nome;
-}
-   
-   
+   public void setId(int id) {
+      this.id = id;
+   }
+
+   public String getNome() {
+      return nome;
+   }
+
+   public void setNome(String nome) {
+      this.nome = nome;
+   }
+
+   public double getPrice() {
+      return price;
+   }
+
+   public void setPrice(double price) {
+      this.price = price;
+   }
+
 }

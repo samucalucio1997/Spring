@@ -15,15 +15,17 @@ import br.com.Pro.exerSB.service.ProdutoService;
 @RequestMapping("/consulta")
 public class ClienteController {
 
-     @Autowired
-    private ProdutoService produtoService; 
+    @Autowired
+    private ProdutoService produtoService;
 
-	@GetMapping(path = "/clientes")
-     public Cliente ObterCliente() {
-    	 return new Cliente(28,"Carlos","004789519-62");
-     }
-     @GetMapping("/listar")
-     public List<Produtos> getLista(){
-         return produtoService.ListarProdutos(); 
-     }
+    @GetMapping(path = "/clientes")
+    public Cliente ObterCliente() {
+        return null;
+        // produtoService.
+    }
+
+    @GetMapping("/listar")
+    public List<Produtos> getLista() {
+        return produtoService.ListarProdutos();
+    }
 }
