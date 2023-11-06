@@ -4,11 +4,14 @@ import com.app.vdc.demo.Model.Categorias;
 import com.app.vdc.demo.Model.Endereco;
 import com.app.vdc.demo.Model.Produto;
 import com.app.vdc.demo.Model.User;
+import com.app.vdc.demo.Security.AuthToken;
+import com.app.vdc.demo.Security.TokenUtil;
 import com.app.vdc.demo.services.ProdutoService;
 import com.app.vdc.demo.services.UserService;
 import com.app.vdc.demo.services.ViaCep;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -35,19 +38,27 @@ public class ImplemController implements ViaCep{
           return m;
      }
 
-     @PostMapping("/cadastroUser")
+     @GetMapping("/cadastroUser")
      public String PostCadastro() {
           ProdutoService service = new ProdutoService();
           // service.CadastrarProduto(new Produto());
           return "Authorized service";
      }
 
-     @Override
      @GetMapping("/cep")
      public Endereco ConsultarCep(@PathVariable String name) {
           // TODO Auto-generated method stub
         
-          throw new UnsupportedOperationException("Unimplemented method 'ConsultarCep'");
+         return new Endereco();
+     }
+
+     @GetMapping("/login")
+     public ResponseEntity<AuthToken> Authentica(@RequestBody User usuario){
+         if(usuario.getUsername().equals("samuca")&&usuario.getPassword().equals("ticao")){
+            return ResponseEntity.ok(TokenUtil.encodeToken(usuario));
+         }else{
+            return ResponseEntity.status(403).build();
+         }
      }
 
 

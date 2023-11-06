@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity
 public class User {
@@ -22,19 +24,12 @@ public class User {
  private String password;
 
  @OneToOne(cascade=CascadeType.ALL)
+//  @JsonIgnore
  private Carrinho carrinho;
  private String CEP;
-
  private int numcasa;
-
  private boolean is_active;
-
-
-
-
-
-
-private final boolean is_staff=false;
+ private final boolean is_staff=false;
 
 
 
