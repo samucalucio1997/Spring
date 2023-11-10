@@ -5,12 +5,15 @@ import com.app.vdc.demo.Model.Endereco;
 import com.app.vdc.demo.Model.Produto;
 import com.app.vdc.demo.Model.User;
 import com.app.vdc.demo.Security.AuthToken;
+import com.app.vdc.demo.Security.MyFilter;
 import com.app.vdc.demo.Security.TokenUtil;
 import com.app.vdc.demo.services.ProdutoService;
 import com.app.vdc.demo.services.UserService;
 import com.app.vdc.demo.services.ViaCep;
 
+import org.hibernate.result.NoMoreReturnsException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties.Authentication;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +26,10 @@ public class ImplemController implements ViaCep{
      @Autowired
      private UserService service;
 
+     @Autowired
+     private ProdutoService produto;
+
+     private User Autentico; 
      
 
      @PostMapping("/casdastroPro")
@@ -55,14 +62,30 @@ public class ImplemController implements ViaCep{
      @GetMapping("/login")
      public ResponseEntity<AuthToken> Authentica(@RequestBody User usuario){
          if(usuario.getUsername().equals("samuca")&&usuario.getPassword().equals("ticao")){
-            return ResponseEntity.ok(TokenUtil.encodeToken(usuario));
+           this.Autentico = usuario;
+           return ResponseEntity.ok(TokenUtil.encodeToken(usuario));
          }else{
             return ResponseEntity.status(403).build();
          }
      }
 
+     @PostMapping("/cadastraProduto")
+     public ResponseEntity<Boolean> CadRegs(Produto produto){
+          try {
+               if(this.Autentico!=null&&this.Autentico.isIs_staff()){
+                    this.produto.CadastrarProduto(produto); 
+                    return ResponseEntity.ok(true);
+               }else{
+                   return ResponseEntity.ok(false);
+               }
+          } catch (Exception e) {
+             ResponseEntity.status(401);
+             throw new NoMoreReturnsException("não se pode operar");
+          }
+     }
+
+
+
 
      //Testando o consumo da api externa
-    
-
 }

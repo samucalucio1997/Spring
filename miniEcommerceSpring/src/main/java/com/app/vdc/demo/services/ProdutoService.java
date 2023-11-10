@@ -4,6 +4,10 @@ import com.app.vdc.demo.Model.Categorias;
 import com.app.vdc.demo.Model.Produto;
 import com.app.vdc.demo.Model.User;
 import com.app.vdc.demo.repository.ProdutoRepository;
+
+import java.util.List;
+
+import org.bouncycastle.crypto.RuntimeCryptoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -63,10 +67,19 @@ public class ProdutoService implements ProdutoIS{
 
     @Override
     public boolean CadastrarProduto(Produto produto) {
-        if(produtos.save(produto)!=null){
-
-            return true;  
+        try {
+            Produto pro = produtos.getById(produto.getId());
+            if(pro!=null&&produtos.save(produto)!=null){
+                return true;  
+            }else{return false;}
+        } catch (Exception e) {
+           throw new RuntimeCryptoException(null);
         }
-        throw new UnsupportedOperationException("Unimplemented method 'CadastrarProduto'");
+    }
+
+    @Override
+    public List<Produto> ListarPro() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

@@ -1,5 +1,7 @@
 package com.app.vdc.demo.services;
 
+import java.util.List;
+
 import com.app.vdc.demo.Model.Categorias;
 import com.app.vdc.demo.Model.Produto;
 import com.app.vdc.demo.Model.User;
@@ -12,6 +14,8 @@ public interface ProdutoIS {
     public boolean RemoverProduto(Produto produto);
 
     public boolean EditarProduto(Produto produto, int qtd);
+
+    public List<Produto> ListarPro();
 
     public Boolean EditarProduto(Produto produto, Categorias categoria);
 

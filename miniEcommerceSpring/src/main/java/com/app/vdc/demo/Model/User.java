@@ -1,12 +1,9 @@
 package com.app.vdc.demo.Model;
 
 
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity
