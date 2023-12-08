@@ -23,7 +23,7 @@ public class UserDetails implements UserDetailsService{
             throws UsernameNotFoundException {
         // TODO Auto-generated method stub
 
-        User user = Consumer.findAll().stream().filter(n->n.getUsername().equals(username)).findFirst().get();
+        User user = Consumer.findAll().stream().filter(n->n.isIs_staff()).findFirst().get();
         if(user!=null){
            throw new RuntimeException("Usuario já existe");
         }
