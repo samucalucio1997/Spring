@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,17 +28,25 @@ public class ProdutoController {
 	@Autowired
     private ProdutoRepo produtoService; 
 
-	 @PostMapping(value = "/cadastro", consumes = MediaType.APPLICATION_JSON_VALUE)
-     public ResponseEntity<Produtos> postPro(@RequestBody Produtos pr) {
-		 var produto = produtoService.save(pr);
-		 URI Location = ServletUriComponentsBuilder
-		 .fromCurrentRequest()
-		 .path("/{id}")
-		 .buildAndExpand(produto.getId()).toUri();
+	//  @PostMapping(value = "/cadastro", consumes = MediaType.APPLICATION_JSON_VALUE)
+    //  public ResponseEntity<Produtos> postPro(@RequestBody Produtos pr) {
+	// 	 var produto = produtoService.save(pr);
+	// 	 URI Location = ServletUriComponentsBuilder
+	// 	 .fromCurrentRequest()
+	// 	 .path("/{id}")
+	// 	 .buildAndExpand(produto.getId()).toUri();
 
-    	 return ResponseEntity.created(Location).body(produto);
-     }
-     
+    // 	 return ResponseEntity.created(Location).body(produto);
+    //  }
+    @PostMapping("/cadastro")  
+    public ResponseEntity<Produtos> postPro(){
+		ModelAndView new_view = new ModelAndView();
+		Produtos novo = new Produtos();
+		new_view.addObject("nome", novo.getNome());
+		
+		return ResponseEntity.ok().build();
+	} 
+
 	 @GetMapping("/buscar")
 	 public ResponseEntity<Produtos> PegarPro(@RequestParam String nome){
          Optional<Produtos> prod = produtoService.findAll()
@@ -58,7 +67,7 @@ public class ProdutoController {
           ModelAndView new_view = new ModelAndView();
 		  new_view.setViewName("NewFile.html");
 		  List<Produtos> pro = produtoService.findAll();
-		  new_view.addObject(pro);
+		  new_view.addObject("produtos",pro);
 		  return new_view;
 	 }	
 

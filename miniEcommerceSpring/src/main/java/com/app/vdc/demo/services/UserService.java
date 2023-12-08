@@ -12,6 +12,7 @@ import com.app.vdc.demo.Model.Carrinho;
 import com.app.vdc.demo.Model.Produto;
 import com.app.vdc.demo.Model.User;
 import com.app.vdc.demo.repository.UserRepository;
+import com.app.vdc.demo.Security.TokenUtil;
 
 @Service
 public class UserService implements UserIS {
@@ -22,7 +23,15 @@ public class UserService implements UserIS {
 
       
 
-
+   public User CriarUser(User usuario){
+        User user = Consumer.findAll().stream().filter(n->n.getUsername().equals(usuario.getUsername())).findFirst().get();
+        if(user!=null){
+           throw new RuntimeException("Usuario já existe");
+        }
+        usuario.setPassword(TokenUtil.encodeToken(user).getToken());
+        User eUser = Consumer.save(usuario);
+        return eUser;
+    }  
 
 
 

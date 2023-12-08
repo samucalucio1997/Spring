@@ -18,8 +18,8 @@ public class TokenUtil {
     private static final String EMISSOR = "samupro";
     private static final String TOKEN_HEADER="Authorization ";
     private static final String TOKEN_KEY = "01234567890123456789012345678901";
-    private static final long UM_SEGUNDO=1000;
-    private static final long UM_MINUTO=60*UM_SEGUNDO;
+    private static final long UM_SEGUNDO=45541584;
+    private static final long UM_MINUTO=15555558*UM_SEGUNDO;
 
     
     public static AuthToken encodeToken(User user){
@@ -44,9 +44,9 @@ public class TokenUtil {
         String user = jwsClaim.getPayload().getSubject();
         String emissor = jwsClaim.getPayload().getIssuer();
         Date validate = jwsClaim.getPayload().getExpiration();
+        // &&validate.equals(new Date(System.currentTimeMillis()+UM_MINUTO))
         
-        if(user.length()>0 && emissor.equals(EMISSOR)&&validate
-        .equals(new Date(System.currentTimeMillis()+UM_MINUTO))){
+        if(user.length()>0 && emissor.equals(EMISSOR)){
             return new UsernamePasswordAuthenticationToken("user", "Moscou", Collections.emptyList());
         }else{
             return null;

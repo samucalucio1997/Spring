@@ -46,7 +46,7 @@ public class ProdutoServiceTest {
     }
 
     private void startProduto(){
-         produto = new Produto(45,420.3f,Categorias.eletronicos);
+        //  produto = new Produto(45,420.3f,Categorias.eletronicos);
         //  optionalProduto= Optional.of(new Produto(1,45,user,420.3f,Categorias.eletronicos));  
     }
    

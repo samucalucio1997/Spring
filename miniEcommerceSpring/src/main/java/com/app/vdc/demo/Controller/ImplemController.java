@@ -7,6 +7,7 @@ import com.app.vdc.demo.Model.User;
 import com.app.vdc.demo.Security.AuthToken;
 import com.app.vdc.demo.Security.MyFilter;
 import com.app.vdc.demo.Security.TokenUtil;
+import com.app.vdc.demo.services.ProdutoIS;
 import com.app.vdc.demo.services.ProdutoService;
 import com.app.vdc.demo.services.UserService;
 import com.app.vdc.demo.services.ViaCep;
@@ -29,15 +30,15 @@ public class ImplemController implements ViaCep{
      @Autowired
      private ProdutoService produto;
 
-     private User Autentico; 
-     
+     private String Autentico; 
 
-     @PostMapping("/casdastroPro")
-     @ResponseBody
-     public void PostCadastro(@RequestParam User admin, @RequestParam Produto produto) {
-          ProdutoService service = new ProdutoService();
-          service.CadastrarProduto(produto, admin);
-     }
+     private User Usuario;
+     
+     @PostMapping("/cadastroPro")
+     public ResponseEntity<Boolean> PostCadastro(@RequestBody Produto pro) {
+          boolean ret =  this.produto.CadastrarProduto(pro, this.Usuario);
+          return ResponseEntity.ok(ret); 
+     }    
 
      @GetMapping("/Categoria")
      public ArrayList<Categorias> GetCategoria() {
@@ -47,7 +48,6 @@ public class ImplemController implements ViaCep{
 
      @GetMapping("/cadastroUser")
      public String PostCadastro() {
-          ProdutoService service = new ProdutoService();
           // service.CadastrarProduto(new Produto());
           return "Authorized service";
      }
@@ -55,14 +55,13 @@ public class ImplemController implements ViaCep{
      @GetMapping("/cep")
      public Endereco ConsultarCep(@PathVariable String name) {
           // TODO Auto-generated method stub
-        
          return new Endereco();
      }
 
      @GetMapping("/login")
      public ResponseEntity<AuthToken> Authentica(@RequestBody User usuario){
          if(usuario.getUsername().equals("samuca")&&usuario.getPassword().equals("ticao")){
-           this.Autentico = usuario;
+           this.Autentico = TokenUtil.encodeToken(usuario).getToken();
            return ResponseEntity.ok(TokenUtil.encodeToken(usuario));
          }else{
             return ResponseEntity.status(403).build();
@@ -70,17 +69,12 @@ public class ImplemController implements ViaCep{
      }
 
      @PostMapping("/cadastraProduto")
-     public ResponseEntity<Boolean> CadRegs(Produto produto){
-          try {
-               if(this.Autentico!=null&&this.Autentico.isIs_staff()){
-                    this.produto.CadastrarProduto(produto); 
-                    return ResponseEntity.ok(true);
-               }else{
-                   return ResponseEntity.ok(false);
-               }
-          } catch (Exception e) {
-             ResponseEntity.status(401);
-             throw new NoMoreReturnsException("não se pode operar");
+     public ResponseEntity<Boolean> CadRegs(@RequestBody Produto produto){
+          if(this.Autentico!=null){
+               this.produto.CadastrarProduto(produto); 
+               return ResponseEntity.ok(true);
+          }else{
+               return ResponseEntity.ok(false);
           }
      }
 
