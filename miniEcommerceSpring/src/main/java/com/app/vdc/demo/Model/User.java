@@ -2,14 +2,21 @@ package com.app.vdc.demo.Model;
 
 
 
+import java.util.Collection;
+import java.util.List;
+
 import javax.persistence.*;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 
 @Entity
-public class User {
+public class User implements UserDetails{
  @Id
  @GeneratedValue(strategy = GenerationType.IDENTITY)
  private int id;
@@ -32,7 +39,10 @@ public class User {
 
 
 
- public User(String username, String first_name, 
+ public User() {
+}
+
+public User(String username, String first_name, 
  String last_name, String email, String password, int numcasa, boolean is_active) {
     this.username = username;
     this.first_name = first_name;
@@ -122,12 +132,39 @@ public Carrinho getCarrinho() {
   this.is_active = is_active;
  }
 
-
-
-
  public boolean isIs_staff() {
   return is_staff;
  }
+
+@Override
+public Collection<? extends GrantedAuthority> getAuthorities() {
+  // TODO Auto-generated method stub
+  return List.of(new SimpleGrantedAuthority("ROLES_USER"));
+}
+
+@Override
+public boolean isAccountNonExpired() {
+  // TODO Auto-generated method stub
+  return false;
+}
+
+@Override
+public boolean isAccountNonLocked() {
+  // TODO Auto-generated method stub
+  return false;
+}
+
+@Override
+public boolean isCredentialsNonExpired() {
+  // TODO Auto-generated method stub
+  return false;
+}
+
+@Override
+public boolean isEnabled() {
+  // TODO Auto-generated method stub
+  return false;
+}
 
 
 

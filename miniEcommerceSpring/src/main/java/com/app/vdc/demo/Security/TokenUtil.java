@@ -1,6 +1,8 @@
 package com.app.vdc.demo.Security;
 
 import java.security.Key;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.Date;
 
@@ -27,7 +29,11 @@ public class TokenUtil {
         String Jwt_Token = Jwts.builder()
                            .setSubject(user.getUsername())
                            .setIssuer(EMISSOR)
-                           .setExpiration(new Date(System.currentTimeMillis() + UM_MINUTO))
+                           .setExpiration(
+                            // LocalDateTime.now().plusMinutes(10L)
+                            // .toInstant(ZoneOffset.of("-03:00"))
+                           new Date(System.currentTimeMillis() + UM_MINUTO)
+                            )
                            .signWith(secretKey).compact();
         AuthToken nToken = new AuthToken(TOKEN_HEADER + Jwt_Token);
         return nToken;

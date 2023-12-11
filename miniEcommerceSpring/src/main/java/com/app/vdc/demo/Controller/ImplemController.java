@@ -16,6 +16,8 @@ import org.hibernate.result.NoMoreReturnsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties.Authentication;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -23,6 +25,9 @@ import java.util.ArrayList;
 @RestController
 @RequestMapping("/home")
 public class ImplemController implements ViaCep{
+
+     @Autowired
+     private AuthenticationManager authenticationManager;
 
      @Autowired
      private UserService service;
@@ -60,12 +65,16 @@ public class ImplemController implements ViaCep{
 
      @GetMapping("/login")
      public ResponseEntity<AuthToken> Authentica(@RequestBody User usuario){
-         if(usuario.getUsername().equals("samuca")&&usuario.getPassword().equals("ticao")){
-           this.Autentico = TokenUtil.encodeToken(usuario).getToken();
-           return ResponseEntity.ok(TokenUtil.encodeToken(usuario));
-         }else{
-            return ResponseEntity.status(403).build();
-         }
+       UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken=
+       new UsernamePasswordAuthenticationToken(usuario.getUsername(), usuario.getPassword());
+       Authentication authenticate = 
+       (Authentication) this.authenticationManager
+       .authenticate(usernamePasswordAuthenticationToken);
+       authenticate.getRealm();
+       User usuUser=new User();
+       usuUser.setUsername(authenticate.getUsername());
+       usuUser.setPassword(authenticate.getPassword());  
+       return ResponseEntity.ok(TokenUtil.encodeToken(usuUser));
      }
 
      @PostMapping("/cadastraProduto")
