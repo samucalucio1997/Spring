@@ -5,8 +5,8 @@ import com.app.vdc.demo.Model.Endereco;
 import com.app.vdc.demo.Model.Produto;
 import com.app.vdc.demo.Model.User;
 import com.app.vdc.demo.Security.AuthToken;
-import com.app.vdc.demo.Security.MyFilter;
 import com.app.vdc.demo.Security.TokenUtil;
+import com.app.vdc.demo.repository.UserRepository;
 import com.app.vdc.demo.services.ProdutoIS;
 import com.app.vdc.demo.services.ProdutoService;
 import com.app.vdc.demo.services.UserService;
@@ -36,9 +36,8 @@ public class ImplemController implements ViaCep{
      private ProdutoService produto;
 
      private String Autentico; 
-
      private User Usuario;
-     
+
      @PostMapping("/cadastroPro")
      public ResponseEntity<Boolean> PostCadastro(@RequestBody Produto pro) {
           boolean ret =  this.produto.CadastrarProduto(pro, this.Usuario);
@@ -51,10 +50,12 @@ public class ImplemController implements ViaCep{
           return m;
      }
 
-     @GetMapping("/cadastroUser")
-     public String PostCadastro() {
+     @PostMapping("/cadastroUser")
+     public ResponseEntity<AuthToken> PostCadastro(@RequestBody User usuario) {
           // service.CadastrarProduto(new Produto());
-          return "Authorized service";
+          User usuUser = this.service.CriarUser(usuario);
+          usuUser.setPassword(TokenUtil.encodeToken(usuUser).getToken()); 
+          return ResponseEntity.ok(new AuthToken(usuUser.getPassword()));
      }
 
      @GetMapping("/cep")
@@ -64,17 +65,8 @@ public class ImplemController implements ViaCep{
      }
 
      @GetMapping("/login")
-     public ResponseEntity<AuthToken> Authentica(@RequestBody User usuario){
-       UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken=
-       new UsernamePasswordAuthenticationToken(usuario.getUsername(), usuario.getPassword());
-       Authentication authenticate = 
-       (Authentication) this.authenticationManager
-       .authenticate(usernamePasswordAuthenticationToken);
-       authenticate.getRealm();
-       User usuUser=new User();
-       usuUser.setUsername(authenticate.getUsername());
-       usuUser.setPassword(authenticate.getPassword());  
-       return ResponseEntity.ok(TokenUtil.encodeToken(usuUser));
+     public String Authentica(){
+        return "Olá";
      }
 
      @PostMapping("/cadastraProduto")

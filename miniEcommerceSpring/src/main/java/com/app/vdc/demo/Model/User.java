@@ -22,11 +22,8 @@ public class User implements UserDetails{
  private int id;
  private String username;
  private String first_name;
- 
  private String last_name;
- 
  private String email;
- 
  private String password;
 
  @OneToOne(cascade=CascadeType.ALL)
@@ -165,8 +162,5 @@ public boolean isEnabled() {
   // TODO Auto-generated method stub
   return false;
 }
-
-
-
 
 }

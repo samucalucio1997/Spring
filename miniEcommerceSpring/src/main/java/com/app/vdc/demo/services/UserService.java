@@ -24,11 +24,11 @@ public class UserService implements UserIS {
       
 
    public User CriarUser(User usuario){
-        User user = Consumer.findAll().stream().filter(n->n.getUsername().equals(usuario.getUsername())).findFirst().get();
+        User user = Consumer.findByUsername(usuario.getUsername());
         if(user!=null){
            throw new RuntimeException("Usuario já existe");
         }
-        usuario.setPassword(TokenUtil.encodeToken(user).getToken());
+        usuario.setPassword(TokenUtil.encodeToken(usuario).getToken());
         User eUser = Consumer.save(usuario);
         return eUser;
     }  
