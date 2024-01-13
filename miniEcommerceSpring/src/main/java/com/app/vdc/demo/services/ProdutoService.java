@@ -19,8 +19,8 @@ public class ProdutoService implements ProdutoIS{
 
     @Override
     public boolean CadastrarProduto(Produto produto, User cadastra) {
-        if(cadastra.isIs_staff()){
-                produtos.save(produto);
+        if(!cadastra.isIs_staff()){
+                produtos.save(produto); 
                 return true;
         }
         return false;
@@ -28,7 +28,7 @@ public class ProdutoService implements ProdutoIS{
 
     @Override
     public boolean RemoverProduto(Produto produto) {
-        if(produto.getId()>0){
+        if(produto.getId() > 0){
             produtos.deleteById(produto.getId());
             return true;
         }

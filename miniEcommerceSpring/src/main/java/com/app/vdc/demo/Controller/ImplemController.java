@@ -5,6 +5,7 @@ import com.app.vdc.demo.Model.Endereco;
 import com.app.vdc.demo.Model.Produto;
 import com.app.vdc.demo.Model.User;
 import com.app.vdc.demo.Security.AuthToken;
+import com.app.vdc.demo.Security.Login;
 import com.app.vdc.demo.Security.TokenUtil;
 import com.app.vdc.demo.repository.UserRepository;
 import com.app.vdc.demo.services.ProdutoIS;
@@ -14,13 +15,18 @@ import com.app.vdc.demo.services.ViaCep;
 
 import org.hibernate.result.NoMoreReturnsException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties.Authentication;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+
+import javax.annotation.security.RolesAllowed;
 
 @RestController
 @RequestMapping("/home")
@@ -36,15 +42,15 @@ public class ImplemController implements ViaCep{
      private ProdutoService produto;
 
      private String Autentico; 
-     private User Usuario;
 
      @PostMapping("/cadastroPro")
-     public ResponseEntity<Boolean> PostCadastro(@RequestBody Produto pro) {
-          boolean ret =  this.produto.CadastrarProduto(pro, this.Usuario);
-          return ResponseEntity.ok(ret); 
+     public ResponseEntity<Boolean> PostCadastro() {
+          // boolean ret =  this.produto.CadastrarProduto(pro);
+          return ResponseEntity.ok(true); 
      }    
 
      @GetMapping("/Categoria")
+     @RolesAllowed("ADMIN")
      public ArrayList<Categorias> GetCategoria() {
           ArrayList<Categorias> m = new ArrayList<>();
           return m;
@@ -52,9 +58,7 @@ public class ImplemController implements ViaCep{
 
      @PostMapping("/cadastroUser")
      public ResponseEntity<AuthToken> PostCadastro(@RequestBody User usuario) {
-          // service.CadastrarProduto(new Produto());
           User usuUser = this.service.CriarUser(usuario);
-          usuUser.setPassword(TokenUtil.encodeToken(usuUser).getToken()); 
           return ResponseEntity.ok(new AuthToken(usuUser.getPassword()));
      }
 
@@ -64,9 +68,18 @@ public class ImplemController implements ViaCep{
          return new Endereco();
      }
 
-     @GetMapping("/login")
-     public String Authentica(){
-        return "Olá";
+     @PostMapping("/login")
+     public ResponseEntity<String> Authentica(@RequestBody @Validated Login usuario){
+      try {
+           UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = 
+           new UsernamePasswordAuthenticationToken(usuario.getUsername(), usuario.getPassword());
+           org.springframework.security.core.Authentication auth = (org.springframework.security.core.Authentication) this.authenticationManager
+           .authenticate(usernamePasswordAuthenticationToken);    
+           var user =(User) auth.getPrincipal();     
+           return ResponseEntity.ok(TokenUtil.encodeToken(user));  
+      } catch (UsernameNotFoundException e) {
+          return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário ou senha inválidos");
+      }    
      }
 
      @PostMapping("/cadastraProduto")

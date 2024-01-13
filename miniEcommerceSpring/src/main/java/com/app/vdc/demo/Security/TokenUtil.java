@@ -3,59 +3,46 @@ package com.app.vdc.demo.Security;
 import java.security.Key;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import com.app.vdc.demo.Model.User;
+import org.springframework.security.core.GrantedAuthority;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
+import com.app.vdc.demo.Model.User;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+
+
 
 public class TokenUtil {
-    private static final String EMISSOR = "samupro";
-    private static final String TOKEN_HEADER="Authorization ";
-    private static final String TOKEN_KEY = "01234567890123456789012345678901";
-    private static final long UM_SEGUNDO=45541584;
-    private static final long UM_MINUTO=15555558*UM_SEGUNDO;
+    
 
     
-    public static AuthToken encodeToken(User user){
-        Key secretKey = Keys.hmacShaKeyFor(TOKEN_KEY.getBytes());
-        String Jwt_Token = Jwts.builder()
-                           .setSubject(user.getUsername())
-                           .setIssuer(EMISSOR)
-                           .setExpiration(
-                            // LocalDateTime.now().plusMinutes(10L)
-                            // .toInstant(ZoneOffset.of("-03:00"))
-                           new Date(System.currentTimeMillis() + UM_MINUTO)
-                            )
-                           .signWith(secretKey).compact();
-        AuthToken nToken = new AuthToken(TOKEN_HEADER + Jwt_Token);
-        return nToken;
+    public static String encodeToken(User user){
+        String token = JWT.create()
+                       .withIssuer("Auth")
+                       .withSubject(user.getUsername())
+                       .withClaim("id", user.getId())
+                       .withExpiresAt(LocalDateTime.now()
+                       .plusMinutes(2)
+                       .toInstant(ZoneOffset.of("-03:00")))
+                       .sign(Algorithm.HMAC256("grazinads"));
+        return new AuthToken(token).getToken();
     }
 
-     //Ira autenticar o token recebido   
-     public static Authentication decodeToken(String Auth){//String correspondente a requisição passada no cabeçalho
-        
-        Auth = Auth.replace(TOKEN_HEADER, "");// Retiro so o nome do header que não pertence ao token
-        //A realização do parse do token
-        Jws<Claims> jwsClaim = Jwts.parser()
-        .setSigningKey(TOKEN_KEY.getBytes())
-        .build().parseClaimsJws(Auth);
-        String user = jwsClaim.getPayload().getSubject();
-        String emissor = jwsClaim.getPayload().getIssuer();
-        Date validate = jwsClaim.getPayload().getExpiration();
-        // &&validate.equals(new Date(System.currentTimeMillis()+UM_MINUTO))
-        
-        if(user.length()>0 && emissor.equals(EMISSOR)){
-            return new UsernamePasswordAuthenticationToken("user", "Moscou", Collections.emptyList());
-        }else{
-            return null;
-        }
-     }    
+    //Ira autenticar o token recebido   
+    public static Authentication decodeToken(String Auth){//String correspondente a requisição passada no cabeçalho
+             
+        return null;
+    }
+
+    public static String getSubject(String token) {
+        return JWT.require(Algorithm.HMAC256("grazinads"))
+                   .withIssuer("Auth")
+                   .build().verify(token).getSubject();
+    }    
 }

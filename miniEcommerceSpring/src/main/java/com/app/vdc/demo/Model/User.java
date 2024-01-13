@@ -136,31 +136,35 @@ public Carrinho getCarrinho() {
 @Override
 public Collection<? extends GrantedAuthority> getAuthorities() {
   // TODO Auto-generated method stub
-  return List.of(new SimpleGrantedAuthority("ROLES_USER"));
+  if(this.is_staff){
+    return List.of(new SimpleGrantedAuthority("ADMIN"));
+  }else{
+    return List.of(new SimpleGrantedAuthority("USER"));
+  }
 }
 
 @Override
 public boolean isAccountNonExpired() {
   // TODO Auto-generated method stub
-  return false;
+  return true;
 }
 
 @Override
 public boolean isAccountNonLocked() {
   // TODO Auto-generated method stub
-  return false;
+  return true;
 }
 
 @Override
 public boolean isCredentialsNonExpired() {
   // TODO Auto-generated method stub
-  return false;
+  return true;
 }
 
 @Override
 public boolean isEnabled() {
   // TODO Auto-generated method stub
-  return false;
+  return true;
 }
 
 }
