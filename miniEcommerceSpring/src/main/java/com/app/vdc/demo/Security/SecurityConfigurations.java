@@ -19,9 +19,9 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
+// @EnableGlobalMethodSecurity(jsr250Enabled = true)
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(jsr250Enabled = true)
 public class SecurityConfigurations {
         
         @Autowired
@@ -36,6 +36,7 @@ public class SecurityConfigurations {
                    authorize
                        .antMatchers(HttpMethod.POST, "/home/cadastroUser").permitAll()
                        .antMatchers(HttpMethod.POST, "/home/login").permitAll()
+                       .antMatchers(HttpMethod.GET, "/home/Categoria").hasRole("ADMIN")           
                        .anyRequest().authenticated();
                } catch (Exception e) {
                    throw new RuntimeException(e);

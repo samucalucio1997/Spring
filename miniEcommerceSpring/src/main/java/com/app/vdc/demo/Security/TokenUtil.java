@@ -1,16 +1,10 @@
 package com.app.vdc.demo.Security;
 
-import java.security.Key;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
 
 
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 
 import com.app.vdc.demo.Model.User;
 import com.auth0.jwt.JWT;

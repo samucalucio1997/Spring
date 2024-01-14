@@ -50,7 +50,6 @@ public class ImplemController implements ViaCep{
      }    
 
      @GetMapping("/Categoria")
-     @RolesAllowed("ADMIN")
      public ArrayList<Categorias> GetCategoria() {
           ArrayList<Categorias> m = new ArrayList<>();
           return m;

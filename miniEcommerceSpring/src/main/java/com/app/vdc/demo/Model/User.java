@@ -137,9 +137,9 @@ public Carrinho getCarrinho() {
 public Collection<? extends GrantedAuthority> getAuthorities() {
   // TODO Auto-generated method stub
   if(this.is_staff){
-    return List.of(new SimpleGrantedAuthority("ADMIN"));
+    return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"));
   }else{
-    return List.of(new SimpleGrantedAuthority("USER"));
+    return List.of(new SimpleGrantedAuthority("ROLE_USER"));
   }
 }
 
