@@ -29,7 +29,8 @@ public class SecurityConfigurations {
        
         @Bean
         public SecurityFilterChain SecurityFilterChain(HttpSecurity http) throws Exception{
-             http.csrf().disable().sessionManagement()
+            System.out.println("passou aqui no SecurityFilterChain");
+            http.cors().disable().csrf().disable().sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and().authorizeHttpRequests(authorize -> {
                try {

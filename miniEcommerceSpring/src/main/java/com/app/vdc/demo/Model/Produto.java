@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Produto {
   @Id
@@ -14,21 +16,35 @@ public class Produto {
   private int qtd;
   private float precoUni;
   @ManyToMany(fetch = FetchType.EAGER)
+  @JsonIgnore
   private List<Carrinho> car;
+  @OneToMany(fetch = FetchType.LAZY)
+  private List<File> imagenList; 
   private Categorias categoria;
-
-public int getId() {
-	return id;
-}
-// public Produto( int qtd, float precoUni, Categorias categoria) {
-// 	this.qtd = qtd;
-// 	this.precoUni = precoUni;
-// 	this.categoria = categoria;
-// }
-
-public void setId(int id) {
-	this.id = id;
-}
+  
+  public int getId() {
+    return id;
+  }
+  
+    
+  public List<Carrinho> getCar() {
+     return car;
+  }
+  
+  public void setCar(List<Carrinho> car) {
+    this.car = car;
+  }
+  
+  public List<File> getImagenList() {
+    return imagenList;
+  }
+  
+  public void setImagenList(List<File> imagenList) {
+    this.imagenList = imagenList;
+  }
+  public void setId(int id) {
+	   this.id = id;
+  }
 
 public int getQtd() {
 	return qtd;

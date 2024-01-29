@@ -1,5 +1,6 @@
 package com.app.vdc.demo.services;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -12,8 +13,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.app.vdc.demo.Model.Carrinho;
+import com.app.vdc.demo.Model.File;
 import com.app.vdc.demo.Model.Produto;
 import com.app.vdc.demo.Model.User;
 import com.app.vdc.demo.repository.UserRepository;
@@ -25,15 +28,19 @@ public class UserService  {
 
     @Autowired
     private UserRepository Consumer;
-
+   
+    @Autowired
+    private FileService imgService; 
       
 
-   public User CriarUser(User usuario){
+   public User CriarUser(User usuario, MultipartFile file) throws IOException{
         User user = Consumer.findByUsername(usuario.getUsername());
         if(user != null){
            throw new RuntimeException("Usuario já existe");
         }
         System.out.println("passou aqui");
+        File new_file = this.imgService.upload(file);
+        usuario.setImagem_perfil(new_file);
         usuario.setPassword(new BCryptPasswordEncoder().encode(usuario.getPassword()));
         User eUser = Consumer.save(usuario);
         return eUser;

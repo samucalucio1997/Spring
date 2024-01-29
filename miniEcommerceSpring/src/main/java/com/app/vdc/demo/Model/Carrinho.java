@@ -1,9 +1,6 @@
 package com.app.vdc.demo.Model;
 
-
 import javax.persistence.*;
-
-
 import java.util.List;
 
 @Entity

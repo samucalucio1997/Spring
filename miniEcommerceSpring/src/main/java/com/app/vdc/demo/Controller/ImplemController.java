@@ -16,6 +16,7 @@ import com.app.vdc.demo.services.ViaCep;
 import org.hibernate.result.NoMoreReturnsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,14 +24,17 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.net.http.HttpHeaders;
 import java.util.ArrayList;
 
 import javax.annotation.security.RolesAllowed;
 
 @RestController
 @RequestMapping("/home")
-public class ImplemController implements ViaCep{
+public class ImplemController {
 
      @Autowired
      private AuthenticationManager authenticationManager;
@@ -54,30 +58,45 @@ public class ImplemController implements ViaCep{
           ArrayList<Categorias> m = new ArrayList<>();
           return m;
      }
-
-     @PostMapping("/cadastroUser")
-     public ResponseEntity<AuthToken> PostCadastro(@RequestBody User usuario) {
-          User usuUser = this.service.CriarUser(usuario);
-          return ResponseEntity.ok(new AuthToken(usuUser.getPassword()));
+     
+    
+     @PostMapping(value = "/cadastroUser")
+     public ResponseEntity<User> PostCadastro(
+     @RequestParam("file") MultipartFile file,
+     @RequestParam("username") String username,
+     @RequestParam("password") String password,
+     @RequestParam("first_name") String first_name,
+     @RequestParam("last_name") String last_name,
+     @RequestParam("email") String email,
+     @RequestParam("cep") String cep,
+     @RequestParam("numcasa") int numcasa,
+     @RequestParam("is_active") boolean is_active
+     ) throws IOException {
+          // User usuario = new User(username, first_name, cep, email, password, numcasa, is_active);
+          // User usuUser = this.service.CriarUser(usuario,file);
+          System.out.println(file.getBytes());
+          String msg = is_active?"está ativo":"ative imedia";
+          System.out.println("Bem-Vindo " + username+", "+msg);
+          return ResponseEntity.ok(new User());
      }
 
      @GetMapping("/cep")
-     public Endereco ConsultarCep(@PathVariable String name) {
+     public String ConsultarCep(@RequestBody String name) {
           // TODO Auto-generated method stub
-         return new Endereco();
+         return "Ola"+ name;
      }
 
      @PostMapping("/login")
-     public ResponseEntity<String> Authentica(@RequestBody @Validated Login usuario){
+     public ResponseEntity<User> Authentica(@RequestBody @Validated Login usuario){
       try {
            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = 
            new UsernamePasswordAuthenticationToken(usuario.getUsername(), usuario.getPassword());
            org.springframework.security.core.Authentication auth = (org.springframework.security.core.Authentication) this.authenticationManager
            .authenticate(usernamePasswordAuthenticationToken);    
            var user =(User) auth.getPrincipal();     
-           return ResponseEntity.ok(TokenUtil.encodeToken(user));  
+           return ResponseEntity.ok(user);  
       } catch (UsernameNotFoundException e) {
-          return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário ou senha inválidos");
+          return ResponseEntity.badRequest().build();
       }    
      }
 
