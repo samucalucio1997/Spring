@@ -29,31 +29,32 @@ public class SecurityConfigurations {
        
         @Bean
         public SecurityFilterChain SecurityFilterChain(HttpSecurity http) throws Exception{
-            System.out.println("passou aqui no SecurityFilterChain");
-            http.cors().disable().csrf().disable().sessionManagement()
+            http.cors().and().csrf().disable().sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and().authorizeHttpRequests(authorize -> {
                try {
                    authorize
                        .antMatchers(HttpMethod.POST, "/home/cadastroUser").permitAll()
                        .antMatchers(HttpMethod.POST, "/home/login").permitAll()
-                       .antMatchers(HttpMethod.GET, "/home/Categoria").hasRole("ADMIN")           
+                    //    .antMatchers(HttpMethod.GET, "/home/Categoria").hasRole("ADMIN")           
                        .anyRequest().authenticated();
                } catch (Exception e) {
                    throw new RuntimeException(e);
                }
            });
-        return http.addFilterBefore(filter,UsernamePasswordAuthenticationFilter.class).build();
+        return http
+        .addFilterBefore(filter,UsernamePasswordAuthenticationFilter.class)
+        .build();
         }
 
     @Bean
-    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception{
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception{
             return authenticationConfiguration.getAuthenticationManager();
         }
 
     @Bean
-    PasswordEncoder passwordEncoder(){ 
+    public PasswordEncoder passwordEncoder(){ 
             return new BCryptPasswordEncoder();
-        } 
+    } 
 
 }

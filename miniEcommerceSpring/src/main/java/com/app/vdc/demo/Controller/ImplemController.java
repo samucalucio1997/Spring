@@ -7,30 +7,24 @@ import com.app.vdc.demo.Model.User;
 import com.app.vdc.demo.Security.AuthToken;
 import com.app.vdc.demo.Security.Login;
 import com.app.vdc.demo.Security.TokenUtil;
-import com.app.vdc.demo.repository.UserRepository;
-import com.app.vdc.demo.services.ProdutoIS;
 import com.app.vdc.demo.services.ProdutoService;
 import com.app.vdc.demo.services.UserService;
-import com.app.vdc.demo.services.ViaCep;
 
-import org.hibernate.result.NoMoreReturnsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.net.http.HttpHeaders;
+import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.ArrayList;
 
-import javax.annotation.security.RolesAllowed;
 
 @RestController
 @RequestMapping("/home")
@@ -72,12 +66,14 @@ public class ImplemController {
      @RequestParam("numcasa") int numcasa,
      @RequestParam("is_active") boolean is_active
      ) throws IOException {
-          // User usuario = new User(username, first_name, cep, email, password, numcasa, is_active);
-          // User usuUser = this.service.CriarUser(usuario,file);
+          User usuario = 
+          new User(username, first_name, last_name,
+           email, password, cep, numcasa, is_active);
+          User usuUser = this.service.CriarUser(usuario,file);
           System.out.println(file.getBytes());
           String msg = is_active?"está ativo":"ative imedia";
           System.out.println("Bem-Vindo " + username+", "+msg);
-          return ResponseEntity.ok(new User());
+          return ResponseEntity.ok(usuUser);
      }
 
      @GetMapping("/cep")
@@ -87,16 +83,26 @@ public class ImplemController {
      }
 
      @PostMapping("/login")
-     public ResponseEntity<User> Authentica(@RequestBody @Validated Login usuario){
+     public ResponseEntity<String> Authentica(
+     @RequestParam("username") String username,
+     @RequestParam("password") String password
+      ){
       try {
            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = 
-           new UsernamePasswordAuthenticationToken(usuario.getUsername(), usuario.getPassword());
-           org.springframework.security.core.Authentication auth = (org.springframework.security.core.Authentication) this.authenticationManager
+           new UsernamePasswordAuthenticationToken(username, password);
+            Authentication auth = this.authenticationManager
            .authenticate(usernamePasswordAuthenticationToken);    
-           var user =(User) auth.getPrincipal();     
-           return ResponseEntity.ok(user);  
+           var user =(User) auth.getPrincipal();
+          //  Path ark =  Paths.get(user.getImagem_perfil().getPath(),user.getImagem_perfil().getNome()); 
+          //  Arquivo ret = new Arquivo();
+          //  ret.setImagem_perfil(ark.toFile());
+          //  ret.setCarrinho(user.getCarrinho());ret.setCEP(user.getCEP());ret.setEmail(user.getEmail());
+          //  ret.setFirst_name(user.getFirst_name());ret.setLast_name(user.getLast_name());
+          //  ret.setId(user.getId());ret.setPassword(user.getPassword());ret.setIs_staff(user.isIs_staff());
+          //  ret.setNumcasa(user.getNumcasa());ret.setIs_active(user.isIs_active());ret.setUsername(user.getUsername());    
+           return ResponseEntity.ok(TokenUtil.encodeToken(user));  
       } catch (UsernameNotFoundException e) {
-          return ResponseEntity.badRequest().build();
+          return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
       }    
      }
 

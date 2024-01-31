@@ -23,7 +23,7 @@ import com.app.vdc.demo.repository.UserRepository;
 import com.app.vdc.demo.Security.TokenUtil;
 
 @Service
-public class UserService  {
+public class UserService implements UserDetailsService{
 
 
     @Autowired
@@ -44,7 +44,14 @@ public class UserService  {
         usuario.setPassword(new BCryptPasswordEncoder().encode(usuario.getPassword()));
         User eUser = Consumer.save(usuario);
         return eUser;
-    }  
+    }
+
+
+@Override
+public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    // TODO Auto-generated method stub
+    return Consumer.findByUsername(username);
+}  
 
 
 

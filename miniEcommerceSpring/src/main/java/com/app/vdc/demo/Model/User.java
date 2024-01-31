@@ -46,16 +46,23 @@ public class User implements UserDetails{
  public User() {
 }
 
-public User(String username, String first_name, 
-String last_name, String email, String password, int numcasa, boolean is_active) {
+
+
+public User(String username, String first_name,
+ String last_name, String email, 
+ String password, String cEP,
+    int numcasa, boolean is_active) {
   this.username = username;
   this.first_name = first_name;
   this.last_name = last_name;
   this.email = email;
   this.password = password;
+  this.CEP = cEP;
   this.numcasa = numcasa;
   this.is_active = is_active;
 }
+
+
 
 public Carrinho getCarrinho() {
   return carrinho;
