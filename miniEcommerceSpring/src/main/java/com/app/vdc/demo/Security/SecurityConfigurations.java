@@ -1,15 +1,12 @@
 package com.app.vdc.demo.Security;
 
-import javax.servlet.Filter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -35,8 +32,7 @@ public class SecurityConfigurations {
                try {
                    authorize
                        .antMatchers(HttpMethod.POST, "/home/cadastroUser").permitAll()
-                       .antMatchers(HttpMethod.POST, "/home/login").permitAll()
-                    //    .antMatchers(HttpMethod.GET, "/home/Categoria").hasRole("ADMIN")           
+                       .antMatchers(HttpMethod.POST, "/home/login").permitAll()    
                        .anyRequest().authenticated();
                } catch (Exception e) {
                    throw new RuntimeException(e);
@@ -49,11 +45,13 @@ public class SecurityConfigurations {
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception{
-            return authenticationConfiguration.getAuthenticationManager();
-        }
+        System.out.println("passou aqui");    
+        return authenticationConfiguration.getAuthenticationManager();
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder(){ 
+            System.out.println("BCryptpasswordEncoder trabalhando");
             return new BCryptPasswordEncoder();
     } 
 

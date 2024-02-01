@@ -1,26 +1,27 @@
 package com.app.vdc.demo.services;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.app.vdc.demo.Model.Carrinho;
-import com.app.vdc.demo.Model.File;
-import com.app.vdc.demo.Model.Produto;
+import com.app.vdc.demo.Config.FilestorageProperties;
 import com.app.vdc.demo.Model.User;
 import com.app.vdc.demo.repository.UserRepository;
-import com.app.vdc.demo.Security.TokenUtil;
+
 
 @Service
 public class UserService implements UserDetailsService{
@@ -28,22 +29,31 @@ public class UserService implements UserDetailsService{
 
     @Autowired
     private UserRepository Consumer;
-   
-    @Autowired
-    private FileService imgService; 
+    
+    private final Path fileStoraged; 
+    
       
 
-   public User CriarUser(User usuario, MultipartFile file) throws IOException{
-        User user = Consumer.findByUsername(usuario.getUsername());
+   public UserService(FilestorageProperties fileStoraged) {
+        this.fileStoraged = Paths.get(fileStoraged.getUploadDir()).toAbsolutePath()
+        .normalize();
+    }
+
+
+public User CriarUser(User usuario, MultipartFile file) throws IOException{
+        User user =(User) Consumer.findByUsername(usuario.getUsername());
         if(user != null){
            throw new RuntimeException("Usuario já existe");
         }
-        System.out.println("passou aqui");
-        File new_file = this.imgService.upload(file);
-        usuario.setImagem_perfil(new_file);
+        if (!file.isEmpty()) {
+            String nomeArquivo = file.getOriginalFilename();
+            Path pasta = fileStoraged.resolve(nomeArquivo).toAbsolutePath().normalize();
+            file.transferTo(pasta);
+            usuario.setImagem(nomeArquivo);
+        }
         usuario.setPassword(new BCryptPasswordEncoder().encode(usuario.getPassword()));
-        User eUser = Consumer.save(usuario);
-        return eUser;
+        this.Consumer.save(usuario);
+        return usuario;
     }
 
 
@@ -106,3 +116,4 @@ public UserDetails loadUserByUsername(String username) throws UsernameNotFoundEx
     
 
 }
+

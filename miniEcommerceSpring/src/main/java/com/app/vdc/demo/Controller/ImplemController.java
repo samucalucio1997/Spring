@@ -20,6 +20,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.nio.file.Path;
@@ -87,12 +88,15 @@ public class ImplemController {
      @RequestParam("username") String username,
      @RequestParam("password") String password
       ){
-      try {
+      
            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = 
            new UsernamePasswordAuthenticationToken(username, password);
+ 
             Authentication auth = this.authenticationManager
            .authenticate(usernamePasswordAuthenticationToken);    
+
            var user =(User) auth.getPrincipal();
+          //  File test = new File();
           //  Path ark =  Paths.get(user.getImagem_perfil().getPath(),user.getImagem_perfil().getNome()); 
           //  Arquivo ret = new Arquivo();
           //  ret.setImagem_perfil(ark.toFile());
@@ -101,9 +105,7 @@ public class ImplemController {
           //  ret.setId(user.getId());ret.setPassword(user.getPassword());ret.setIs_staff(user.isIs_staff());
           //  ret.setNumcasa(user.getNumcasa());ret.setIs_active(user.isIs_active());ret.setUsername(user.getUsername());    
            return ResponseEntity.ok(TokenUtil.encodeToken(user));  
-      } catch (UsernameNotFoundException e) {
-          return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-      }    
+      
      }
 
      @PostMapping("/cadastraProduto")

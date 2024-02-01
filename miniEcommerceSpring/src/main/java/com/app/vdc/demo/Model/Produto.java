@@ -18,8 +18,6 @@ public class Produto {
   @ManyToMany(fetch = FetchType.EAGER)
   @JsonIgnore
   private List<Carrinho> car;
-  @OneToMany(fetch = FetchType.LAZY)
-  private List<File> imagenList; 
   private Categorias categoria;
   
   public int getId() {
@@ -35,13 +33,7 @@ public class Produto {
     this.car = car;
   }
   
-  public List<File> getImagenList() {
-    return imagenList;
-  }
   
-  public void setImagenList(List<File> imagenList) {
-    this.imagenList = imagenList;
-  }
   public void setId(int id) {
 	   this.id = id;
   }

@@ -32,9 +32,9 @@ public class User implements UserDetails{
  @JsonIgnore
  private Carrinho carrinho;
 
- @OneToOne(cascade = CascadeType.ALL)
- private File imagem_perfil;
+ private String imagem;
 
+ 
  
  private String CEP;
  private int numcasa;
@@ -49,9 +49,9 @@ public class User implements UserDetails{
 
 
 public User(String username, String first_name,
- String last_name, String email, 
- String password, String cEP,
-    int numcasa, boolean is_active) {
+String last_name, String email, 
+String password, String cEP,
+int numcasa, boolean is_active) {
   this.username = username;
   this.first_name = first_name;
   this.last_name = last_name;
@@ -83,40 +83,33 @@ public String getUsername() {
   return username;
 }
 
-  public void setUsername(String username) {
-    this.username = username;
+public void setUsername(String username) {
+  this.username = username;
   }
   
   public String getFirst_name() {
     return first_name;
   }
   
-  public File getImagem_perfil() {
-   return imagem_perfil;
-  }
-  
-  public void setImagem_perfil(File imagem_perfil) {
-   this.imagem_perfil = imagem_perfil;
-  }
   
   public void setFirst_name(String first_name) {
     this.first_name = first_name;
   }
   
   public String getLast_name() {
-  return last_name;
+    return last_name;
 }
 
- public void setLast_name(String last_name) {
-   this.last_name = last_name;
-  }
-  
-  public String getEmail() {
-    return email;
+public void setLast_name(String last_name) {
+  this.last_name = last_name;
+}
+
+public String getEmail() {
+  return email;
   }
 
- public void setEmail(String email) {
-   this.email = email;
+  public void setEmail(String email) {
+    this.email = email;
   }
   
   public String getPassword() {
@@ -130,12 +123,25 @@ public String getUsername() {
   public String getCEP() {
     return CEP;
   }
-
+  
   public void setCEP(String CEP) {
     this.CEP = CEP;
- }
+  }
+  
 
- public int getNumcasa() {
+  public String getImagem() {
+    return imagem;
+  }
+
+
+
+  public void setImagem(String imagem) {
+    this.imagem = imagem;
+  }
+
+
+
+  public int getNumcasa() {
    return numcasa;
   }
   
