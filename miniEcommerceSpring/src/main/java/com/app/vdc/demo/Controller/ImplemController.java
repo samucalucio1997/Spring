@@ -1,5 +1,6 @@
 package com.app.vdc.demo.Controller;
 
+import com.app.vdc.demo.Config.FilestorageProperties;
 import com.app.vdc.demo.Model.Categorias;
 import com.app.vdc.demo.Model.Endereco;
 import com.app.vdc.demo.Model.Produto;
@@ -9,6 +10,7 @@ import com.app.vdc.demo.Security.Login;
 import com.app.vdc.demo.Security.TokenUtil;
 import com.app.vdc.demo.services.ProdutoService;
 import com.app.vdc.demo.services.UserService;
+import com.app.vdc.demo.services.UserloginReturn;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
@@ -40,7 +43,13 @@ public class ImplemController {
      @Autowired
      private ProdutoService produto;
 
-     private String Autentico; 
+     private final Path filestorageProperties;
+
+     
+
+     public ImplemController(FilestorageProperties filestorageProperties) {
+          this.filestorageProperties = Paths.get(filestorageProperties.getUploadDir()).toAbsolutePath();
+     }
 
      @PostMapping("/cadastroPro")
      public ResponseEntity<Boolean> PostCadastro() {
@@ -84,33 +93,26 @@ public class ImplemController {
      }
 
      @PostMapping("/login")
-     public ResponseEntity<String> Authentica(
+     public ResponseEntity<UserloginReturn> Authentica(
      @RequestParam("username") String username,
      @RequestParam("password") String password
-      ){
+      ) throws IOException{
       
-           UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = 
+          UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = 
            new UsernamePasswordAuthenticationToken(username, password);
  
-            Authentication auth = this.authenticationManager
+          Authentication auth = this.authenticationManager
            .authenticate(usernamePasswordAuthenticationToken);    
 
-           var user =(User) auth.getPrincipal();
-          //  File test = new File();
-          //  Path ark =  Paths.get(user.getImagem_perfil().getPath(),user.getImagem_perfil().getNome()); 
-          //  Arquivo ret = new Arquivo();
-          //  ret.setImagem_perfil(ark.toFile());
-          //  ret.setCarrinho(user.getCarrinho());ret.setCEP(user.getCEP());ret.setEmail(user.getEmail());
-          //  ret.setFirst_name(user.getFirst_name());ret.setLast_name(user.getLast_name());
-          //  ret.setId(user.getId());ret.setPassword(user.getPassword());ret.setIs_staff(user.isIs_staff());
-          //  ret.setNumcasa(user.getNumcasa());ret.setIs_active(user.isIs_active());ret.setUsername(user.getUsername());    
-           return ResponseEntity.ok(TokenUtil.encodeToken(user));  
-      
+          var user =(User) auth.getPrincipal();
+          Path rePath = this.filestorageProperties.resolve(user.getImagem()).toAbsolutePath();   
+          UserloginReturn new_ret = new UserloginReturn(user, Files.readAllBytes(rePath));
+          return ResponseEntity.ok(new_ret);
      }
 
      @PostMapping("/cadastraProduto")
      public ResponseEntity<Boolean> CadRegs(@RequestBody Produto produto){
-          if(this.Autentico!=null){
+          if(null==null){
                this.produto.CadastrarProduto(produto); 
                return ResponseEntity.ok(true);
           }else{
