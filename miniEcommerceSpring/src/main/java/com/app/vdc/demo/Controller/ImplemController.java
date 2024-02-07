@@ -5,34 +5,37 @@ import com.app.vdc.demo.Model.Categorias;
 import com.app.vdc.demo.Model.Endereco;
 import com.app.vdc.demo.Model.Produto;
 import com.app.vdc.demo.Model.User;
-import com.app.vdc.demo.Security.AuthToken;
-import com.app.vdc.demo.Security.Login;
-import com.app.vdc.demo.Security.TokenUtil;
+import com.app.vdc.demo.repository.UserRepository;
 import com.app.vdc.demo.services.ProdutoService;
 import com.app.vdc.demo.services.UserService;
 import com.app.vdc.demo.services.UserloginReturn;
 
+import reactor.core.publisher.Flux;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.reactive.function.client.WebClient;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Optional;
 
 
 @RestController
 @RequestMapping("/home")
 public class ImplemController {
+     
+     @Autowired
+     private UserRepository userRepository;
 
      @Autowired
      private AuthenticationManager authenticationManager;
@@ -86,10 +89,10 @@ public class ImplemController {
           return ResponseEntity.ok(usuUser);
      }
 
-     @GetMapping("/cep")
-     public String ConsultarCep(@RequestBody String name) {
+     @GetMapping("/{id}")
+     public Optional<User> ConsultarCep(@PathVariable("id") int id) {
           // TODO Auto-generated method stub
-         return "Ola"+ name;
+         return this.userRepository.findById(id);
      }
 
      @PostMapping("/login")
@@ -119,7 +122,16 @@ public class ImplemController {
                return ResponseEntity.ok(false);
           }
      }
-
+     
+     @GetMapping(value = "cep")
+     public Flux<Object> testAPi(@RequestParam("cep") String cep){
+       return WebClient.create().get()
+       .uri("https://viacep.com.br/ws/"+ cep + "/json")
+       .retrieve()
+       .bodyToFlux(Object.class);
+     }
+     
+     // https://maps.googleapis.com/maps/api/directions/json?origin=Disneyland&destination=Universal+Studios+Hollywood&key=
 
 
 

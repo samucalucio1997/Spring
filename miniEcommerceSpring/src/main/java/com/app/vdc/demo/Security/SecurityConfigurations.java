@@ -32,7 +32,8 @@ public class SecurityConfigurations {
                try {
                    authorize
                        .antMatchers(HttpMethod.POST, "/home/cadastroUser").permitAll()
-                       .antMatchers(HttpMethod.POST, "/home/login").permitAll()    
+                       .antMatchers(HttpMethod.POST, "/home/login").permitAll()
+                       .antMatchers(HttpMethod.GET, "/home/cep").permitAll()    
                        .anyRequest().authenticated();
                } catch (Exception e) {
                    throw new RuntimeException(e);
