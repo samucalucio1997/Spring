@@ -26,20 +26,24 @@ public class SecurityConfigurations {
        
         @Bean
         public SecurityFilterChain SecurityFilterChain(HttpSecurity http) throws Exception{
-            http.cors().and().csrf().disable().sessionManagement()
+            http
+            .cors().and().csrf().disable()
+            .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and().authorizeHttpRequests(authorize -> {
-               try {
-                   authorize
-                       .antMatchers(HttpMethod.POST, "/home/cadastroUser").permitAll()
-                       .antMatchers(HttpMethod.POST, "/home/login").permitAll()
-                       .antMatchers(HttpMethod.GET, "/home/cep").permitAll()    
-                       .anyRequest().authenticated();
+                try {
+                    authorize
+                    .antMatchers(HttpMethod.POST, "/home/cadastroUser").permitAll()
+                    .antMatchers(HttpMethod.POST, "/home/login").permitAll()
+                    .antMatchers(HttpMethod.GET, "/home/logout").permitAll()
+                    .anyRequest().authenticated();
                } catch (Exception e) {
                    throw new RuntimeException(e);
                }
            });
-        return http
+           
+        
+        return http 
         .addFilterBefore(filter,UsernamePasswordAuthenticationFilter.class)
         .build();
         }

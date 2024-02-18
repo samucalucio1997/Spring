@@ -5,6 +5,7 @@ import com.app.vdc.demo.Model.Categorias;
 import com.app.vdc.demo.Model.Endereco;
 import com.app.vdc.demo.Model.Produto;
 import com.app.vdc.demo.Model.User;
+import com.app.vdc.demo.Security.TokenUtil;
 import com.app.vdc.demo.repository.UserRepository;
 import com.app.vdc.demo.services.ProdutoService;
 import com.app.vdc.demo.services.UserService;
@@ -28,6 +29,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.UUID;
+
+import javax.servlet.http.HttpSession;
 
 
 @RestController
@@ -98,7 +102,8 @@ public class ImplemController {
      @PostMapping("/login")
      public ResponseEntity<UserloginReturn> Authentica(
      @RequestParam("username") String username,
-     @RequestParam("password") String password
+     @RequestParam("password") String password,
+     HttpSession httpSession
       ) throws IOException{
       
           UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = 
@@ -108,9 +113,22 @@ public class ImplemController {
            .authenticate(usernamePasswordAuthenticationToken);    
 
           var user =(User) auth.getPrincipal();
-          Path rePath = this.filestorageProperties.resolve(user.getImagem()).toAbsolutePath();   
-          UserloginReturn new_ret = new UserloginReturn(user, Files.readAllBytes(rePath));
-          return ResponseEntity.ok(new_ret);
+          httpSession.setAttribute("user", user);
+          
+          return ResponseEntity.ok(new UserloginReturn(user, TokenUtil.encodeToken(user)));
+     }
+     
+     @PostMapping("/image")
+     public ResponseEntity<byte[]> GetImage(@RequestParam("id") int id) throws IOException{
+          User pessoa = this.userRepository.findById(id).get();
+          Path path = this.filestorageProperties.resolve(pessoa.getImagem()).toAbsolutePath();
+          return ResponseEntity.ok(Files.readAllBytes(path));
+     }
+
+     @GetMapping("/logout")
+     public void logout(HttpSession httpSession){
+          System.out.println("deslogado");
+          httpSession.invalidate();
      }
 
      @PostMapping("/cadastraProduto")
