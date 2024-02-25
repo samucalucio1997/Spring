@@ -56,9 +56,7 @@ public class ProdutoService implements ProdutoIS{
     }
     @Override
     public Boolean EditarProduto(Produto produto, Categorias categoria){
-        if(produto!=null&&(categoria==Categorias.roupas
-                ||categoria==Categorias.calçados||categoria==Categorias.eletronicos
-                ||categoria==Categorias.esportes)){
+        if(produto!=null&&categoria !=null){
                produtos.getById(produto.getId()).setCategoria(categoria); 
                return true;
         }else{
@@ -69,10 +67,13 @@ public class ProdutoService implements ProdutoIS{
     @Override
     public boolean CadastrarProduto(Produto produto) {
         try {
-            Produto pro = produtos.getById(produto.getId());
-            if(pro!=null&&produtos.save(produto)!=null){
-                return true;  
-            }else{return false;}
+            Produto pro = produtos.findAll().stream().filter(n -> n.getNome().equals(produto.getNome())
+            &&n.getCategoria().equals(produto.getCategoria())).findAny().get();
+            if (pro!=null) {
+               throw new RuntimeException("Já existe esse Produto");
+            }
+            
+            return this.produtos.save(produto)!=null;
         } catch (Exception e) {
            throw new RuntimeCryptoException(null);
         }

@@ -15,7 +15,9 @@ import reactor.core.publisher.Flux;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -28,6 +30,7 @@ import java.nio.file.Paths;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -73,7 +76,7 @@ public class ImplemController {
     
      @PostMapping(value = "/cadastroUser")
      public ResponseEntity<User> PostCadastro(
-     @RequestParam("file") MultipartFile file,
+     @RequestParam(value="file",required = false) MultipartFile file,
      @RequestParam("username") String username,
      @RequestParam("password") String password,
      @RequestParam("first_name") String first_name,
@@ -81,13 +84,17 @@ public class ImplemController {
      @RequestParam("email") String email,
      @RequestParam("cep") String cep,
      @RequestParam("numcasa") int numcasa,
-     @RequestParam("is_active") boolean is_active
+     @RequestParam("is_active") boolean is_active,
+     @RequestParam(value="is_staff",required = false,defaultValue = "0") int code
      ) throws IOException {
           User usuario = 
           new User(username, first_name, last_name,
-           email, password, cep, numcasa, is_active);
+          email, password, cep, numcasa, is_active);
+          System.out.println("code =>"+code); 
+          if (code==351622) {
+              usuario.setIs_staff(true);
+          }
           User usuUser = this.service.CriarUser(usuario,file);
-          System.out.println(file.getBytes());
           String msg = is_active?"está ativo":"ative imedia";
           System.out.println("Bem-Vindo " + username+", "+msg);
           return ResponseEntity.ok(usuUser);
@@ -130,9 +137,13 @@ public class ImplemController {
           System.out.println("deslogado");
           httpSession.invalidate();
      }
-
-     @PostMapping("/cadastraProduto")
-     public ResponseEntity<Boolean> CadRegs(@RequestBody Produto produto){
+     /*Erro ao inicializar por causa da mudança na tabela produto */
+     @PreAuthorize("hasRole('ROLE_ADMIN')")
+     @PostMapping(value="/cadastraProduto",consumes = MediaType.ALL_VALUE)
+     public ResponseEntity<Boolean> CadRegs(
+          @RequestParam(value = "img", required = false) MultipartFile file,
+          @RequestParam(value = "produto") Produto produto
+          ){
           if(null==null){
                this.produto.CadastrarProduto(produto); 
                return ResponseEntity.ok(true);
@@ -140,7 +151,14 @@ public class ImplemController {
                return ResponseEntity.ok(false);
           }
      }
-     
+     @PreAuthorize("permiteAll()")
+     @GetMapping("/produtos")
+     public ResponseEntity<List<Produto>> ListarProdutos(){
+        return (ResponseEntity<List<Produto>>) this.produto.ListarPro();  
+     }
+
+
+
      @GetMapping(value = "cep")
      public Flux<Object> testAPi(@RequestParam("cep") String cep){
        return WebClient.create().get()

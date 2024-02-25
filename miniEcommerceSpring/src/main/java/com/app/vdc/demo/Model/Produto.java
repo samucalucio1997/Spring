@@ -15,16 +15,27 @@ public class Produto {
   private String nome;
   private int qtd;
   private float precoUni;
+  private List<String> imagens;
   @ManyToMany(fetch = FetchType.EAGER)
   @JsonIgnore
   private List<Carrinho> car;
+  @Enumerated(EnumType.STRING)
   private Categorias categoria;
   
   public int getId() {
     return id;
   }
   
-    
+  
+  public List<String> getImagens() {
+    return imagens;
+  }
+
+
+  public void setImagens(List<String> imagens) {
+    this.imagens = imagens;
+  }
+  
   public List<Carrinho> getCar() {
      return car;
   }

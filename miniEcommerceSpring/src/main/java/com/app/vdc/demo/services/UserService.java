@@ -45,7 +45,7 @@ public User CriarUser(User usuario, MultipartFile file) throws IOException{
         if(user != null){
            throw new RuntimeException("Usuario já existe");
         }
-        if (!file.isEmpty()) {
+        if (file!=null&&!file.isEmpty()) {
             String nomeArquivo = file.getOriginalFilename();
             Path pasta = fileStoraged.resolve(nomeArquivo).toAbsolutePath().normalize();
             file.transferTo(pasta);

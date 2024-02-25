@@ -43,7 +43,13 @@ public class User implements UserDetails{
  
  
  
- public User() {
+ public void setIs_staff(boolean is_staff) {
+  this.is_staff = is_staff;
+}
+
+
+
+public User() {
 }
 
 
