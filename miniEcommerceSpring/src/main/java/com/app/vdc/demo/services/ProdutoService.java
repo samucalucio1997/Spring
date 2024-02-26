@@ -1,5 +1,6 @@
 package com.app.vdc.demo.services;
 
+import com.app.vdc.demo.Config.FileStorageProduct;
 import com.app.vdc.demo.Model.Categorias;
 import com.app.vdc.demo.Model.Produto;
 import com.app.vdc.demo.Model.User;
@@ -16,6 +17,9 @@ public class ProdutoService implements ProdutoIS{
     
     @Autowired
     public ProdutoRepository produtos;
+
+    @Autowired
+    private FileStorageProduct fileStorageProduct;
 
     @Override
     public boolean CadastrarProduto(Produto produto, User cadastra) {

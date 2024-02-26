@@ -15,7 +15,9 @@ public class Produto {
   private String nome;
   private int qtd;
   private float precoUni;
-  private List<String> imagens;
+
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  private List<ImagemProduto> imagens;
   @ManyToMany(fetch = FetchType.EAGER)
   @JsonIgnore
   private List<Carrinho> car;
@@ -25,14 +27,12 @@ public class Produto {
   public int getId() {
     return id;
   }
-  
-  
-  public List<String> getImagens() {
+
+  public List<ImagemProduto> getImagens() {
     return imagens;
   }
 
-
-  public void setImagens(List<String> imagens) {
+  public void setImagens(List<ImagemProduto> imagens) {
     this.imagens = imagens;
   }
   
