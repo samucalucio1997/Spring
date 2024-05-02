@@ -61,7 +61,8 @@ public class ImplemController {
           this.filestorageProperties = Paths.get(filestorageProperties.getUploadDir()).toAbsolutePath();
      }
 
-     @PostMapping("/cadastroPro")
+     @GetMapping("/cadastroPro")
+     @PreAuthorize("permitAll()")
      public ResponseEntity<Boolean> PostCadastro() {
           // boolean ret =  this.produto.CadastrarProduto(pro);
           return ResponseEntity.ok(true); 
@@ -160,6 +161,7 @@ public class ImplemController {
 
 
      @GetMapping(value = "cep")
+     @PreAuthorize("permiteAll()")
      public Flux<Object> testAPi(@RequestParam("cep") String cep){
        return WebClient.create().get()
        .uri("https://viacep.com.br/ws/"+ cep + "/json")

@@ -2,10 +2,15 @@ package com.app.vdc.demo.services;
 
 import com.app.vdc.demo.Config.FileStorageProduct;
 import com.app.vdc.demo.Model.Categorias;
+import com.app.vdc.demo.Model.ImagemProduto;
 import com.app.vdc.demo.Model.Produto;
 import com.app.vdc.demo.Model.User;
+import com.app.vdc.demo.repository.ImagemProdutoRepository;
 import com.app.vdc.demo.repository.ProdutoRepository;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bouncycastle.crypto.RuntimeCryptoException;
@@ -16,14 +21,27 @@ import org.springframework.stereotype.Component;
 public class ProdutoService implements ProdutoIS{
     
     @Autowired
-    public ProdutoRepository produtos;
+    private ProdutoRepository produtos;
 
     @Autowired
-    private FileStorageProduct fileStorageProduct;
+    private ImagemProdutoRepository imgProduto;
+
+    private final Path caminho;
+
+    
+
+    public ProdutoService(FileStorageProduct fileStorageProduct) {
+        this.caminho = Paths.get(fileStorageProduct.getSobeImg()).toAbsolutePath().normalize();
+    }
 
     @Override
     public boolean CadastrarProduto(Produto produto, User cadastra) {
         if(!cadastra.isIs_staff()){
+                if (!produto.getImagens().isEmpty()) {
+                    produto.getImagens().stream().forEach(n -> {
+                        this.imgProduto.save(n);
+                    });
+                }
                 produtos.save(produto); 
                 return true;
         }
