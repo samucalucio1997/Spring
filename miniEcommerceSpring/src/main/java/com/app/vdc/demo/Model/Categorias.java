@@ -2,17 +2,17 @@ package com.app.vdc.demo.Model;
 
 public enum Categorias {
    Roupas("roupas"),
-   Calcados("calçados"),
+   Calcados("calcados"),
    Eletronicos("eletronicos"),
    Esportes("esportes");
 
    
+   private String descricao;
 
    private Categorias(String descricao) {
       this.descricao = descricao;
    }
 
-   private String descricao;
 
    public String getDescricao() {
       return descricao;

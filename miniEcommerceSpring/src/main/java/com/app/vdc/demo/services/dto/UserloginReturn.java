@@ -1,4 +1,4 @@
-package com.app.vdc.demo.services;
+package com.app.vdc.demo.services.dto;
 
 import com.app.vdc.demo.Model.User;
 

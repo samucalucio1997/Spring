@@ -7,7 +7,11 @@ import com.app.vdc.demo.Model.Produto;
 import com.app.vdc.demo.Model.User;
 import com.app.vdc.demo.repository.ImagemProdutoRepository;
 import com.app.vdc.demo.repository.ProdutoRepository;
+import com.app.vdc.demo.services.dto.ProdutoResponse;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -16,6 +20,7 @@ import java.util.List;
 import org.bouncycastle.crypto.RuntimeCryptoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 @Component
 public class ProdutoService implements ProdutoIS{
@@ -34,23 +39,12 @@ public class ProdutoService implements ProdutoIS{
         this.caminho = Paths.get(fileStorageProduct.getSobeImg()).toAbsolutePath().normalize();
     }
 
-    @Override
-    public boolean CadastrarProduto(Produto produto, User cadastra) {
-        if(!cadastra.isIs_staff()){
-                if (!produto.getImagens().isEmpty()) {
-                    produto.getImagens().stream().forEach(n -> {
-                        this.imgProduto.save(n);
-                    });
-                }
-                produtos.save(produto); 
-                return true;
-        }
-        return false;
-    }
+ 
 
     @Override
     public boolean RemoverProduto(Produto produto) {
         if(produto.getId() > 0){
+            
             produtos.deleteById(produto.getId());
             return true;
         }
@@ -59,14 +53,15 @@ public class ProdutoService implements ProdutoIS{
 
     @Override
     public boolean EditarProduto(Produto produto,int qtd) {
-          if(produto!=null&&qtd>0){
-            Produto pro=  produtos.getById(produto.getId());
+          if(produto!=null && qtd>0){
+            Produto pro =  produtos.getById(produto.getId());
             pro.setQtd(qtd);
             return true;
           }else{
             return false;
           }
     }
+
     @Override
     public boolean EditarProduto(Produto produto, float preco){
         if(produto!=null&&preco>0.0){
@@ -76,6 +71,7 @@ public class ProdutoService implements ProdutoIS{
             return false;
         }
     }
+
     @Override
     public Boolean EditarProduto(Produto produto, Categorias categoria){
         if(produto!=null&&categoria !=null){
@@ -87,12 +83,32 @@ public class ProdutoService implements ProdutoIS{
     }
 
     @Override
-    public boolean CadastrarProduto(Produto produto) {
+    public boolean CadastrarProduto(Produto produto,List<MultipartFile> imgs) throws IOException{
         try {
             Produto pro = produtos.findAll().stream().filter(n -> n.getNome().equals(produto.getNome())
             &&n.getCategoria().equals(produto.getCategoria())).findAny().get();
             if (pro!=null) {
                throw new RuntimeException("Já existe esse Produto");
+            }
+            if (!imgs.isEmpty()) {
+               imgs.stream().forEach(n->{
+                   try {
+                    String nome =  n.getOriginalFilename();
+                    Path path = this.caminho.resolve(nome).toAbsolutePath().normalize();
+                    n.transferTo(path);
+                    ImagemProduto imgp = new ImagemProduto();
+                    imgp.setPath(nome);
+                    this.imgProduto.save(imgp);
+                    produto.getImagens().add(imgp);
+                } catch (IllegalStateException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+               });
             }
             
             return this.produtos.save(produto)!=null;
@@ -102,8 +118,62 @@ public class ProdutoService implements ProdutoIS{
     }
 
     @Override
-    public List<Produto> ListarPro() {
+    public List<ProdutoResponse> ListarPro() {
         // TODO Auto-generated method stub
-        return null;
+        List<ProdutoResponse> lista = new ArrayList<>();
+        this.produtos.findAll().stream()
+        .forEach(n -> {
+            List<byte[]> byteimg = new ArrayList<>();
+            if (n.getImagens()!=null) {
+                n.getImagens().stream()
+                .forEach(p -> {
+                  Path path = this.caminho.resolve(p.getPath()).toAbsolutePath();
+                  try {
+                      byteimg.add(Files.readAllBytes(path));
+                    } catch (Exception e) {
+                    // TODO: handle exception
+                    e.getStackTrace();
+                } 
+                
+            });
+            }
+        ProdutoResponse resp = new ProdutoResponse(byteimg, n);
+        lista.add(resp);
+        });
+
+
+        return lista;
+    }
+
+
+
+    @Override
+    public boolean EditarProduto(String produto, List<MultipartFile> imgs) {
+        // TODO Auto-generated method stub
+        Produto produtoAtual = this.produtos
+        .findByNome(produto);
+        if (!imgs.isEmpty()) {
+            imgs.stream().forEach(
+                n -> {
+                String cami = n.getOriginalFilename();
+                Path path = this.caminho.resolve(cami).toAbsolutePath().normalize();
+               try {
+                n.transferTo(path);
+                ImagemProduto pImpr = new ImagemProduto();
+                pImpr.setPath(cami);
+                this.imgProduto.save(pImpr);
+                produtoAtual.getImagens().add(pImpr);
+                this.produtos.save(produtoAtual);
+            } catch (IllegalStateException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            });            
+        }
+        //produtoAtual.getImagens().
+        return false;
     }
 }

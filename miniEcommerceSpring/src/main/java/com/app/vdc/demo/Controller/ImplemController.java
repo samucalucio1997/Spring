@@ -9,7 +9,7 @@ import com.app.vdc.demo.Security.TokenUtil;
 import com.app.vdc.demo.repository.UserRepository;
 import com.app.vdc.demo.services.ProdutoService;
 import com.app.vdc.demo.services.UserService;
-import com.app.vdc.demo.services.UserloginReturn;
+import com.app.vdc.demo.services.dto.UserloginReturn;
 
 import reactor.core.publisher.Flux;
 
@@ -50,9 +50,7 @@ public class ImplemController {
      @Autowired
      private UserService service;
 
-     @Autowired
-     private ProdutoService produto;
-
+     
      private final Path filestorageProperties;
 
      
@@ -139,24 +137,7 @@ public class ImplemController {
           httpSession.invalidate();
      }
      /*Erro ao inicializar por causa da mudança na tabela produto */
-     @PreAuthorize("hasRole('ROLE_ADMIN')")
-     @PostMapping(value="/cadastraProduto",consumes = MediaType.ALL_VALUE)
-     public ResponseEntity<Boolean> CadRegs(
-          @RequestParam(value = "img", required = false) MultipartFile file,
-          @RequestParam(value = "produto") Produto produto
-          ){
-          if(null==null){
-               this.produto.CadastrarProduto(produto); 
-               return ResponseEntity.ok(true);
-          }else{
-               return ResponseEntity.ok(false);
-          }
-     }
-     @PreAuthorize("permiteAll()")
-     @GetMapping("/produtos")
-     public ResponseEntity<List<Produto>> ListarProdutos(){
-        return (ResponseEntity<List<Produto>>) this.produto.ListarPro();  
-     }
+     
 
 
 

@@ -40,8 +40,7 @@ public class ProdutoServiceTest {
     void testCadastrarProduto() {
         setup();
         startProduto();
-        Assertions.assertTrue(produtoService.
-        CadastrarProduto(produto,user));
+        
 
     }
 

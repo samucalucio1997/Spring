@@ -1,6 +1,7 @@
 package com.app.vdc.demo.Model;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.*;
@@ -23,7 +24,14 @@ public class Produto {
   private List<Carrinho> car;
   @Enumerated(EnumType.STRING)
   private Categorias categoria;
+
   
+  
+  
+  public Produto() {
+    this.imagens = new ArrayList<>();
+  }
+
   public int getId() {
     return id;
   }
