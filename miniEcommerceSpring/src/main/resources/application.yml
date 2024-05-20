@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/springboot
-    username: root
-    password: gripenng
+    url: 
+    username: 
+    password: 
 
   jpa:
     hibernate:
