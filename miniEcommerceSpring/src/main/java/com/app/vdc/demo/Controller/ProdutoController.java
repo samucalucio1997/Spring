@@ -50,7 +50,6 @@ public class ProdutoController {
      }
      @GetMapping("/produtos")
      public ResponseEntity<List<ProdutoResponse>> ListarProdutos(){
-        System.out.println("passou aqui");
         return  ResponseEntity.status(200).body(this.produto.ListarPro());
      }
 

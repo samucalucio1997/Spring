@@ -9,9 +9,9 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQL57Dialect
+        dialect: org.hibernate.dialect.MySQL57Dialect      
   
-chave: c49673f0-b314-4a71-8b63-14ccc2345de2
+chave: 
 
 endpoints:
   configprops:
