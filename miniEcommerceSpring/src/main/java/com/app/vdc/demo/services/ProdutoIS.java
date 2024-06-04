@@ -18,6 +18,8 @@ public interface ProdutoIS {
     public boolean EditarProduto(Produto produto, int qtd);
 
     public List<ProdutoResponse> ListarPro();
+    
+    public ProdutoResponse PegarPorId(int id);
 
     public Boolean EditarProduto(Produto produto, Categorias categoria);
 

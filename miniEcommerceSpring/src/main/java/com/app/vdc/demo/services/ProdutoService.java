@@ -82,6 +82,25 @@ public class ProdutoService implements ProdutoIS{
         }
     }
 
+    public ProdutoResponse PegarPorId(int id){
+        if (this.produtos.findById(id).isPresent()) {
+            Produto produto = this.produtos.getById(id);
+            List<byte[]> imgs =new ArrayList<>();
+            produto.getImagens().stream().forEach( img -> {
+                Path caminho = this.caminho.resolve(img.getPath()).toAbsolutePath().normalize();
+                try {
+                    imgs.add(Files.readAllBytes(caminho));
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }   
+            });
+            return new ProdutoResponse(imgs, produto);
+        }else{
+            return new ProdutoResponse(null, null);
+        }  
+    }
+
     @Override
     public boolean CadastrarProduto(Produto produto,List<MultipartFile> imgs) throws IOException{
         try {
