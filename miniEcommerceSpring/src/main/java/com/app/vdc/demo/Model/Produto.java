@@ -16,6 +16,7 @@ public class Produto {
   private String nome;
   private int qtd;
   private float precoUni;
+  private String descricao;
 
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<ImagemProduto> imagens;

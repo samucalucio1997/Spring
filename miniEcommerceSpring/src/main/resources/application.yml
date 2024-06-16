@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: 
-    username: 
-    password: 
+    url:
+    username:
+    password:
 
   jpa:
     hibernate:
@@ -10,8 +10,11 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL57Dialect      
-  
-chave: 
+  flyway:
+    enabled: false
+    locations: classpath:db/migration
+
+chave:
 
 endpoints:
   configprops:

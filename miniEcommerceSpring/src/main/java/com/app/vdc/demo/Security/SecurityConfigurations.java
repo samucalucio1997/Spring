@@ -39,6 +39,7 @@ public class SecurityConfigurations {
                     .antMatchers(HttpMethod.GET, "/home/logout").permitAll()
                     .antMatchers(HttpMethod.GET, "/produto/produtos").permitAll()
                     .antMatchers(HttpMethod.GET, "/produto/{id}").permitAll()
+                    .antMatchers(HttpMethod.POST,"/produto/criaCliente").permitAll()
                     .antMatchers(HttpMethod.GET, "/actuator/*").permitAll()
                     .antMatchers(HttpMethod.GET, "/swagger-ui.html").permitAll()
                     .anyRequest().authenticated();

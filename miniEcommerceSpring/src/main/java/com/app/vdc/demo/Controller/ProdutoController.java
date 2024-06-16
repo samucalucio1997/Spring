@@ -1,10 +1,15 @@
 package com.app.vdc.demo.Controller;
 
 import java.io.IOException;
+import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
 
+import com.app.vdc.demo.services.Pagamento.PagamentoBoleto;
 import org.aspectj.bridge.Message;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -17,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.app.vdc.demo.Model.Produto;
@@ -33,6 +39,9 @@ public class ProdutoController {
     @Autowired
     private ProdutoIS produto;
 
+
+    @Autowired
+    private PagamentoBoleto pagamentoBoleto;
 
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -51,7 +60,7 @@ public class ProdutoController {
      }
      @GetMapping("/produtos")
      public ResponseEntity<List<ProdutoResponse>> ListarProdutos(){
-        return  ResponseEntity.status(200).body(this.produto.ListarPro());
+        return ResponseEntity.status(200).body(this.produto.ListarPro());
      }
 
      @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -70,4 +79,25 @@ public class ProdutoController {
      ResponseEntity<ProdutoResponse> produtoPorId(@PathVariable int id){          
           return ResponseEntity.status(200).body(this.produto.PegarPorId(id));
      }
+
+      @GetMapping("/cep/{cep}")
+      ResponseEntity<Object> exibirEndereco(@PathVariable int cep){
+        try {
+            RestTemplate apiCall = new RestTemplate();
+            Object retorno = apiCall.getForObject(new URI("https://viacep.com.br/ws/"+cep+"/json/"),Object.class);
+            return ResponseEntity.status(200).body(retorno);
+        }catch (Exception e) {
+            return ResponseEntity.status(404).body("Não encotrado");
+        }
+     }
+     @PostMapping("/criaCliente")
+     ResponseEntity<Object> criarCliente(){
+        try {
+            return ResponseEntity.status(200).body(this.pagamentoBoleto.criarCliente());
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.status(404).body("Quebrou");
+        }
+     }
+
 }
