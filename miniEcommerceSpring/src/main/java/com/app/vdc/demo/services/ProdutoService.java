@@ -17,7 +17,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bouncycastle.crypto.RuntimeCryptoException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -132,7 +132,7 @@ public class ProdutoService implements ProdutoIS{
             
             return this.produtos.save(produto)!=null;
         } catch (Exception e) {
-           throw new RuntimeCryptoException(null);
+           throw e;
         }
     }
 
@@ -167,10 +167,10 @@ public class ProdutoService implements ProdutoIS{
 
 
     @Override
-    public boolean EditarProduto(String produto, List<MultipartFile> imgs) {
+    public boolean EditarProduto(String nome_produto, List<MultipartFile> imgs, Produto produto) {
         // TODO Auto-generated method stub
         Produto produtoAtual = this.produtos
-        .findByNome(produto);
+        .findByNome(nome_produto);
         if (!imgs.isEmpty()) {
             imgs.stream().forEach(
                 n -> {

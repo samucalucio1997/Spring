@@ -1,0 +1,1 @@
+ALTER TABLE produto ADD COLUMN id_costumer VARCHAR(255);

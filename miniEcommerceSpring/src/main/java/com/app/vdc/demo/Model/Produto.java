@@ -18,6 +18,8 @@ public class Produto {
   private float precoUni;
   private String descricao;
 
+
+
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<ImagemProduto> imagens;
   @ManyToMany(fetch = FetchType.EAGER)
@@ -29,32 +31,32 @@ public class Produto {
   
   
   
-  public Produto() {
+public Produto() {
     this.imagens = new ArrayList<>();
   }
 
-  public int getId() {
+public int getId() {
     return id;
   }
 
-  public List<ImagemProduto> getImagens() {
+public List<ImagemProduto> getImagens() {
     return imagens;
   }
 
-  public void setImagens(List<ImagemProduto> imagens) {
+public void setImagens(List<ImagemProduto> imagens) {
     this.imagens = imagens;
   }
   
-  public List<Carrinho> getCar() {
+public List<Carrinho> getCar() {
      return car;
   }
   
-  public void setCar(List<Carrinho> car) {
+public void setCar(List<Carrinho> car) {
     this.car = car;
   }
   
   
-  public void setId(int id) {
+public void setId(int id) {
 	   this.id = id;
   }
 
@@ -89,5 +91,12 @@ public void setNome(String nome) {
   this.nome = nome;
 }
 
-  
+public String getDescricao() {
+    return descricao;
+  }
+
+public void setDescricao(String descricao) {
+    this.descricao = descricao;
+  }
+
 }

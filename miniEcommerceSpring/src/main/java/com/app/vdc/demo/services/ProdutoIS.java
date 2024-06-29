@@ -25,5 +25,5 @@ public interface ProdutoIS {
 
     public boolean EditarProduto(Produto produto, float preco);
 
-    public boolean EditarProduto(String produto, List<MultipartFile> imgs);
+    public boolean EditarProduto(String nome_produto, List<MultipartFile> imgs, Produto produto);
 }

@@ -64,10 +64,11 @@ public class ProdutoController {
      }
 
      @PreAuthorize("hasRole('ROLE_ADMIN')")
-     @PatchMapping("/adimgs")
-     public ResponseEntity<Boolean> editarftProduto(@RequestParam("nome") String nomePro,@RequestParam("imagens") List<MultipartFile> imgs){
+     @PatchMapping("/editarProduto")
+     public ResponseEntity<Boolean> editarftProduto(@RequestParam("nome") String nomePro,@RequestParam("imagens") List<MultipartFile> imgs,
+         @RequestBody Produto produto){
           try {         
-               return ResponseEntity.status(200).body(this.produto.EditarProduto(nomePro, imgs));
+               return ResponseEntity.status(200).body(this.produto.EditarProduto(nomePro, imgs,produto));
           } catch (Exception e) {
                // TODO: handle exception
                return ResponseEntity.status(401).body(new Message("deu errado", null, false)).badRequest().build();
@@ -90,10 +91,14 @@ public class ProdutoController {
             return ResponseEntity.status(404).body("Não encotrado");
         }
      }
-     @PostMapping("/criaCliente")
-     ResponseEntity<Object> criarCliente(){
+
+
+
+     @PostMapping(value="/criaPagamento")
+     ResponseEntity<Object> criarPagamentoBoleto(){
         try {
-            return ResponseEntity.status(200).body(this.pagamentoBoleto.criarCliente());
+
+            return ResponseEntity.status(200).body("valeu");
         }catch (Exception e){
             e.printStackTrace();
             return ResponseEntity.status(404).body("Quebrou");

@@ -1,5 +1,7 @@
 package com.app.vdc.demo.services.Pagamento;
 
+import com.app.vdc.demo.services.dto.ClienteAsaas;
+import com.app.vdc.demo.services.dto.UsuarioSalvo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -20,7 +22,9 @@ public class PagamentoBoleto {
     private String chave;
 
 
-
+    public UsuarioSalvo pagarBoleto(){
+        return null;
+    }
 
 
 
@@ -28,53 +32,39 @@ public class PagamentoBoleto {
     
 
 
-    public Object criarCliente(){
+
+
+
+
+
+    public ClienteAsaas criarCliente(UsuarioSalvo usuario){
         try {
             RestTemplate restTemplate = new RestTemplate();
 
-            // Configurar os cabeçalhos
+
             HttpHeaders headers = new HttpHeaders();
             headers.set("Content-Type", "application/json");
             headers.set("access-token", getChave());
             headers.set("User-Agent", "MyApp/1.0");
 
-            // Criar o objeto de requisição
-            Cliente bodyRequest = new Cliente("Lucas", "84991801842", "01746575441", "samucafab@gmail.com");
-            HttpEntity<Cliente> requestEntity = new HttpEntity<>(bodyRequest, headers);
 
-            // Fazer a requisição POST
-            ResponseEntity<Object> response = restTemplate.exchange(
+            ClienteAsaas bodyRequest = new ClienteAsaas(usuario.getUsername(), usuario.getCpfCnpj(), usuario.getTelefone(), usuario.getEmail());
+            HttpEntity<ClienteAsaas> requestEntity = new HttpEntity<>(bodyRequest, headers);
+
+
+            ResponseEntity<ClienteAsaas> response = restTemplate.exchange(
                     "https://sandbox.asaas.com/api/v3/customers",
                     HttpMethod.POST,
                     requestEntity,
-                    Object.class
+                    ClienteAsaas.class
             );
 
-            // Retornar o corpo da resposta
+
             return response.getBody();
         }catch (Exception e){
             System.out.println(e.getMessage());
             e.printStackTrace();
             return null;
-        }
-    }
-
-
-    private class Cliente{
-        @JsonProperty("name")
-        private String name;
-        @JsonProperty("cpfCnpj")
-        private String cpfCnpj;
-        @JsonProperty("mobilePhone")
-        private String mobilePhone;
-        @JsonProperty("email")
-        private String email;
-
-        public Cliente(String nome, String celular, String cpfCnpj,String email) {
-            this.name = nome;
-            this.mobilePhone = celular;
-            this.cpfCnpj = cpfCnpj;
-            this.email = email;
         }
     }
 

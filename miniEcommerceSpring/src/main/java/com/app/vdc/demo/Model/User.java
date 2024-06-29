@@ -26,6 +26,7 @@ public class User implements UserDetails{
  private String last_name;
  private String email;
  private String password;
+ private String idCostumer;
  
  
  @OneToOne(cascade=CascadeType.ALL)
@@ -166,8 +167,14 @@ public String getEmail() {
   public boolean isIs_staff() {
     return is_staff;
   }
-  
 
+  public String getIdCostumer() {
+        return idCostumer;
+    }
+
+  public void setIdCostumer(String idCostumer) {
+        this.idCostumer = idCostumer;
+    }
 
 @Override
 public Collection<? extends GrantedAuthority> getAuthorities() {

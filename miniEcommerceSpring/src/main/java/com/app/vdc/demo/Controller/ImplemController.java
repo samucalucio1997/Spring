@@ -7,10 +7,12 @@ import com.app.vdc.demo.Model.Produto;
 import com.app.vdc.demo.Model.User;
 import com.app.vdc.demo.Security.TokenUtil;
 import com.app.vdc.demo.repository.UserRepository;
+import com.app.vdc.demo.services.Pagamento.PagamentoBoleto;
 import com.app.vdc.demo.services.ProdutoService;
 import com.app.vdc.demo.services.UserService;
 import com.app.vdc.demo.services.dto.UserloginReturn;
 
+import com.app.vdc.demo.services.dto.UsuarioSalvo;
 import reactor.core.publisher.Flux;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +47,9 @@ public class ImplemController {
      private UserRepository userRepository;
 
      @Autowired
+     private PagamentoBoleto pagamentoBoleto;
+
+     @Autowired
      private AuthenticationManager authenticationManager;
 
      @Autowired
@@ -61,8 +66,24 @@ public class ImplemController {
 
      @GetMapping("/cadastroPro")
      @PreAuthorize("permitAll()")
-     public ResponseEntity<Boolean> PostCadastro() {
-          // boolean ret =  this.produto.CadastrarProduto(pro);
+     public ResponseEntity<Boolean> PostCadastro(@RequestBody UsuarioSalvo usuario) {
+          try {
+               User usuarioSave = new User();
+               usuarioSave.setEmail(usuario.getEmail());
+               usuarioSave.setPassword(usuario.getPassword());
+               usuarioSave.setUsername(usuario.getUsername());
+               usuarioSave.setCarrinho(usuarioSave.getCarrinho());
+               usuarioSave.setCEP(usuario.getCEP());
+               usuarioSave.setImagem(usuario.getImagem());
+               usuarioSave.setFirst_name(usuario.getFirst_name());
+               usuarioSave.setLast_name(usuario.getLast_name());
+               usuarioSave.setNumcasa(usuario.getNumcasa());
+               usuarioSave.setIs_staff(false);
+               this.service.CriarUser(usuarioSave,null);
+          }catch (Exception e) {
+
+          }
+
           return ResponseEntity.ok(true); 
      }    
 
