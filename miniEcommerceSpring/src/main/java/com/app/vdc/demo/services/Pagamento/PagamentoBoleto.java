@@ -1,19 +1,14 @@
 package com.app.vdc.demo.services.Pagamento;
 
-import com.app.vdc.demo.services.dto.ClienteAsaas;
-import com.app.vdc.demo.services.dto.UsuarioSalvo;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.app.vdc.demo.dto.ClienteAsaas;
+import com.app.vdc.demo.dto.UsuarioSalvo;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-
-
-import com.app.vdc.demo.Model.User;
 
 @Service
 public class PagamentoBoleto {

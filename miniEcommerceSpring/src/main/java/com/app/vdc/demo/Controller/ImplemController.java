@@ -2,22 +2,17 @@ package com.app.vdc.demo.Controller;
 
 import com.app.vdc.demo.Config.FilestorageProperties;
 import com.app.vdc.demo.Model.Categorias;
-import com.app.vdc.demo.Model.Endereco;
-import com.app.vdc.demo.Model.Produto;
 import com.app.vdc.demo.Model.User;
 import com.app.vdc.demo.Security.TokenUtil;
 import com.app.vdc.demo.repository.UserRepository;
 import com.app.vdc.demo.services.Pagamento.PagamentoBoleto;
-import com.app.vdc.demo.services.ProdutoService;
 import com.app.vdc.demo.services.UserService;
-import com.app.vdc.demo.services.dto.UserloginReturn;
+import com.app.vdc.demo.dto.UserloginReturn;
 
-import com.app.vdc.demo.services.dto.UsuarioSalvo;
+import com.app.vdc.demo.dto.UsuarioSalvo;
 import reactor.core.publisher.Flux;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,9 +27,7 @@ import java.nio.file.Paths;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import javax.servlet.http.HttpSession;
 
@@ -140,6 +133,7 @@ public class ImplemController {
 
           var user =(User) auth.getPrincipal();
           httpSession.setAttribute("user", user);
+
           
           return ResponseEntity.ok(new UserloginReturn(user, TokenUtil.encodeToken(user)));
      }
@@ -157,9 +151,6 @@ public class ImplemController {
           httpSession.invalidate();
      }
      /*Erro ao inicializar por causa da mudança na tabela produto */
-     
-
-
 
      @GetMapping(value = "cep")
      @PreAuthorize("permiteAll()")

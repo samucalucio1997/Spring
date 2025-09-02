@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.app.vdc.demo.Model.Categorias;
 import com.app.vdc.demo.Model.Produto;
-import com.app.vdc.demo.services.dto.ProdutoResponse;
+import com.app.vdc.demo.dto.ProdutoResponse;
 
 public interface ProdutoIS {
  

@@ -1,4 +1,4 @@
-package com.app.vdc.demo.services.dto;
+package com.app.vdc.demo.dto;
 
 import java.util.List;
 

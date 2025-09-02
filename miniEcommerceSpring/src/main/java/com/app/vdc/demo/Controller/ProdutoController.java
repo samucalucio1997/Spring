@@ -2,17 +2,13 @@ package com.app.vdc.demo.Controller;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.HashMap;
 import java.util.List;
 
 import com.app.vdc.demo.services.Pagamento.PagamentoBoleto;
 import org.aspectj.bridge.Message;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -27,9 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.app.vdc.demo.Model.Produto;
 import com.app.vdc.demo.services.ProdutoIS;
-import com.app.vdc.demo.services.dto.ProdutoResponse;
-
-import antlr.debug.MessageAdapter;
+import com.app.vdc.demo.dto.ProdutoResponse;
 
 @RestController
 @RequestMapping("/produto")

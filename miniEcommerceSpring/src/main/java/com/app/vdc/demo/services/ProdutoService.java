@@ -4,12 +4,10 @@ import com.app.vdc.demo.Config.FileStorageProduct;
 import com.app.vdc.demo.Model.Categorias;
 import com.app.vdc.demo.Model.ImagemProduto;
 import com.app.vdc.demo.Model.Produto;
-import com.app.vdc.demo.Model.User;
 import com.app.vdc.demo.repository.ImagemProdutoRepository;
 import com.app.vdc.demo.repository.ProdutoRepository;
-import com.app.vdc.demo.services.dto.ProdutoResponse;
+import com.app.vdc.demo.dto.ProdutoResponse;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
