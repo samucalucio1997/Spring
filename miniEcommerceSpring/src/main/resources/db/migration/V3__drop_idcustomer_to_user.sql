@@ -1,2 +1,2 @@
-ALTER TABLE produto DELETE COLUMN id_costumer;
-ALTER TABLE user ADD COLUMN id_costumer VARCHAR(255);
+-- ALTER TABLE produto DELETE COLUMN id_costumer;
+-- ALTER TABLE user ADD COLUMN id_costumer VARCHAR(255);

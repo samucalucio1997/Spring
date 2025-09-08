@@ -1,1 +1,1 @@
-ALTER TABLE produto ADD COLUMN descricao VARCHAR(255);
+-- ALTER TABLE produto ADD COLUMN descricao VARCHAR(255);

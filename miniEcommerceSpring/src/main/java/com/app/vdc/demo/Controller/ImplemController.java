@@ -3,11 +3,9 @@ package com.app.vdc.demo.Controller;
 import com.app.vdc.demo.Config.FilestorageProperties;
 import com.app.vdc.demo.Model.Categorias;
 import com.app.vdc.demo.Model.User;
-import com.app.vdc.demo.Security.TokenUtil;
 import com.app.vdc.demo.repository.UserRepository;
 import com.app.vdc.demo.services.Pagamento.PagamentoBoleto;
 import com.app.vdc.demo.services.UserService;
-import com.app.vdc.demo.dto.UserloginReturn;
 
 import com.app.vdc.demo.dto.UsuarioSalvo;
 import reactor.core.publisher.Flux;
@@ -16,8 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -116,26 +112,6 @@ public class ImplemController {
      public Optional<User> ConsultarCep(@PathVariable("id") int id) {
           // TODO Auto-generated method stub
          return this.userRepository.findById(id);
-     }
-
-     @PostMapping("/login")
-     public ResponseEntity<UserloginReturn> Authentica(
-     @RequestParam("username") String username,
-     @RequestParam("password") String password,
-     HttpSession httpSession
-      ) throws IOException{
-      
-          UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = 
-           new UsernamePasswordAuthenticationToken(username, password);
- 
-          Authentication auth = this.authenticationManager
-           .authenticate(usernamePasswordAuthenticationToken);    
-
-          var user =(User) auth.getPrincipal();
-          httpSession.setAttribute("user", user);
-
-          
-          return ResponseEntity.ok(new UserloginReturn(user, TokenUtil.encodeToken(user)));
      }
      
      @PostMapping("/image")
