@@ -30,12 +30,12 @@ public class SecurityConfigurations {
             http
             .cors().and().csrf().disable()
             .sessionManagement()
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and().authorizeHttpRequests(authorize -> {
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+            .authorizeHttpRequests(authorize -> {
                 try {
                     authorize
                     .antMatchers(HttpMethod.POST, "/home/cadastroUser").permitAll()
-                    .antMatchers(HttpMethod.POST, "/home/login").permitAll()
+                    .antMatchers(HttpMethod.POST, "/auth/login").permitAll()
                     .antMatchers(HttpMethod.GET, "/home/logout").permitAll()
                     .antMatchers(HttpMethod.GET, "/produto/produtos").permitAll()
                     .antMatchers(HttpMethod.GET, "/produto/{id}").permitAll()

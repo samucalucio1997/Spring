@@ -27,7 +27,7 @@ public class AuthController {
 
     @PostMapping("/login")
     @PreAuthorize("permitAll()")
-    public ResponseEntity<UserLoginReturn> Authentica(
+    public UserLoginReturn Authentica(
             @RequestParam("username") String username,
             @RequestParam("password") String password
     ) throws IOException {
@@ -40,11 +40,15 @@ public class AuthController {
 
         var user =(User) auth.getPrincipal();
 
-        return ResponseEntity.ok(new UserLoginReturn(user, TokenUtil.encodeToken(user)));
+        return UserLoginReturn
+                .builder()
+                .user(user)
+                .token(TokenUtil.encodeToken(user))
+                .build();
     }
 
     @GetMapping("/validate")
-    @PreAuthorize("PermitAll()")
+    @PreAuthorize("isAuthenticated()")
     public String validarToken(String token) {
         try {
             String subject = TokenUtil.getSubject(token);
@@ -56,11 +60,12 @@ public class AuthController {
     }
 
     @GetMapping("/refresh")
-    @PreAuthorize("PermitAll()")
+    @PreAuthorize("isAuthenticated()")
     public String refreshToken(
-            @RequestParam String nome) {
+            @RequestParam Authentication authentication) {
         try {
-            final var user = (User) userDetailsService.loadUserByUsername(nome);
+            User user = (User) authentication.getPrincipal();
+
             return TokenUtil.encodeToken(user);
         } catch (Exception e) {
             throw new RuntimeException("Erro ao atualizar o token: " + e.getMessage());
