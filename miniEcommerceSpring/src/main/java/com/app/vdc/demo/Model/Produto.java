@@ -17,6 +17,7 @@ public class Produto {
   private int qtd;
   private float precoUni;
   private String descricao;
+  private boolean disponivel;
 
 
 
@@ -98,5 +99,13 @@ public String getDescricao() {
 public void setDescricao(String descricao) {
     this.descricao = descricao;
   }
+
+    public boolean isDisponivel() {
+        return disponivel;
+    }
+
+    public void setDisponivel(boolean disponivel) {
+        this.disponivel = disponivel;
+    }
 
 }

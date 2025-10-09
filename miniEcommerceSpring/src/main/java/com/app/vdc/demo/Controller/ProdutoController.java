@@ -29,14 +29,11 @@ import com.app.vdc.demo.dto.ProdutoResponse;
 @RequestMapping("/produto")
 public class ProdutoController {
 
-
     @Autowired
     private ProdutoIS produto;
 
-
     @Autowired
     private PagamentoBoleto pagamentoBoleto;
-
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping(value="/cadastraProduto",consumes = MediaType.ALL_VALUE)
@@ -45,13 +42,14 @@ public class ProdutoController {
           List<MultipartFile> file,
           @RequestBody Produto produto
           ) throws IOException{
-          if(null==null){
+          if(produto == null){
                this.produto.CadastrarProduto(produto,file!=null?file:null); 
                return ResponseEntity.ok(true);
           }else{
                return ResponseEntity.ok(false);
           }
      }
+
      @GetMapping("/produtos")
      public ResponseEntity<List<ProdutoResponse>> ListarProdutos(){
         return ResponseEntity.status(200).body(this.produto.ListarPro());
@@ -69,7 +67,6 @@ public class ProdutoController {
           }
      }
 
-     
      @GetMapping("/{id}")
      ResponseEntity<ProdutoResponse> produtoPorId(@PathVariable int id){          
           return ResponseEntity.status(200).body(this.produto.PegarPorId(id));
@@ -85,8 +82,6 @@ public class ProdutoController {
             return ResponseEntity.status(404).body("Não encotrado");
         }
      }
-
-
 
      @PostMapping(value="/criaPagamento")
      ResponseEntity<Object> criarPagamentoBoleto(){

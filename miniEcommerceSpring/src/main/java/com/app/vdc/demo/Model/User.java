@@ -36,8 +36,6 @@ public class User implements UserDetails{
 
  private String imagem;
 
- 
- 
  private String CEP;
  private int numcasa;
  private boolean is_active;
