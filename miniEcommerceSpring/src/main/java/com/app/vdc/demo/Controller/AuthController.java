@@ -48,14 +48,13 @@ public class AuthController {
     }
 
     @GetMapping("/validate")
-    @PreAuthorize("isAuthenticated()")
-    public String validarToken(String token) {
+    @PreAuthorize("permitAll()")
+    public boolean validarToken(@RequestParam("token") String token) {
         try {
-            String subject = TokenUtil.getSubject(token);
-            User user = (User) userDetailsService.loadUserByUsername(subject);
-            return "Token válido para o usuário: " + user.getUsername();
+            TokenUtil.getSubject(token); // lança exceção se inválido/expirado
+            return true;
         } catch (Exception e) {
-            return "Token inválido: " + e.getMessage();
+            return false;
         }
     }
 

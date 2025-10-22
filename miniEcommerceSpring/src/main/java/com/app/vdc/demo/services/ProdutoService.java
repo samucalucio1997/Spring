@@ -4,6 +4,7 @@ import com.app.vdc.demo.Config.FileStorageProduct;
 import com.app.vdc.demo.Model.Categorias;
 import com.app.vdc.demo.Model.ImagemProduto;
 import com.app.vdc.demo.Model.Produto;
+import com.app.vdc.demo.dto.ProdutoDTO;
 import com.app.vdc.demo.repository.ImagemProdutoRepository;
 import com.app.vdc.demo.repository.ProdutoRepository;
 import com.app.vdc.demo.dto.ProdutoResponse;
@@ -16,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,9 +32,10 @@ public class ProdutoService implements ProdutoIS{
     @Autowired
     private ImagemProdutoRepository imgProduto;
 
-    private final Path caminho;
+    @Autowired
+    private ModelMapper modelMapper;
 
-    
+    private final Path caminho;
 
     public ProdutoService(FileStorageProduct fileStorageProduct) {
         this.caminho = Paths.get(fileStorageProduct.getSobeImg()).toAbsolutePath().normalize();
@@ -82,6 +86,8 @@ public class ProdutoService implements ProdutoIS{
 
     public ProdutoResponse PegarPorId(int id){
         if (this.produtos.findById(id).isPresent()) {
+            final var produutosDto = ProdutoDTO.builder().build();
+
             Produto produto = this.produtos.getById(id);
             List<byte[]> imgs =new ArrayList<>();
             produto.getImagens().stream().forEach( img -> {

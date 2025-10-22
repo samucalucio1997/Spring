@@ -62,7 +62,6 @@ public class ProdutoController {
           try {         
                return ResponseEntity.status(200).body(this.produto.EditarProduto(nomePro, imgs,produto));
           } catch (Exception e) {
-               // TODO: handle exception
                return ResponseEntity.status(401).body(new Message("deu errado", null, false)).badRequest().build();
           }
      }
@@ -86,7 +85,6 @@ public class ProdutoController {
      @PostMapping(value="/criaPagamento")
      ResponseEntity<Object> criarPagamentoBoleto(){
         try {
-
             return ResponseEntity.status(200).body("valeu");
         }catch (Exception e){
             e.printStackTrace();
