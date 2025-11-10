@@ -17,31 +17,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+import com.app.vdc.demo.repository.custom.CustomRepositoryProdutoImp;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 @Component
+@RequiredArgsConstructor
 public class ProdutoService implements ProdutoIS{
     
     @Autowired
     private ProdutoRepository produtos;
+
+    private final CustomRepositoryProdutoImp customRepositoryProdutoImp;
 
     @Autowired
     private ImagemProdutoRepository imgProduto;
 
     @Autowired
     private ModelMapper modelMapper;
-
-    private final Path caminho;
-
-    public ProdutoService(FileStorageProduct fileStorageProduct) {
-        this.caminho = Paths.get(fileStorageProduct.getSobeImg()).toAbsolutePath().normalize();
-    }
-
- 
 
     @Override
     public boolean RemoverProduto(Produto produto) {
@@ -85,117 +85,106 @@ public class ProdutoService implements ProdutoIS{
     }
 
     public ProdutoResponse PegarPorId(int id){
-        if (this.produtos.findById(id).isPresent()) {
-            final var produutosDto = ProdutoDTO.builder().build();
-
-            Produto produto = this.produtos.getById(id);
-            List<byte[]> imgs =new ArrayList<>();
-            produto.getImagens().stream().forEach( img -> {
-                Path caminho = this.caminho.resolve(img.getPath()).toAbsolutePath().normalize();
-                try {
-                    imgs.add(Files.readAllBytes(caminho));
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }   
-            });
-            return new ProdutoResponse(imgs, produto);
-        }else{
-            return new ProdutoResponse(null, null);
-        }  
+//        if (this.produtos.findById(id).isPresent()) {
+//            final var produutosDto = ProdutoDTO.builder().build();
+//
+//            Produto produto = this.produtos.getById(id);
+//            List<byte[]> imgs =new ArrayList<>();
+//            produto.getImagens().stream().forEach( img -> {
+//                Path caminho = this.caminho.resolve(img.getPath()).toAbsolutePath().normalize();
+//                try {
+//                    imgs.add(Files.readAllBytes(caminho));
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            });
+//            return new ProdutoResponse(imgs, produto);
+//        }else{
+//            return new ProdutoResponse(null, null);
+//        }
+        return new ProdutoResponse(null, null);
     }
 
     @Override
     public boolean CadastrarProduto(Produto produto,List<MultipartFile> imgs) throws IOException{
-        try {
-            Produto pro = produtos.findAll().stream().filter(n -> n.getNome().equals(produto.getNome())
-            &&n.getCategoria().equals(produto.getCategoria())).findAny().get();
-            if (pro!=null) {
-               throw new RuntimeException("Já existe esse Produto");
-            }
-            if (!imgs.isEmpty()) {
-               imgs.stream().forEach(n->{
-                   try {
-                    String nome =  n.getOriginalFilename();
-                    Path path = this.caminho.resolve(nome).toAbsolutePath().normalize();
-                    n.transferTo(path);
-                    ImagemProduto imgp = new ImagemProduto();
-                    imgp.setPath(nome);
-                    this.imgProduto.save(imgp);
-                    produto.getImagens().add(imgp);
-                } catch (IllegalStateException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-
-               });
-            }
-            
-            return this.produtos.save(produto)!=null;
-        } catch (Exception e) {
-           throw e;
-        }
+//        try {
+//            Produto pro = produtos.findAll().stream().filter(n -> n.getNome().equals(produto.getNome())
+//            &&n.getCategoria().equals(produto.getCategoria())).findAny().get();
+//            if (pro!=null) {
+//               throw new RuntimeException("Já existe esse Produto");
+//            }
+//            if (!imgs.isEmpty()) {
+//               imgs.stream().forEach(n->{
+//                   try {
+//                    String nome =  n.getOriginalFilename();
+//                    Path path = this.caminho.resolve(nome).toAbsolutePath().normalize();
+//                    n.transferTo(path);
+//                    ImagemProduto imgp = new ImagemProduto();
+//                    imgp.setPath(nome);
+//                    this.imgProduto.save(imgp);
+//                    produto.getImagens().add(imgp);
+//                } catch (IllegalStateException e) {
+//                    e.printStackTrace();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//
+//               });
+//            }
+//
+//            return this.produtos.save(produto)!=null;
+//        } catch (Exception e) {
+//           throw e;
+//        }
+        return false;
     }
 
     @Override
-    public List<ProdutoResponse> ListarPro() {
-        // TODO Auto-generated method stub
-        List<ProdutoResponse> lista = new ArrayList<>();
-        this.produtos.findAll().stream()
-        .forEach(n -> {
-            List<byte[]> byteimg = new ArrayList<>();
-            if (n.getImagens()!=null) {
-                n.getImagens().stream()
-                .forEach(p -> {
-                  Path path = this.caminho.resolve(p.getPath()).toAbsolutePath();
-                  try {
-                      byteimg.add(Files.readAllBytes(path));
-                    } catch (Exception e) {
-                    // TODO: handle exception
-                    e.getStackTrace();
-                } 
-                
-            });
-            }
-        ProdutoResponse resp = new ProdutoResponse(byteimg, n);
-        lista.add(resp);
-        });
+    public Page<ProdutoDTO> ListarPro(String categoria,
+                                      Double precoMin,
+                                      Double precoMax,
+                                      Pageable pageable) {
+
+        Categorias categorias = null;
+        final var categoriaStr = categoria == null || categoria.isBlank() ? null : categoria;
+        final var precoMinFloat = precoMin == 0.0 ? null : precoMin.floatValue();
+        final var precoMaxFloat = precoMax == 0.0 ? null : precoMax.floatValue();
 
 
-        return lista;
+        Page<Produto> produtosFiltrados = this.produtos.findByFilter(categoriaStr != null ? Categorias.valueOf(categoriaStr) : null
+                , precoMinFloat, precoMaxFloat, pageable);
+        final var responseContent = produtosFiltrados.getContent();
+        final var listResult = responseContent.stream().map(p -> modelMapper.map(p, ProdutoDTO.class)).toList();
+
+        return new PageImpl<ProdutoDTO>(listResult, pageable, produtosFiltrados.getTotalElements());
     }
-
-
 
     @Override
     public boolean EditarProduto(String nome_produto, List<MultipartFile> imgs, Produto produto) {
-        // TODO Auto-generated method stub
-        Produto produtoAtual = this.produtos
-        .findByNome(nome_produto);
-        if (!imgs.isEmpty()) {
-            imgs.stream().forEach(
-                n -> {
-                String cami = n.getOriginalFilename();
-                Path path = this.caminho.resolve(cami).toAbsolutePath().normalize();
-               try {
-                n.transferTo(path);
-                ImagemProduto pImpr = new ImagemProduto();
-                pImpr.setPath(cami);
-                this.imgProduto.save(pImpr);
-                produtoAtual.getImagens().add(pImpr);
-                this.produtos.save(produtoAtual);
-            } catch (IllegalStateException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-            });            
-        }
+//        // TODO Auto-generated method stub
+//        Produto produtoAtual = this.produtos
+//        .findByNome(nome_produto);
+//        if (!imgs.isEmpty()) {
+//            imgs.stream().forEach(
+//                n -> {
+//                String cami = n.getOriginalFilename();
+//                Path path = this.caminho.resolve(cami).toAbsolutePath().normalize();
+//               try {
+//                n.transferTo(path);
+//                ImagemProduto pImpr = new ImagemProduto();
+//                pImpr.setPath(cami);
+//                this.imgProduto.save(pImpr);
+//                produtoAtual.getImagens().add(pImpr);
+//                this.produtos.save(produtoAtual);
+//            } catch (IllegalStateException e) {
+//                // TODO Auto-generated catch block
+//                e.printStackTrace();
+//            } catch (IOException e) {
+//                // TODO Auto-generated catch block
+//                e.printStackTrace();
+//            }
+//            });
+//        }
         //produtoAtual.getImagens().
         return false;
     }

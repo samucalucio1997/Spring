@@ -4,9 +4,12 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
+import com.app.vdc.demo.dto.ProdutoDTO;
 import com.app.vdc.demo.services.Pagamento.PagamentoBoleto;
 import org.aspectj.bridge.Message;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -51,15 +54,20 @@ public class ProdutoController {
      }
 
      @GetMapping("/produtos")
-     public ResponseEntity<List<ProdutoResponse>> ListarProdutos(){
-        return ResponseEntity.status(200).body(this.produto.ListarPro());
+     public Page<ProdutoDTO> ListarProdutos(
+             @RequestParam(value = "categoria", required = false) String categoria,
+             @RequestParam(value = "precoMin", required = false) Double precoMin,
+             @RequestParam(value = "precoMax", required = false) Double precoMax,
+             Pageable pageable
+     ){
+        return this.produto.ListarPro(categoria, precoMin, precoMax, pageable);
      }
 
      @PreAuthorize("hasRole('ROLE_ADMIN')")
      @PatchMapping("/editarProduto")
      public ResponseEntity<Boolean> editarftProduto(@RequestParam("nome") String nomePro,@RequestParam("imagens") List<MultipartFile> imgs,
          @RequestBody Produto produto){
-          try {         
+          try {
                return ResponseEntity.status(200).body(this.produto.EditarProduto(nomePro, imgs,produto));
           } catch (Exception e) {
                return ResponseEntity.status(401).body(new Message("deu errado", null, false)).badRequest().build();
@@ -67,29 +75,29 @@ public class ProdutoController {
      }
 
      @GetMapping("/{id}")
-     ResponseEntity<ProdutoResponse> produtoPorId(@PathVariable int id){          
+     ResponseEntity<ProdutoResponse> produtoPorId(@PathVariable int id){
           return ResponseEntity.status(200).body(this.produto.PegarPorId(id));
      }
 
-      @GetMapping("/cep/{cep}")
-      ResponseEntity<Object> exibirEndereco(@PathVariable int cep){
-        try {
-            RestTemplate apiCall = new RestTemplate();
-            Object retorno = apiCall.getForObject(new URI("https://viacep.com.br/ws/"+cep+"/json/"),Object.class);
-            return ResponseEntity.status(200).body(retorno);
-        }catch (Exception e) {
-            return ResponseEntity.status(404).body("Não encotrado");
-        }
-     }
+    @GetMapping("/cep/{cep}")
+    ResponseEntity<Object> exibirEndereco(@PathVariable int cep){
+      try {
+          RestTemplate apiCall = new RestTemplate();
+          Object retorno = apiCall.getForObject(new URI("https://viacep.com.br/ws/"+cep+"/json/"),Object.class);
+          return ResponseEntity.status(200).body(retorno);
+      }catch (Exception e) {
+          return ResponseEntity.status(404).body("Não encotrado");
+      }
+    }
 
-     @PostMapping(value="/criaPagamento")
-     ResponseEntity<Object> criarPagamentoBoleto(){
-        try {
-            return ResponseEntity.status(200).body("valeu");
-        }catch (Exception e){
-            e.printStackTrace();
-            return ResponseEntity.status(404).body("Quebrou");
-        }
-     }
+    @PostMapping(value="/criaPagamento")
+    ResponseEntity<Object> criarPagamentoBoleto(){
+       try {
+           return ResponseEntity.status(200).body("valeu");
+       }catch (Exception e){
+           e.printStackTrace();
+           return ResponseEntity.status(404).body("Quebrou");
+       }
+    }
 
 }
