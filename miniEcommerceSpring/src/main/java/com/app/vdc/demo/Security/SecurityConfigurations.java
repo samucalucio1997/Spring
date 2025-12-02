@@ -36,6 +36,7 @@ public class SecurityConfigurations {
                     authorize
                     .antMatchers(HttpMethod.POST, "/home/cadastroUser").permitAll()
                     .antMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                    .antMatchers(HttpMethod.GET, "/auth/refresh").permitAll()
                     .antMatchers(HttpMethod.GET, "/home/logout").permitAll()
                     .antMatchers(HttpMethod.GET, "/produto/produtos").permitAll()
                     .antMatchers(HttpMethod.GET, "/produto/{id}").permitAll()
@@ -56,13 +57,11 @@ public class SecurityConfigurations {
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception{
-        System.out.println("passou aqui");    
         return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
     public PasswordEncoder passwordEncoder(){ 
-            System.out.println("BCryptpasswordEncoder trabalhando");
             return new BCryptPasswordEncoder();
     } 
 

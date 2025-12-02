@@ -43,9 +43,9 @@ public class ProdutoController {
     public ResponseEntity<Boolean> CadRegs(
           @RequestParam(value = "img", required = false) 
           List<MultipartFile> file,
-          @RequestBody Produto produto
+          @RequestBody ProdutoDTO produto
           ) throws IOException{
-          if(produto == null){
+          if(produto != null){
                this.produto.CadastrarProduto(produto,file!=null?file:null); 
                return ResponseEntity.ok(true);
           }else{

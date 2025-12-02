@@ -106,7 +106,7 @@ public class ProdutoService implements ProdutoIS{
     }
 
     @Override
-    public boolean CadastrarProduto(Produto produto,List<MultipartFile> imgs) throws IOException{
+    public boolean CadastrarProduto(ProdutoDTO produto,List<MultipartFile> imgs) throws IOException{
 //        try {
 //            Produto pro = produtos.findAll().stream().filter(n -> n.getNome().equals(produto.getNome())
 //            &&n.getCategoria().equals(produto.getCategoria())).findAny().get();
@@ -136,6 +136,7 @@ public class ProdutoService implements ProdutoIS{
 //        } catch (Exception e) {
 //           throw e;
 //        }
+        System.out.println("cadastrando esse tipo de produto" + produto.getDescricao());
         return false;
     }
 
@@ -145,11 +146,9 @@ public class ProdutoService implements ProdutoIS{
                                       Double precoMax,
                                       Pageable pageable) {
 
-        Categorias categorias = null;
         final var categoriaStr = categoria == null || categoria.isBlank() ? null : categoria;
         final var precoMinFloat = precoMin == 0.0 ? null : precoMin.floatValue();
         final var precoMaxFloat = precoMax == 0.0 ? null : precoMax.floatValue();
-
 
         Page<Produto> produtosFiltrados = this.produtos.findByFilter(categoriaStr != null ? Categorias.valueOf(categoriaStr) : null
                 , precoMinFloat, precoMaxFloat, pageable);

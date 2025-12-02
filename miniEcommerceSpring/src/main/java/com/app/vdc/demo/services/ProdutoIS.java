@@ -14,7 +14,7 @@ import com.app.vdc.demo.dto.ProdutoResponse;
 
 public interface ProdutoIS {
  
-    public boolean CadastrarProduto(Produto produto,List<MultipartFile> imgs) throws IOException;
+    public boolean CadastrarProduto(ProdutoDTO produto,List<MultipartFile> imgs) throws IOException;
 
     public boolean RemoverProduto(Produto produto);
 

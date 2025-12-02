@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,7 +31,9 @@ public class FilterToken extends OncePerRequestFilter{
         var authorization = request.getHeader("Authorization");
         if(authorization != null){
             token = authorization.replace("Bearer ", "");
-            var subject = TokenUtil.getSubject(token);
+//            var subject = TokenUtil.getSubject(token);
+            DecodedJWT jwt = TokenUtil.decodeAndVerifyIgnoringExpiration(token);
+            String subject = jwt.getSubject();
             var usuario = this.userRepository.findByUsername(subject);
 
             Iterator junks = usuario.getAuthorities().iterator();

@@ -3,6 +3,8 @@ package com.app.vdc.demo.Controller;
 import com.app.vdc.demo.Model.User;
 import com.app.vdc.demo.Security.TokenUtil;
 import com.app.vdc.demo.dto.UserLoginReturn;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -59,11 +61,20 @@ public class AuthController {
     }
 
     @GetMapping("/refresh")
-    @PreAuthorize("isAuthenticated()")
     public String refreshToken(
-            @RequestParam Authentication authentication) {
+            @RequestHeader(value = "Authorization", required = false) String authorization) {
         try {
-            User user = (User) authentication.getPrincipal();
+            String token = authorization.substring(7);
+            String username = TokenUtil.getSubjectAllowExpired(token);
+
+//            JWT.require(Algorithm.HMAC256("grazinads"))
+//                    .withIssuer("Auth")
+//                    .build()
+//                    .verify(token);
+
+            var userDetails = this.userDetailsService.loadUserByUsername(username);
+            // se sua User for a classe com.app.vdc.demo.Model.User, faça o cast:
+            User user = (User) userDetails;
 
             return TokenUtil.encodeToken(user);
         } catch (Exception e) {
