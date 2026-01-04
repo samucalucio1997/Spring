@@ -13,14 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,14 +32,14 @@ public class ProdutoController {
     private PagamentoBoleto pagamentoBoleto;
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping(value="/cadastraProduto",consumes = MediaType.ALL_VALUE)
+    @PostMapping(value="/cadastraProduto", consumes = "multipart/form-data")
     public ResponseEntity<Boolean> CadRegs(
-          @RequestParam(value = "img", required = false) 
+          @RequestPart(value = "img", required = false)
           List<MultipartFile> file,
-          @RequestBody ProdutoDTO produto
+          @RequestPart(value = "produto") ProdutoDTO produto
           ) throws IOException{
           if(produto != null){
-               this.produto.CadastrarProduto(produto,file!=null?file:null); 
+               this.produto.CadastrarProduto(produto, file != null ? file : null);
                return ResponseEntity.ok(true);
           }else{
                return ResponseEntity.ok(false);

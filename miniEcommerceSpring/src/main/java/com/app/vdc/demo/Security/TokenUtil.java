@@ -29,7 +29,6 @@ public class TokenUtil {
         return new AuthToken(token).getToken();
     }
 
-    //Ira autenticar o token recebido   
     public static String getSubjectAllowExpired(String token) {
         DecodedJWT decoded = JWT.decode(token);
         return decoded.getSubject();

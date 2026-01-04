@@ -9,6 +9,9 @@ import com.app.vdc.demo.repository.ImagemProdutoRepository;
 import com.app.vdc.demo.repository.ProdutoRepository;
 import com.app.vdc.demo.dto.ProdutoResponse;
 
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -116,13 +119,8 @@ public class ProdutoService implements ProdutoIS{
 //            if (!imgs.isEmpty()) {
 //               imgs.stream().forEach(n->{
 //                   try {
-//                    String nome =  n.getOriginalFilename();
-//                    Path path = this.caminho.resolve(nome).toAbsolutePath().normalize();
-//                    n.transferTo(path);
-//                    ImagemProduto imgp = new ImagemProduto();
-//                    imgp.setPath(nome);
-//                    this.imgProduto.save(imgp);
-//                    produto.getImagens().add(imgp);
+                    final var s3Client = S3Client.create();
+                    
 //                } catch (IllegalStateException e) {
 //                    e.printStackTrace();
 //                } catch (IOException e) {
@@ -136,7 +134,7 @@ public class ProdutoService implements ProdutoIS{
 //        } catch (Exception e) {
 //           throw e;
 //        }
-        System.out.println("cadastrando esse tipo de produto" + produto.getDescricao());
+//        System.out.println("cadastrando esse tipo de produto" + produto.getDescricao());
         return false;
     }
 
