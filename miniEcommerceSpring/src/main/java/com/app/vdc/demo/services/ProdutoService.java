@@ -1,22 +1,16 @@
 package com.app.vdc.demo.services;
 
-import com.app.vdc.demo.Config.FileStorageProduct;
 import com.app.vdc.demo.Model.Categorias;
-import com.app.vdc.demo.Model.ImagemProduto;
 import com.app.vdc.demo.Model.Produto;
 import com.app.vdc.demo.dto.ProdutoDTO;
 import com.app.vdc.demo.repository.ImagemProdutoRepository;
 import com.app.vdc.demo.repository.ProdutoRepository;
 import com.app.vdc.demo.dto.ProdutoResponse;
 
-import software.amazon.awssdk.regions.Region;
-import software.amazon.awssdk.services.s3.S3Client;
+import com.app.vdc.demo.utils.AwsService;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -28,8 +22,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.transaction.Transactional;
 
 @Component
 @RequiredArgsConstructor
@@ -42,6 +37,11 @@ public class ProdutoService implements ProdutoIS{
 
     @Autowired
     private ImagemProdutoRepository imgProduto;
+
+    private final AwsService awsService;
+
+    @Value("${chave-upload.aws.secret-key}")
+    private String secretKey;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -108,34 +108,32 @@ public class ProdutoService implements ProdutoIS{
         return new ProdutoResponse(null, null);
     }
 
+    @Transactional
     @Override
     public boolean CadastrarProduto(ProdutoDTO produto,List<MultipartFile> imgs) throws IOException{
-//        try {
-//            Produto pro = produtos.findAll().stream().filter(n -> n.getNome().equals(produto.getNome())
-//            &&n.getCategoria().equals(produto.getCategoria())).findAny().get();
-//            if (pro!=null) {
-//               throw new RuntimeException("Já existe esse Produto");
-//            }
-//            if (!imgs.isEmpty()) {
-//               imgs.stream().forEach(n->{
-//                   try {
-                    final var s3Client = S3Client.create();
-                    
-//                } catch (IllegalStateException e) {
-//                    e.printStackTrace();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//
-//               });
-//            }
-//
-//            return this.produtos.save(produto)!=null;
-//        } catch (Exception e) {
-//           throw e;
-//        }
-//        System.out.println("cadastrando esse tipo de produto" + produto.getDescricao());
-        return false;
+        try {
+            Produto pro = produtos.findAll().stream().filter(n -> n.getNome().equals(produto.getNome())
+            &&n.getCategoria().equals(produto.getCategoria())).findAny().orElse(null);
+            if (pro!=null) {
+               throw new RuntimeException("Já existe esse Produto");
+            }
+            if (!imgs.isEmpty()) {
+               imgs.stream().forEach(n -> {
+                try {
+                    awsService.uploadFileToS3Bucket("bucket-imagens-estoque-gerencia", secretKey, n.getInputStream());
+                } catch (IllegalStateException e) {
+                    throw new IllegalStateException("erro no estado ao enviar o input stream para o S3", e);
+                } catch (IOException e) {
+                    throw new RuntimeException("Houve um problema ao enviar o input stream para o S3", e);
+                }
+               });
+            }
+            final var produtoDomain = modelMapper.map(produto, Produto.class);
+
+            return this.produtos.save(produtoDomain)!=null;
+        } catch (Exception e) {
+           throw e;
+        }
     }
 
     @Override

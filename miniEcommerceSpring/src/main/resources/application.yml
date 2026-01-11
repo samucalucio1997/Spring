@@ -17,8 +17,14 @@ spring:
 #  flyway:
 #    enabled: false
 #    locations: classpath:db/migration
-
 chave:
+
+AWS_REGION: us-east-2
+
+chave-upload:
+  aws:
+    access-key:
+    secret-key:
 
 endpoints:
   configprops:
