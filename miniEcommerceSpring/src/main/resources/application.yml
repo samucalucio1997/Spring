@@ -21,6 +21,9 @@ chave:
 
 AWS_REGION: us-east-2
 
+bucket-aws:
+    nome: bucket-imagens-estoque-gerencia
+
 chave-upload:
   aws:
     access-key:

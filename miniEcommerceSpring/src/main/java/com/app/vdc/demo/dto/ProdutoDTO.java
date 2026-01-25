@@ -19,5 +19,6 @@ public class ProdutoDTO {
     private String descricao;
     private Categorias categoria;
     private List<ImagemProdutoDTO> imagens;
+    private List<byte[]> arquivosProduto;
 }
 

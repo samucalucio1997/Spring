@@ -37,6 +37,7 @@ public class SecurityConfigurations {
                     .antMatchers(HttpMethod.POST, "/home/cadastroUser").permitAll()
                     .antMatchers(HttpMethod.POST, "/auth/login").permitAll()
                     .antMatchers(HttpMethod.GET, "/auth/refresh").permitAll()
+                    .antMatchers(HttpMethod.GET, "/files/*").permitAll()
                     .antMatchers(HttpMethod.GET, "/home/logout").permitAll()
                     .antMatchers(HttpMethod.GET, "/produto/produtos").permitAll()
                     .antMatchers(HttpMethod.GET, "/produto/{id}").permitAll()

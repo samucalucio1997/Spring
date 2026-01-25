@@ -10,11 +10,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.List;
 
 @Component
 public interface ProdutoRepository extends JpaRepository<Produto, Integer>{
-      Produto findByNome(String nome);
+
+      <T> Collection<T> findByNome(String nome);
+
       @Query("SELECT p " +
              "FROM Produto p " +
              "WHERE 1=1 AND (:categoria IS NULL OR p.categoria = :categoria) " +

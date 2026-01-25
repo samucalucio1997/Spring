@@ -1,16 +1,20 @@
 package com.app.vdc.demo.services;
 
 import com.app.vdc.demo.Model.Categorias;
+import com.app.vdc.demo.Model.ImagemProduto;
 import com.app.vdc.demo.Model.Produto;
+import com.app.vdc.demo.dto.ImagemProdutoDTO;
 import com.app.vdc.demo.dto.ProdutoDTO;
 import com.app.vdc.demo.repository.ImagemProdutoRepository;
 import com.app.vdc.demo.repository.ProdutoRepository;
 import com.app.vdc.demo.dto.ProdutoResponse;
 
 import com.app.vdc.demo.utils.AwsService;
+import com.app.vdc.demo.utils.ImageTransformerUtils;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -114,13 +118,20 @@ public class ProdutoService implements ProdutoIS{
         try {
             Produto pro = produtos.findAll().stream().filter(n -> n.getNome().equals(produto.getNome())
             &&n.getCategoria().equals(produto.getCategoria())).findAny().orElse(null);
+            final var listaImagens = new ArrayList<ImagemProduto>();
+
             if (pro!=null) {
                throw new RuntimeException("Já existe esse Produto");
             }
+
             if (!imgs.isEmpty()) {
-               imgs.stream().forEach(n -> {
+               imgs.stream().forEach(n -> {//TODO: ao ínves de salvar o caminho do arquivo, salvar a chave
                 try {
                     awsService.uploadFileToS3Bucket("bucket-imagens-estoque-gerencia", secretKey, n.getInputStream());
+                    final var imagemProdutoDTO = ImagemProdutoDTO.builder()
+                            .path("https://bucket-imagens-estoque-gerencia.s3.amazonaws.com/" + n.getOriginalFilename())
+                            .build();
+                    listaImagens.add(ImageTransformerUtils.imageDTOToImageDomain(imagemProdutoDTO));
                 } catch (IllegalStateException e) {
                     throw new IllegalStateException("erro no estado ao enviar o input stream para o S3", e);
                 } catch (IOException e) {
@@ -130,7 +141,11 @@ public class ProdutoService implements ProdutoIS{
             }
             final var produtoDomain = modelMapper.map(produto, Produto.class);
 
-            return this.produtos.save(produtoDomain)!=null;
+            if (!listaImagens.isEmpty()){
+                produtoDomain.setImagens(listaImagens);
+            }
+
+            return this.produtos.save(produtoDomain) != null;
         } catch (Exception e) {
            throw e;
         }
@@ -155,8 +170,8 @@ public class ProdutoService implements ProdutoIS{
     }
 
     @Override
-    public boolean EditarProduto(String nome_produto, List<MultipartFile> imgs, Produto produto) {
-//        // TODO Auto-generated method stub
+    public boolean EditarProduto(String nomeProduto, List<MultipartFile> imgs, Produto produto) {
+        // TODO Auto-generated method stub
 //        Produto produtoAtual = this.produtos
 //        .findByNome(nome_produto);
 //        if (!imgs.isEmpty()) {
@@ -172,10 +187,10 @@ public class ProdutoService implements ProdutoIS{
 //                produtoAtual.getImagens().add(pImpr);
 //                this.produtos.save(produtoAtual);
 //            } catch (IllegalStateException e) {
-//                // TODO Auto-generated catch block
+                // TODO Auto-generated catch block
 //                e.printStackTrace();
 //            } catch (IOException e) {
-//                // TODO Auto-generated catch block
+                // TODO Auto-generated catch block
 //                e.printStackTrace();
 //            }
 //            });
