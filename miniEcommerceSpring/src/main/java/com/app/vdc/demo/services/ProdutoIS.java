@@ -16,7 +16,7 @@ public interface ProdutoIS {
  
     public boolean CadastrarProduto(ProdutoDTO produto,List<MultipartFile> imgs) throws IOException;
 
-    public boolean RemoverProduto(Produto produto);
+    public boolean RemoverProduto(int produtoID);
 
     public boolean EditarProduto(Produto produto, int qtd);
 
@@ -31,5 +31,5 @@ public interface ProdutoIS {
 
     public boolean EditarProduto(Produto produto, float preco);
 
-    public boolean EditarProduto(String nome_produto, List<MultipartFile> imgs, Produto produto);
+    public boolean EditarProduto(int produtoID, List<MultipartFile> imgs, ProdutoDTO produtoDTO);
 }

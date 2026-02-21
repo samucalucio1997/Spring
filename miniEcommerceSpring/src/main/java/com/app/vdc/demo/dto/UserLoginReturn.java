@@ -4,6 +4,6 @@ import com.app.vdc.demo.Model.User;
 import lombok.Builder;
 
 @Builder
-public record UserLoginReturn(User user, String token) {
+public record UserLoginReturn(String token, UsuarioDto usuarioDto) {
 
 }

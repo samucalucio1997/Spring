@@ -45,13 +45,13 @@ public class ImplemController {
      private UserService service;
 
      
-     private final Path filestorageProperties;
+//     private final Path filestorageProperties;
 
      
 
-     public ImplemController(FilestorageProperties filestorageProperties) {
-          this.filestorageProperties = Paths.get(filestorageProperties.getUploadDir()).toAbsolutePath();
-     }
+//     public ImplemController(FilestorageProperties filestorageProperties) {
+//          this.filestorageProperties = Paths.get(filestorageProperties.getUploadDir()).toAbsolutePath();
+//     }
 
      @GetMapping("/cadastroPro")
      @PreAuthorize("permitAll()")
@@ -114,19 +114,18 @@ public class ImplemController {
          return this.userRepository.findById(id);
      }
      
-     @PostMapping("/image")
-     public ResponseEntity<byte[]> GetImage(@RequestParam("id") int id) throws IOException{
-          User pessoa = this.userRepository.findById(id).get();
-          Path path = this.filestorageProperties.resolve(pessoa.getImagem()).toAbsolutePath();
-          return ResponseEntity.ok(Files.readAllBytes(path));
-     }
+//     @PostMapping("/image")
+//     public ResponseEntity<byte[]> GetImage(@RequestParam("id") int id) throws IOException{
+//          User pessoa = this.userRepository.findById(id).get();
+//          Path path = this.filestorageProperties.resolve(pessoa.getImagem()).toAbsolutePath();
+//          return ResponseEntity.ok(Files.readAllBytes(path));
+//     }
 
      @GetMapping("/logout")
      public void logout(HttpSession httpSession){
           System.out.println("deslogado");
           httpSession.invalidate();
      }
-     /*Erro ao inicializar por causa da mudança na tabela produto */
 
      @GetMapping(value = "cep")
      @PreAuthorize("permiteAll()")
@@ -136,10 +135,6 @@ public class ImplemController {
        .retrieve()
        .bodyToFlux(Object.class);
      }
-     
-     // https://maps.googleapis.com/maps/api/directions/json?origin=Disneyland&destination=Universal+Studios+Hollywood&key=
 
 
-
-     //Testando o consumo da api externa
 }

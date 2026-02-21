@@ -2,9 +2,11 @@ package com.app.vdc.demo.Security;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Date;
 
 
 import com.auth0.jwt.interfaces.DecodedJWT;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 
 import com.app.vdc.demo.Model.User;
@@ -14,8 +16,9 @@ import com.auth0.jwt.algorithms.Algorithm;
 
 
 public class TokenUtil {
-    
 
+    @Value("${client.google.id}")
+    private String secret;
     
     public static String encodeToken(User user){
         String token = JWT.create()
@@ -47,5 +50,15 @@ public class TokenUtil {
         alg.verify(decoded);
 
         return decoded;
+    }
+
+    public static String generate(String email) {
+
+        return JWT.create()
+                .withSubject(email)
+                .withExpiresAt(LocalDateTime.now()
+                        .plusMinutes(5)
+                        .toInstant(ZoneOffset.of("-03:00")))
+                .sign(Algorithm.HMAC256("grazinads"));
     }
 }

@@ -18,6 +18,8 @@ public interface ProdutoRepository extends JpaRepository<Produto, Integer>{
 
       <T> Collection<T> findByNome(String nome);
 
+      Produto findById(int id);
+
       @Query("SELECT p " +
              "FROM Produto p " +
              "WHERE 1=1 AND (:categoria IS NULL OR p.categoria = :categoria) " +
