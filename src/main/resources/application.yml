@@ -1,0 +1,97 @@
+server:
+  port: 8082
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  kafka:
+    producer:
+#      acks: all
+#      retries: 50
+#      properties:
+#        retry:
+#          backoff:
+#            ms: 1000
+#        schema:
+#          registry:
+#            url: http://localhost:8081
+#            ssl:
+#              keystore:
+#                location: classpath:keystore.jks
+#                password: keystorepassword
+#                type: JKS
+#              key:
+#                password: keypassword
+#              truststore:
+#                location: classpath:truststore.jks
+#                password: truststorepassword
+#                type: JKS
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    bootstrap-servers: localhost:9092
+    template:
+      default-topic: PAYMENT.PIX
+
+  #        dialect: org.hibernate.dialect.MySQL57Dialect
+#  flyway:
+#    enabled: false
+#    locations: classpath:db/migration
+chave:
+
+AWS_REGION: us-east-2
+
+client:
+  google:
+    id:
+
+bucket-aws:
+    nome: bucket-imagens-estoque-gerencia
+
+chave-upload:
+  aws:
+    access-key:
+    secret-key:
+
+endpoints:
+  configprops:
+    enabled: true
+  beans:
+    enabled: true
+  shutdown:
+    enabled: true
+
+management:
+  endpoints:
+    enabled-by-default: true
+    sensitive: false
+    enabled: true
+    configprops:
+      enabled: true
+    beans:
+      enabled: true
+    shutdown:
+      enabled: true
+    web:
+      exposure:
+        include: "*"
+
+logging:
+  level:
+    org.springframework.web.cors: DEBUG
+
+file:
+  upload_dir: "src/main/resources/static/images-perfil"
+
+archive:
+  sobe_img: "src/main/resources/static/images-products"
+
