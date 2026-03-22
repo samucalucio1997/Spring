@@ -45,6 +45,8 @@ public class ProdutoService implements ProdutoIS{
 
     private final AwsService awsService;
 
+    private final ImagemIS imagemService;
+
     @Value("${chave-upload.aws.secret-key}")
     private String secretKey;
 
@@ -115,7 +117,7 @@ public class ProdutoService implements ProdutoIS{
 
     @Transactional
     @Override
-    public boolean CadastrarProduto(ProdutoDTO produto,List<MultipartFile> imgs) throws IOException{
+    public boolean CadastrarProduto(ProdutoDTO produto, List<MultipartFile> imgs) throws IOException{
         try {
             Produto pro = produtos.findAll().stream().filter(n -> n.getNome().equals(produto.getNome())
             && n.getCategoria().equals(produto.getCategoria())).findAny().orElse(null);
@@ -126,19 +128,7 @@ public class ProdutoService implements ProdutoIS{
             }
 
             if (!imgs.isEmpty()) {
-               imgs.stream().forEach(n -> {
-                try {
-                    awsService.uploadFileToS3Bucket("bucket-imagens-estoque-gerencia", secretKey, n.getInputStream());
-                    final var imagemProdutoDTO = ImagemProdutoDTO.builder()
-                            .path("https://bucket-imagens-estoque-gerencia.s3.amazonaws.com/" + n.getOriginalFilename())
-                            .build();
-                    listaImagens.add(ImageTransformerUtils.imageDTOToImageDomain(imagemProdutoDTO));
-                } catch (IllegalStateException e) {
-                    throw new IllegalStateException("erro no estado ao enviar o input stream para o S3", e);
-                } catch (IOException e) {
-                    throw new RuntimeException("Houve um problema ao enviar o input stream para o S3", e);
-                }
-               });
+                this.imagemService.salvarImagem(imgs, listaImagens);
             }
             final var produtoDomain = modelMapper.map(produto, Produto.class);
 
@@ -178,20 +168,7 @@ public class ProdutoService implements ProdutoIS{
         BeanUtils.copyProperties(produtoDTO, produtoAtual);
 
         if (!imgs.isEmpty()) {
-            imgs.stream().forEach(
-                n -> {
-               try {
-                   awsService.uploadFileToS3Bucket("bucket-imagens-estoque-gerencia", secretKey, n.getInputStream());
-                   final var imagemProdutoDTO = ImagemProdutoDTO.builder()
-                           .path("https://bucket-imagens-estoque-gerencia.s3.amazonaws.com/" + n.getOriginalFilename())
-                           .build();
-                   listaImagens.add(ImageTransformerUtils.imageDTOToImageDomain(imagemProdutoDTO));
-               } catch (IllegalStateException e) {
-                   e.printStackTrace();
-               } catch (IOException e) {
-                   throw new RuntimeException("Houve no processamento do arquivo de imagem");
-               }
-            });
+           this.imagemService.salvarImagem(imgs, listaImagens);
         }
         final var produtoDomain = modelMapper.map(produtoAtual, Produto.class);
 
