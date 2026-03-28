@@ -1,4 +1,5 @@
 version: '3'
+
 services:
   zookeeper:
     image: confluentinc/cp-zookeeper:7.2.0
@@ -28,3 +29,20 @@ services:
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
     depends_on:
       - kafka
+  db:
+    image: postgres:15
+    container_name: postgres-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./docker/postgres/dump-postgres-202603281349.sql:/docker-entrypoint-initdb.d/dump.dump
+      - ./docker/postgres/init.sh:/docker-entrypoint-initdb.d/init.sh
+
+volumes:
+  postgres-data:
