@@ -1,5 +1,14 @@
-version: '3'
 services:
+  app:
+    image: mcr.microsoft.com/devcontainers/universal:5-linux
+    container_name: devcontainer-app
+    volumes:
+      - .:/workspace:cached
+    command: sleep infinity
+    depends_on:
+      - kafka
+      - db
+
   zookeeper:
     image: confluentinc/cp-zookeeper:7.2.0
     environment:
@@ -28,3 +37,20 @@ services:
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
     depends_on:
       - kafka
+
+  db:
+    image: postgres:15
+    container_name: postgres-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  postgres-data:
