@@ -25,20 +25,23 @@ public class AwsService {
     @Autowired
     private S3Client s3Client;
 
-    public void uploadFileToS3Bucket(String bucketName,
+    public String uploadFileToS3Bucket(String bucketName,
                                               String key,
                                               InputStream inputStream
     ) {
         try{
-            s3Client.putObject(
+            final var objetoUpload = s3Client.putObject(
                     builder -> builder.bucket(bucketName).key(key).build(),
                     RequestBody.fromInputStream(inputStream, inputStream.available())
             );
+
+            return objetoUpload.eTag();
         } catch (IOException e) {
-            log.error("Erro ao fazer upload do arquivo para o S3", e);
+            log.error("Erro ao ler arquivo", e);
             throw new RuntimeException(e);
         } catch(S3Exception e) {
-            e.printStackTrace();
+            log.error("Erro ao fazer upload do arquivo para o S3", e);
+            throw new RuntimeException(e);
         }
     }
 

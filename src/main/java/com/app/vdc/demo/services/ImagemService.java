@@ -26,9 +26,9 @@ public class ImagemService implements ImagemIS {
     public void salvarImagem(List<MultipartFile> imgs, List<ImagemProduto> imagensProdutos) {
         imgs.stream().forEach(n -> {
             try {
-                awsService.uploadFileToS3Bucket("bucket-imagens-estoque-gerencia", secretKey, n.getInputStream());
+                final var nomeObjeto = awsService.uploadFileToS3Bucket("bucket-imagens-estoque-gerencia", secretKey, n.getInputStream());
                 final var imagemProdutoDTO = ImagemProdutoDTO.builder()
-                        .path("https://bucket-imagens-estoque-gerencia.s3.amazonaws.com/" + n.getOriginalFilename())
+                        .path(nomeObjeto)
                         .build();
                 imagensProdutos.add(ImageTransformerUtils.imageDTOToImageDomain(imagemProdutoDTO));
             } catch (IllegalStateException e) {
