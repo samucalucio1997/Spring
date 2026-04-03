@@ -2,7 +2,7 @@ server:
   port: 8082
 spring:
   datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:5432/postgres
+    url: jdbc:postgresql://db:5432/postgres
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
@@ -16,26 +16,26 @@ spring:
 
   kafka:
     producer:
-#      acks: all
-#      retries: 50
-#      properties:
-#        retry:
-#          backoff:
-#            ms: 1000
-#        schema:
-#          registry:
-#            url: http://localhost:8081
-#            ssl:
-#              keystore:
-#                location: classpath:keystore.jks
-#                password: keystorepassword
-#                type: JKS
-#              key:
-#                password: keypassword
-#              truststore:
-#                location: classpath:truststore.jks
-#                password: truststorepassword
-#                type: JKS
+      #      acks: all
+      #      retries: 50
+      #      properties:
+      #        retry:
+      #          backoff:
+      #            ms: 1000
+      #        schema:
+      #          registry:
+      #            url: http://localhost:8081
+      #            ssl:
+      #              keystore:
+      #                location: classpath:keystore.jks
+      #                password: keystorepassword
+      #                type: JKS
+      #              key:
+      #                password: keypassword
+      #              truststore:
+      #                location: classpath:truststore.jks
+      #                password: truststorepassword
+      #                type: JKS
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
     bootstrap-servers: kafka:9092
@@ -55,7 +55,7 @@ client:
     id:
 
 bucket-aws:
-    nome: bucket-imagens-estoque-gerencia
+  nome: bucket-imagens-estoque-gerencia
 
 chave-upload:
   aws:
@@ -94,4 +94,3 @@ file:
 
 archive:
   sobe_img: "src/main/resources/static/images-products"
-
