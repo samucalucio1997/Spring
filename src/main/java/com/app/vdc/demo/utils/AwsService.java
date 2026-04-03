@@ -25,17 +25,16 @@ public class AwsService {
     @Autowired
     private S3Client s3Client;
 
-    public String uploadFileToS3Bucket(String bucketName,
+    public void uploadFileToS3Bucket(String bucketName,
                                               String key,
                                               InputStream inputStream
     ) {
         try{
-            final var objetoUpload = s3Client.putObject(
+            s3Client.putObject(
                     builder -> builder.bucket(bucketName).key(key).build(),
                     RequestBody.fromInputStream(inputStream, inputStream.available())
             );
 
-            return objetoUpload.eTag();
         } catch (IOException e) {
             log.error("Erro ao ler arquivo", e);
             throw new RuntimeException(e);
@@ -47,7 +46,7 @@ public class AwsService {
 
     public InputStreamResource getFileUrl(String nomeArquivo)  {
         try {
-            final var fileRequest = GetObjectRequest.builder()
+                final var fileRequest = GetObjectRequest.builder()
                     .bucket(bucketName)
                     .key(nomeArquivo)
                     .build();

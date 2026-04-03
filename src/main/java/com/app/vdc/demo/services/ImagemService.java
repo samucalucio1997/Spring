@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -26,9 +27,12 @@ public class ImagemService implements ImagemIS {
     public void salvarImagem(List<MultipartFile> imgs, List<ImagemProduto> imagensProdutos) {
         imgs.stream().forEach(n -> {
             try {
-                final var nomeObjeto = awsService.uploadFileToS3Bucket("bucket-imagens-estoque-gerencia", secretKey, n.getInputStream());
+                final var key = UUID.randomUUID().toString();
+                awsService
+                .uploadFileToS3Bucket("bucket-imagens-estoque-gerencia", key, n.getInputStream());
                 final var imagemProdutoDTO = ImagemProdutoDTO.builder()
-                        .path(nomeObjeto)
+                        .path(key)
+                        .nomeArquivo(n.getOriginalFilename())
                         .build();
                 imagensProdutos.add(ImageTransformerUtils.imageDTOToImageDomain(imagemProdutoDTO));
             } catch (IllegalStateException e) {

@@ -13,8 +13,13 @@ public class ImagemProduto {
    
    private String path;
 
+   private String nomeArquivo;
 
-   public String getPath() {
+    public String getNomeArquivo() { return nomeArquivo; }
+
+    public void setNomeArquivo(String nomeArquivo) { this.nomeArquivo = nomeArquivo; }
+
+    public String getPath() {
       return path;
    }
 

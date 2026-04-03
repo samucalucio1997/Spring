@@ -18,7 +18,7 @@ public class FileController {
 
     private final AwsService awsService;
 
-    @GetMapping("/img")
+    @GetMapping(value = "/img")
     public ResponseEntity<InputStreamResource> getFile(@RequestParam(name = "nomeArquivo") String nomeArquivo){
         return ResponseEntity.ok()
                         .contentType(MediaType.valueOf(MediaType.IMAGE_PNG_VALUE))

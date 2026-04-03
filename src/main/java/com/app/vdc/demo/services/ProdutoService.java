@@ -119,7 +119,7 @@ public class ProdutoService implements ProdutoIS{
     @Override
     public boolean CadastrarProduto(ProdutoDTO produto, List<MultipartFile> imgs) throws IOException{
         try {
-            Produto pro = produtos.findAll().stream().filter(n -> n.getNome().equals(produto.getNome())
+            Produto pro = produtos.findAll().stream().filter(n -> n.getNome().equals(produto.getNome()) && n.getDescricao().equals(produto.getDescricao())
             && n.getCategoria().equals(produto.getCategoria())).findAny().orElse(null);
             final var listaImagens = new ArrayList<ImagemProduto>();
 

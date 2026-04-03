@@ -1,0 +1,1 @@
+ALTER TABLE imagem_produto ADD COLUMN nome_arquivo VARCHAR(255) NOT NULL;
