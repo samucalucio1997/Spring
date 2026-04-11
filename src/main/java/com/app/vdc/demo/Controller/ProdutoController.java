@@ -55,11 +55,23 @@ public class ProdutoController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PatchMapping(value = "/editarProduto", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Boolean> editarftProduto(@RequestParam("produto_id") Integer produtoId, @RequestPart( value = "imagens", required = false) List<MultipartFile> imgs,
-        @RequestParam("nome") String nome
+    public ResponseEntity<Boolean> editarftProduto(@RequestParam("produtoId") Integer produtoId, @RequestPart( value = "imagens", required = false) List<MultipartFile> imgs,
+        @RequestParam("nome") String nome,
+        @RequestParam("qtd") Integer qtd,
+        @RequestParam("precoUni") Float precoUni,
+        @RequestParam("descricao") String descricao,
+        @RequestParam("categoria") String categoria
     ){
          try {
-              return ResponseEntity.status(200).body(this.produto.EditarProduto(produtoId, imgs, null));
+              final var produto = ProdutoDTO.builder()
+                      .id(produtoId)
+                      .nome(nome)
+                      .qtd(qtd)
+                      .precoUni(precoUni)
+                      .descricao(descricao)
+                      .categoria(categoria != null ? Enum.valueOf(com.app.vdc.demo.Model.Categorias.class, categoria) : null)
+                      .build();
+              return ResponseEntity.status(200).body(this.produto.EditarProduto(produtoId, imgs, produto));
          } catch (Exception e) {
               return ResponseEntity.status(401).body(new Message("deu errado", null, false)).badRequest().build();
          }

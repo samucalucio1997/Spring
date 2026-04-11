@@ -165,17 +165,20 @@ public class ProdutoService implements ProdutoIS{
         final var produtoAtual = this.produtos.findById(produtoId);
         final var listaImagens = new ArrayList<ImagemProduto>();
 
-        BeanUtils.copyProperties(produtoDTO, produtoAtual);
+        produtoAtual.setCategoria(produtoDTO.getCategoria());
+        produtoAtual.setDescricao(produtoDTO.getDescricao());
+        produtoAtual.setNome(produtoDTO.getNome());
+        produtoAtual.setPrecoUni(produtoDTO.getPrecoUni());
+        produtoAtual.setQtd(produtoDTO.getQtd());
 
         if (!imgs.isEmpty()) {
            this.imagemService.salvarImagem(imgs, listaImagens);
         }
-        final var produtoDomain = modelMapper.map(produtoAtual, Produto.class);
 
         if (!listaImagens.isEmpty()){
-            produtoDomain.setImagens(listaImagens);
+            produtoAtual.setImagens(listaImagens);
         }
 
-        return this.produtos.save(produtoDomain) != null;
+        return this.produtos.saveAndFlush(produtoAtual) != null;
     }
 }
