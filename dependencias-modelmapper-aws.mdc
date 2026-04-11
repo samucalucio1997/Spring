@@ -1,0 +1,57 @@
+Título: Avaliação de versionamento (semver) e LTS — modelmapper & aws sdk s3
+
+Resumo
+
+Este documento avalia, com justificativa e links diretos para as versões usadas no `pom.xml`, se `org.modelmapper:modelmapper` e `software.amazon.awssdk:s3` adotam versionamento semântico e se oferecem LTS (Long Term Support).
+
+---
+
+1) Dependência: org.modelmapper:modelmapper
+- Versão encontrada no `pom.xml`: 3.1.1
+- Versionamento semântico (semver): Sim
+  - Justificativa: usa o esquema MAJOR.MINOR.PATCH (ex.: 3.1.1). O projeto publica tags/releases nesse formato.
+- LTS (Long Term Support): Não
+  - Justificativa: o projeto não declara versões LTS oficiais nem política de suporte de longo prazo.
+- Links (versão e projeto):
+  - Maven Central (artefato 3.1.1): https://search.maven.org/artifact/org.modelmapper/modelmapper/3.1.1/jar
+  - Repositório do projeto (GitHub): https://github.com/modelmapper/modelmapper
+- Riscos / Observações:
+  - Atualizações de major podem introduzir breaking changes; minor/patch costumam ser seguros.
+- Recomendações práticas:
+  - Manter a versão fixada (já está em 3.1.1) ou usar ferramenta de PRs controladas (Dependabot/Renovate).
+  - Antes de atualizar MAJOR, revisar changelog e rodar testes de integração que cubram mapeamentos críticos.
+
+---
+
+2) Dependência: software.amazon.awssdk:s3
+- Versão encontrada no `pom.xml`: 2.22.5 (gerenciada via propriedade `awsjavasdk.version` e BOM `software.amazon.awssdk:bom:2.22.5`)
+- Versionamento semântico (semver): Sim
+  - Justificativa: AWS SDK for Java v2 usa o esquema MAJOR.MINOR.PATCH (ex.: 2.22.5); compatibilidade é regida pelas mudanças de MAJOR.
+- LTS (Long Term Support): Não (sem LTS formal)
+  - Justificativa: a AWS não publica uma designação "LTS" para o SDK; versões recebem manutenção regular sem um rótulo LTS oficial.
+- Links (versão e projeto):
+  - Maven Central (artefato s3 2.22.5): https://search.maven.org/artifact/software.amazon.awssdk/s3/2.22.5/jar
+  - Maven Central (BOM 2.22.5): https://search.maven.org/artifact/software.amazon.awssdk/bom/2.22.5/pom
+  - Repositório do projeto (GitHub): https://github.com/aws/aws-sdk-java-v2
+- Riscos / Observações:
+  - Atualizações de major podem trazer breaking changes; manter BOM ajuda a controlar versões coerentes entre módulos do SDK.
+- Recomendações práticas:
+  - Manter o BOM com a propriedade `awsjavasdk.version` (boa prática já adotada no `pom.xml`).
+  - Aplicar updates de patch/minor regularmente (monitorar changelogs e avisos de segurança).
+  - Criar testes de integração (com mocks ou ambiente de staging) para validar comportamento ao atualizar o SDK.
+
+---
+
+Cobertura de requisitos
+- Confirmar versões no `pom.xml`: Done (modelmapper 3.1.1; aws s3 2.22.5 via property/BOM).
+- Identificar semver: Done (ambos usam MAJOR.MINOR.PATCH).
+- Identificar LTS: Done (nenhum dos dois possui designação LTS oficial).
+
+Próximos passos sugeridos
+- Habilitar Dependabot/Renovate para PRs automáticas com atualizações de segurança/patch.
+- Adicionar um checklist de upgrade no repositório (rodar testes, revisar changelog, validar integrações com S3).
+
+Data da avaliação: 2026-04-11
+
+Gerado automaticamente a partir do `pom.xml` em: C:\Users\samuel_lucio\Documents\pessoal\Spring\miniEcommerceSpring
+
