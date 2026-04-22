@@ -5,10 +5,7 @@ import com.app.vdc.demo.Security.TokenUtil;
 import com.app.vdc.demo.dto.UserLoginReturn;
 import com.app.vdc.demo.dto.UsuarioDto;
 import com.app.vdc.demo.services.GoogleTokenService;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,7 +14,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.stream.Collectors;
 
@@ -47,7 +43,6 @@ public class AuthController {
             String jwtToken = TokenUtil.generate(user.getEmail());
             return UserLoginReturn
                     .builder()
-//                    .googleUsuario(user)
                     .token(jwtToken)
                     .usuarioDto(usuarioDto)
                     .build();
@@ -81,7 +76,6 @@ public class AuthController {
 
         return UserLoginReturn
                 .builder()
-//                .user(user)
                 .token(TokenUtil.encodeToken(user))
                 .usuarioDto(usuarioDto)
                 .build();
@@ -104,11 +98,6 @@ public class AuthController {
         try {
             String token = authorization.substring(7);
             String username = TokenUtil.getSubjectAllowExpired(token);
-
-//            JWT.require(Algorithm.HMAC256("grazinads"))
-//                    .withIssuer("Auth")
-//                    .build()
-//                    .verify(token);
 
             var userDetails = this.userDetailsService.loadUserByUsername(username);
             // se sua User for a classe com.app.vdc.demo.Model.User, faça o cast:

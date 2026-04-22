@@ -81,4 +81,15 @@ public class ProdutoController {
     ResponseEntity<ProdutoResponse> produtoPorId(@PathVariable int id){
          return ResponseEntity.status(200).body(this.produto.PegarPorId(id));
     }
+
+    @DeleteMapping("/deletarProduto")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<Boolean> deletarProduto(@RequestParam("produtoId") Integer produtoId) {
+        try {
+            this.produto.RemoverProduto(produtoId);
+            return ResponseEntity.ok(true);
+        } catch (Exception e) {
+            return ResponseEntity.ok(false);
+        }
+    }
 }

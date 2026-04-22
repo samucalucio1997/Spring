@@ -58,4 +58,13 @@ public class AwsService {
             throw e;
         }
     }
+
+    public void deleteFileFromS3Bucket(String key) {
+        try {
+            s3Client.deleteObject(builder -> builder.bucket(bucketName).key(key).build());
+        } catch (S3Exception e) {
+            log.error("Erro ao deletar arquivo do S3", e);
+            throw new RuntimeException(e);
+        }
+    }
 }

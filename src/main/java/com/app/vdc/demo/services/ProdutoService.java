@@ -11,6 +11,7 @@ import com.app.vdc.demo.dto.ProdutoResponse;
 
 import com.app.vdc.demo.utils.AwsService;
 import com.app.vdc.demo.utils.ImageTransformerUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -35,6 +36,7 @@ import javax.transaction.Transactional;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class ProdutoService implements ProdutoIS{
 
     private final ProdutoRepository produtos;
@@ -54,9 +56,22 @@ public class ProdutoService implements ProdutoIS{
     private ModelMapper modelMapper;
 
     @Override
-    public boolean RemoverProduto(int produtoId) {
-        produtos.deleteById(produtoId);
-        return produtos.findById(produtoId) != null;
+    @Transactional
+    public void RemoverProduto(int produtoId) {
+        final var produtoImagens = produtos.findById(produtoId);
+        final var imagens = new ArrayList<ImagemProduto>();
+        if (produtoImagens != null) {
+            imagens.addAll(produtoImagens.getImagens());
+            imagens.forEach(img -> {
+                try {
+                    this.awsService.deleteFileFromS3Bucket(img.getPath());
+                } catch (Exception e) {
+                    log.error("Erro ao deletar imagem do S3: " + img.getPath(), e);
+                    e.printStackTrace();
+                }
+            });
+        }
+        produtos.delete(produtoImagens);
     }
 
     @Override

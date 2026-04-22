@@ -16,7 +16,7 @@ public interface ProdutoIS {
  
     public boolean CadastrarProduto(ProdutoDTO produto,List<MultipartFile> imgs) throws IOException;
 
-    public boolean RemoverProduto(int produtoID);
+    public void RemoverProduto(int produtoID);
 
     public boolean EditarProduto(Produto produto, int qtd);
 
