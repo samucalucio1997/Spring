@@ -20,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 
 import com.app.vdc.demo.repository.custom.CustomRepositoryProdutoImp;
@@ -59,6 +60,9 @@ public class ProdutoService implements ProdutoIS{
     @Transactional
     public void RemoverProduto(int produtoId) {
         final var produtoImagens = produtos.findById(produtoId);
+        final var produtoDeprecado = produtos.getOne(produtoId);
+        System.out.println("forma deprecada de pegar o objeto" + produtoDeprecado);
+
         final var imagens = new ArrayList<ImagemProduto>();
         if (produtoImagens != null) {
             imagens.addAll(produtoImagens.getImagens());
