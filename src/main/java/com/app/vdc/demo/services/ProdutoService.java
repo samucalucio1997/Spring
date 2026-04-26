@@ -60,8 +60,9 @@ public class ProdutoService implements ProdutoIS{
     @Transactional
     public void RemoverProduto(int produtoId) {
         final var produtoImagens = produtos.findById(produtoId);
-        final var produtoDeprecado = produtos.getOne(produtoId);
-        System.out.println("forma deprecada de pegar o objeto" + produtoDeprecado);
+        //TODO: Remover após a apresentação, isso é só para mostrar o funcionamento da checagem de código deprecado
+//        final var produtoDeprecado = produtos.getOne(produtoId);
+//        System.out.println("forma deprecada de pegar o objeto" + produtoDeprecado);
 
         final var imagens = new ArrayList<ImagemProduto>();
         if (produtoImagens != null) {
