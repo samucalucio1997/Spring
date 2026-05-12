@@ -2,30 +2,31 @@ name: CI - Maven build with cache and dependency check
 
 on:
   push:
-    branches: [ "*" ]
+    branches: [ main, master ]
   pull_request:
-    branches: [ "*" ]
+    branches: [ main, master ]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     services:
-      postgres:
-        image: postgres:15
+      db:
+        image: postgres:14
         env:
-          POSTGRES_DB: postgres
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          DB_HOST: postgres
+          POSTGRES_DB: demo
         ports:
           - 5432:5432
         options: >-
-          --health-cmd="pg_isready -U postgres"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/demo
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
 
     steps:
       - name: Checkout
@@ -46,6 +47,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-m2-
 
+      - name: Wait for Postgres service
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y postgresql-client
+          for i in {1..30}; do pg_isready -h db -U postgres && break || sleep 2; done
+
       - name: Build (skip tests)
         run: mvn -B -U -DskipTests verify
 
@@ -58,4 +65,3 @@ jobs:
         with:
           name: dependency-check-report
           path: target/dependency-check-report.html
-
