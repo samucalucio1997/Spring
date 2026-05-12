@@ -2,9 +2,9 @@ name: CI - Maven build with cache and dependency check
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ * ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ * ]
 
 jobs:
   build:
