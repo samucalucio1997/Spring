@@ -1,57 +1,33 @@
-Título: Avaliação de versionamento (semver) e LTS — modelmapper & aws sdk s3
+# Dependências: ModelMapper e AWS S3
 
-Resumo
-
-Este documento avalia, com justificativa e links diretos para as versões usadas no `pom.xml`, se `org.modelmapper:modelmapper` e `software.amazon.awssdk:s3` adotam versionamento semântico e se oferecem LTS (Long Term Support).
+Este arquivo lista as dependências `org.modelmapper:modelmapper` e `software.amazon.awssdk:s3` usadas neste projeto (conforme `pom.xml`) e indica se seguem versionamento semântico e se possuem versão LTS.
 
 ---
 
-1) Dependência: org.modelmapper:modelmapper
-- Versão encontrada no `pom.xml`: 3.1.1
-- Versionamento semântico (semver): Sim
-  - Justificativa: usa o esquema MAJOR.MINOR.PATCH (ex.: 3.1.1). O projeto publica tags/releases nesse formato.
-- LTS (Long Term Support): Não
-  - Justificativa: o projeto não declara versões LTS oficiais nem política de suporte de longo prazo.
-- Links (versão e projeto):
-  - Maven Central (artefato 3.1.1): https://search.maven.org/artifact/org.modelmapper/modelmapper/3.1.1/jar
-  - Repositório do projeto (GitHub): https://github.com/modelmapper/modelmapper
-- Riscos / Observações:
-  - Atualizações de major podem introduzir breaking changes; minor/patch costumam ser seguros.
-- Recomendações práticas:
-  - Manter a versão fixada (já está em 3.1.1) ou usar ferramenta de PRs controladas (Dependabot/Renovate).
-  - Antes de atualizar MAJOR, revisar changelog e rodar testes de integração que cubram mapeamentos críticos.
+## 1) org.modelmapper:modelmapper
+- Versão no projeto: 3.1.1
+- Versionamento semântico: Sim — o `modelmapper` usa versionamento MAJOR.MINOR.PATCH (semântico).
+- LTS (Long-Term Support): Não há uma linha oficial "LTS" publicada pelo projeto ModelMapper; a manutenção segue lançamentos regulares.
+- Link para a versão referenciada (Maven Central): https://search.maven.org/artifact/org.modelmapper/modelmapper/3.1.1/jar
+
+Observações: atualizações de `modelmapper` normalmente são compatíveis com semver; revise notas de versão quando for atualizar para checar mudanças de API entre versões major.
 
 ---
 
-2) Dependência: software.amazon.awssdk:s3
-- Versão encontrada no `pom.xml`: 2.22.5 (gerenciada via propriedade `awsjavasdk.version` e BOM `software.amazon.awssdk:bom:2.22.5`)
-- Versionamento semântico (semver): Sim
-  - Justificativa: AWS SDK for Java v2 usa o esquema MAJOR.MINOR.PATCH (ex.: 2.22.5); compatibilidade é regida pelas mudanças de MAJOR.
-- LTS (Long Term Support): Não (sem LTS formal)
-  - Justificativa: a AWS não publica uma designação "LTS" para o SDK; versões recebem manutenção regular sem um rótulo LTS oficial.
-- Links (versão e projeto):
-  - Maven Central (artefato s3 2.22.5): https://search.maven.org/artifact/software.amazon.awssdk/s3/2.22.5/jar
-  - Maven Central (BOM 2.22.5): https://search.maven.org/artifact/software.amazon.awssdk/bom/2.22.5/pom
-  - Repositório do projeto (GitHub): https://github.com/aws/aws-sdk-java-v2
-- Riscos / Observações:
-  - Atualizações de major podem trazer breaking changes; manter BOM ajuda a controlar versões coerentes entre módulos do SDK.
-- Recomendações práticas:
-  - Manter o BOM com a propriedade `awsjavasdk.version` (boa prática já adotada no `pom.xml`).
-  - Aplicar updates de patch/minor regularmente (monitorar changelogs e avisos de segurança).
-  - Criar testes de integração (com mocks ou ambiente de staging) para validar comportamento ao atualizar o SDK.
+## 2) software.amazon.awssdk:s3
+- Versão no projeto: 2.22.5 (definida pelo BOM `software.amazon.awssdk:bom:2.22.5`)
+- Versionamento semântico: Sim — o AWS SDK for Java v2 usa semantic versioning.
+- LTS (Long-Term Support): A AWS não publica formalmente versões "LTS" para o SDK v2; o projeto mantém compatibilidade e correções em versões estáveis e fornece um BOM para alinhar versões entre módulos.
+- Link para a versão referenciada (Maven Central — módulo s3): https://search.maven.org/artifact/software.amazon.awssdk/s3/2.22.5/jar
+- Link para o BOM usado (`software.amazon.awssdk:bom:2.22.5`): https://search.maven.org/artifact/software.amazon.awssdk/bom/2.22.5/pom
+
+Observações: ao atualizar o SDK AWS, prefira atualizar o BOM para garantir compatibilidade entre módulos (s3, core, etc.).
 
 ---
 
-Cobertura de requisitos
-- Confirmar versões no `pom.xml`: Done (modelmapper 3.1.1; aws s3 2.22.5 via property/BOM).
-- Identificar semver: Done (ambos usam MAJOR.MINOR.PATCH).
-- Identificar LTS: Done (nenhum dos dois possui designação LTS oficial).
+### Notas sobre exclusões
+Conforme solicitado, não considerei Java nem Spring nesta verificação (foco em bibliotecas `modelmapper` e `aws sdk`).
 
-Próximos passos sugeridos
-- Habilitar Dependabot/Renovate para PRs automáticas com atualizações de segurança/patch.
-- Adicionar um checklist de upgrade no repositório (rodar testes, revisar changelog, validar integrações com S3).
-
-Data da avaliação: 2026-04-11
-
-Gerado automaticamente a partir do `pom.xml` em: C:\Users\samuel_lucio\Documents\pessoal\Spring\miniEcommerceSpring
-
+### Próximos passos sugeridos
+- Use Dependabot para abrir PRs automáticos de atualização (já configurado no repositório).
+- Configure OWASP Dependency Check para detectar vulnerabilidades e bloquear builds com CVSS >= 7 (já configurado no `pom.xml`; adicionamos um workflow para rodar o build com cache).
