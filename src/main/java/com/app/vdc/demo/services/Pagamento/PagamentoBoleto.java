@@ -7,7 +7,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.kafka.core.KafkaTemplate;
+//import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -17,7 +17,7 @@ public class PagamentoBoleto implements PagamentoIS{
     @Value("${chave}")
     private String chave;
 
-    private KafkaTemplate<String , String> kafkaTemplate;
+//    private KafkaTemplate<String , String> kafkaTemplate;
 
     public UsuarioSalvo pagarBoleto(){
         return null;
@@ -56,7 +56,7 @@ public class PagamentoBoleto implements PagamentoIS{
 
     @Override
     public void sendPaymentRegister(String paymentId) {
-        this.kafkaTemplate.send("payments", paymentId);
+//        this.kafkaTemplate.send("payments", paymentId);
         System.out.println("Pagamento registrado com ID: " + paymentId + " concluido");
     }
 
