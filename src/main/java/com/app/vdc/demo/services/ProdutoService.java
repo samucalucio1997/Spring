@@ -82,7 +82,7 @@ public class ProdutoService implements ProdutoIS{
     @Override
     public boolean EditarProduto(Produto produto,int qtd) {
           if(produto!=null && qtd>0){
-            Produto pro =  produtos.getById(produto.getId());
+            Produto pro =  produtos.findById(produto.getId());
             pro.setQtd(qtd);
             return true;
           }else{
@@ -93,7 +93,7 @@ public class ProdutoService implements ProdutoIS{
     @Override
     public boolean EditarProduto(Produto produto, float preco){
         if(produto != null && preco > 0.0){
-            produtos.getById(produto.getId()).setPrecoUni(preco);
+            produtos.findById(produto.getId()).setPrecoUni(preco);
             return true;
         }else{
             return false;
@@ -103,7 +103,7 @@ public class ProdutoService implements ProdutoIS{
     @Override
     public Boolean EditarProduto(Produto produto, Categorias categoria){
         if(produto!=null&&categoria !=null){
-               produtos.getById(produto.getId()).setCategoria(categoria); 
+               produtos.findById(produto.getId()).setCategoria(categoria);
                return true;
         }else{
             return false;

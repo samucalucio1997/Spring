@@ -8,7 +8,6 @@ import com.app.vdc.demo.services.Pagamento.PagamentoBoleto;
 import com.app.vdc.demo.services.UserService;
 
 import com.app.vdc.demo.dto.UsuarioSalvo;
-import reactor.core.publisher.Flux;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +15,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -127,14 +125,14 @@ public class ImplemController {
           httpSession.invalidate();
      }
 
-     @GetMapping(value = "cep")
-     @PreAuthorize("permiteAll()")
-     public Flux<Object> testAPi(@RequestParam("cep") String cep){
-       return WebClient.create().get()
-       .uri("https://viacep.com.br/ws/"+ cep + "/json")
-       .retrieve()
-       .bodyToFlux(Object.class);
-     }
+//     @GetMapping(value = "cep")
+//     @PreAuthorize("permiteAll()")
+//     public Flux<Object> testAPi(@RequestParam("cep") String cep){
+//       return WebClient.create().get()
+//       .uri("https://viacep.com.br/ws/"+ cep + "/json")
+//       .retrieve()
+//       .bodyToFlux(Object.class);
+//     }
 
 
 }
