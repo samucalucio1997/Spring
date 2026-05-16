@@ -28,7 +28,7 @@ jobs:
       - name: Run dependency check
         env:
           NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
-        run: mvn org.owasp:dependency-check-maven:check -Dformat=HTML
+        run: mvn org.owasp:dependency-check-maven:check -Dformat=HTML -DnvdApiKey=${{ secrets.NVD_API_KEY }} -DnvdApiDelay=8000
 
       - name: Upload report
         uses: actions/upload-artifact@v4
