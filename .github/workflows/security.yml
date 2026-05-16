@@ -17,6 +17,14 @@ jobs:
           java-version: 17
           cache: maven
 
+      - name: Cache NVD Data
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository/org/owasp/dependency-check-data
+          key: ${{ runner.os }}-nvd-data-${{ github.run_id }}
+          restore-keys: |
+            ${{ runner.os }}-nvd-data-
+
       - name: Run dependency check
         env:
           NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
