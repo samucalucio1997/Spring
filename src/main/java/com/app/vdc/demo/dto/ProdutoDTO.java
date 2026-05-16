@@ -12,12 +12,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProdutoDTO {
-    private int id;
-    private String nome;
-    private int qtd;
-    private float precoUni;
-    private String descricao;
-    private Categorias categoria;
-    private List<ImagemProdutoDTO> imagens;
-}
 
+	private int id;
+
+	private String nome;
+
+	private int qtd;
+
+	private float precoUni;
+
+	private String descricao;
+
+	private Categorias categoria;
+
+	private List<ImagemProdutoDTO> imagens;
+
+}

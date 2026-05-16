@@ -14,19 +14,16 @@ import java.util.Collection;
 import java.util.List;
 
 @Component
-public interface ProdutoRepository extends JpaRepository<Produto, Integer>{
+public interface ProdutoRepository extends JpaRepository<Produto, Integer> {
 
-      <T> Collection<T> findByNome(String nome);
+	<T> Collection<T> findByNome(String nome);
 
-      Produto findById(int id);
+	Produto findById(int id);
 
-      @Query("SELECT p " +
-             "FROM Produto p " +
-             "WHERE 1=1 AND (:categoria IS NULL OR p.categoria = :categoria) " +
-             "AND (:precoMin IS NULL OR p.precoUni >= :precoMin) " +
-             "AND (:precoMax IS NULL OR p.precoUni <= :precoMax) "
-      )
-      Page<Produto> findByFilter(@Param("categoria") Categorias categoria,
-                                 @Param("precoMin") Float precoMin,
-                                 @Param("precoMax") Float precoMax, Pageable pageable);
+	@Query("SELECT p " + "FROM Produto p " + "WHERE 1=1 AND (:categoria IS NULL OR p.categoria = :categoria) "
+			+ "AND (:precoMin IS NULL OR p.precoUni >= :precoMin) "
+			+ "AND (:precoMax IS NULL OR p.precoUni <= :precoMax) ")
+	Page<Produto> findByFilter(@Param("categoria") Categorias categoria, @Param("precoMin") Float precoMin,
+			@Param("precoMax") Float precoMax, Pageable pageable);
+
 }

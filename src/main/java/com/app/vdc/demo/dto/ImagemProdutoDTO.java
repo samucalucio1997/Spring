@@ -14,11 +14,14 @@ import org.springframework.lang.Nullable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ImagemProdutoDTO {
-    private int id;
-    private String nomeArquivo;
-    private String path;
-//    private String tipoArquivo;
-//    private long tamanhoArquivo;
+
+	private int id;
+
+	private String nomeArquivo;
+
+	private String path;
+
+	// private String tipoArquivo;
+	// private long tamanhoArquivo;
 
 }
-

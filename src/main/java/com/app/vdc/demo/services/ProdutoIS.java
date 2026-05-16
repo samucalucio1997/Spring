@@ -13,23 +13,21 @@ import com.app.vdc.demo.Model.Produto;
 import com.app.vdc.demo.dto.ProdutoResponse;
 
 public interface ProdutoIS {
- 
-    public boolean CadastrarProduto(ProdutoDTO produto,List<MultipartFile> imgs) throws IOException;
 
-    public void RemoverProduto(int produtoID);
+	public boolean CadastrarProduto(ProdutoDTO produto, List<MultipartFile> imgs) throws IOException;
 
-    public boolean EditarProduto(Produto produto, int qtd);
+	public void RemoverProduto(int produtoID);
 
-    public Page<ProdutoDTO> ListarPro(String categoria,
-                                      Double precoMin,
-                                      Double precoMax,
-                                      Pageable pageable);
-    
-    public ProdutoResponse PegarPorId(int id);
+	public boolean EditarProduto(Produto produto, int qtd);
 
-    public Boolean EditarProduto(Produto produto, Categorias categoria);
+	public Page<ProdutoDTO> ListarPro(String categoria, Double precoMin, Double precoMax, Pageable pageable);
 
-    public boolean EditarProduto(Produto produto, float preco);
+	public ProdutoResponse PegarPorId(int id);
 
-    public boolean EditarProduto(int produtoID, List<MultipartFile> imgs, ProdutoDTO produtoDTO);
+	public Boolean EditarProduto(Produto produto, Categorias categoria);
+
+	public boolean EditarProduto(Produto produto, float preco);
+
+	public boolean EditarProduto(int produtoID, List<MultipartFile> imgs, ProdutoDTO produtoDTO);
+
 }

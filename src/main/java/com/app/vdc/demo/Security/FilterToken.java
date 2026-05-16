@@ -18,29 +18,28 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.app.vdc.demo.repository.UserRepository;
 
 @Component
-public class FilterToken extends OncePerRequestFilter{
+public class FilterToken extends OncePerRequestFilter {
 
-    @Autowired
-    private UserRepository userRepository;
+	@Autowired
+	private UserRepository userRepository;
 
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+	@Override
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+			throws ServletException, IOException {
 
-        String token="";
-        var authorization = request.getHeader("Authorization");
-        if(authorization != null){
-            token = authorization.replace("Bearer ", "");
+		String token = "";
+		var authorization = request.getHeader("Authorization");
+		if (authorization != null) {
+			token = authorization.replace("Bearer ", "");
 
-            DecodedJWT jwt = TokenUtil.decodeAndVerifyIgnoringExpiration(token);
-            String subject = jwt.getSubject();
-            var usuario = this.userRepository.findByUsername(subject);
+			DecodedJWT jwt = TokenUtil.decodeAndVerifyIgnoringExpiration(token);
+			String subject = jwt.getSubject();
+			var usuario = this.userRepository.findByUsername(subject);
 
-            var authentication = new UsernamePasswordAuthenticationToken(usuario,
-            null, usuario.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-        }
-        filterChain.doFilter(request, response);
-    }
+			var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+		}
+		filterChain.doFilter(request, response);
+	}
 
 }

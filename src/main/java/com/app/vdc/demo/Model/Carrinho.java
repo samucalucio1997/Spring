@@ -5,14 +5,13 @@ import java.util.List;
 
 @Entity
 public class Carrinho {
+
 	@javax.persistence.Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long Id;
+
 	@ManyToMany(fetch = FetchType.LAZY)
 	private List<Produto> produtos;
-
-     
-
 
 	public Carrinho(List<Produto> produtos) {
 		this.produtos = produtos;
@@ -30,9 +29,8 @@ public class Carrinho {
 		this.produtos = produtos;
 	}
 
-    public Long getId() {
+	public Long getId() {
 		return Id;
 	}
-
 
 }

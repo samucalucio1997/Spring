@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface ImagemIS {
 
-    public void salvarImagem(List<MultipartFile> imgs, List<ImagemProduto> imagensProdutos);
+	public void salvarImagem(List<MultipartFile> imgs, List<ImagemProduto> imagensProdutos);
+
 }

@@ -13,33 +13,32 @@ import java.util.Collections;
 @Service
 public class GoogleTokenService {
 
-    @Value("${client.google.id}")
-    private String clientId;
+	@Value("${client.google.id}")
+	private String clientId;
 
-    public GoogleUsuario verify(String token) {
+	public GoogleUsuario verify(String token) {
 
-        try {
+		try {
 
-            GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier
-                    .Builder(new NetHttpTransport(), new GsonFactory())
-                    .setAudience(Collections.singletonList(clientId))
-                    .build();
+			GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(),
+					new GsonFactory())
+				.setAudience(Collections.singletonList(clientId))
+				.build();
 
-            GoogleIdToken idToken = verifier.verify(token);
+			GoogleIdToken idToken = verifier.verify(token);
 
-            if (idToken == null) {
-                throw new RuntimeException("Token inválido");
-            }
+			if (idToken == null) {
+				throw new RuntimeException("Token inválido");
+			}
 
-            final var payload = idToken.getPayload();
+			final var payload = idToken.getPayload();
 
-            return GoogleUsuario.builder()
-                    .email(payload.getEmail())
-                    .nome((String) payload.get("name"))
-                    .build();
+			return GoogleUsuario.builder().email(payload.getEmail()).nome((String) payload.get("name")).build();
 
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 }

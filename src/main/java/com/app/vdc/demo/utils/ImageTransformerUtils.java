@@ -6,13 +6,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ImageTransformerUtils {
 
-    private static ObjectMapper objectMapper;
+	private static ObjectMapper objectMapper;
 
-    static {
-        objectMapper = new ObjectMapper();
-    }
+	static {
+		objectMapper = new ObjectMapper();
+	}
 
-    public static ImagemProduto imageDTOToImageDomain(ImagemProdutoDTO imgProduto) {
-        return ImageTransformerUtils.objectMapper.convertValue(imgProduto, ImagemProduto.class);
-    }
+	public static ImagemProduto imageDTOToImageDomain(ImagemProdutoDTO imgProduto) {
+		return ImageTransformerUtils.objectMapper.convertValue(imgProduto, ImagemProduto.class);
+	}
+
 }
