@@ -22,74 +22,70 @@ import com.app.vdc.demo.dto.ProdutoResponse;
 @RequestMapping("/produto")
 public class ProdutoController {
 
-    @Autowired
-    private ProdutoIS produto;
+	@Autowired
+	private ProdutoIS produto;
 
-    @Autowired
-    private PagamentoBoleto pagamentoBoleto;
+	@Autowired
+	private PagamentoBoleto pagamentoBoleto;
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping(value="/cadastraProduto", consumes = "multipart/form-data")
-    public ResponseEntity<Boolean> CadRegs(
-          @RequestPart(value = "img", required = false)
-          List<MultipartFile> file,
-          @RequestPart(value = "produto") ProdutoDTO produto
-          ) throws IOException{
-          if(produto != null){
-               this.produto.CadastrarProduto(produto, file != null ? file : null);
-               return ResponseEntity.ok(true);
-          }else{
-               return ResponseEntity.ok(false);
-          }
-    }
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@PostMapping(value = "/cadastraProduto", consumes = "multipart/form-data")
+	public ResponseEntity<Boolean> CadRegs(@RequestPart(value = "img", required = false) List<MultipartFile> file,
+			@RequestPart(value = "produto") ProdutoDTO produto) throws IOException {
+		if (produto != null) {
+			this.produto.CadastrarProduto(produto, file != null ? file : null);
+			return ResponseEntity.ok(true);
+		}
+		else {
+			return ResponseEntity.ok(false);
+		}
+	}
 
-    @GetMapping("/produtos")
-    public Page<ProdutoDTO> ListarProdutos(
-            @RequestParam(value = "categoria", required = false) String categoria,
-            @RequestParam(value = "precoMin", required = false) Double precoMin,
-            @RequestParam(value = "precoMax", required = false) Double precoMax,
-            Pageable pageable
-    ){
-       return this.produto.ListarPro(categoria, precoMin, precoMax, pageable);
-    }
+	@GetMapping("/produtos")
+	public Page<ProdutoDTO> ListarProdutos(@RequestParam(value = "categoria", required = false) String categoria,
+			@RequestParam(value = "precoMin", required = false) Double precoMin,
+			@RequestParam(value = "precoMax", required = false) Double precoMax, Pageable pageable) {
+		return this.produto.ListarPro(categoria, precoMin, precoMax, pageable);
+	}
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PatchMapping(value = "/editarProduto", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Boolean> editarftProduto(@RequestParam("produtoId") Integer produtoId, @RequestPart( value = "imagens", required = false) List<MultipartFile> imgs,
-        @RequestParam("nome") String nome,
-        @RequestParam("qtd") Integer qtd,
-        @RequestParam("precoUni") Float precoUni,
-        @RequestParam("descricao") String descricao,
-        @RequestParam("categoria") String categoria
-    ){
-         try {
-              final var produto = ProdutoDTO.builder()
-                      .id(produtoId)
-                      .nome(nome)
-                      .qtd(qtd)
-                      .precoUni(precoUni)
-                      .descricao(descricao)
-                      .categoria(categoria != null ? Enum.valueOf(com.app.vdc.demo.Model.Categorias.class, categoria) : null)
-                      .build();
-              return ResponseEntity.status(200).body(this.produto.EditarProduto(produtoId, imgs, produto));
-         } catch (Exception e) {
-              return ResponseEntity.status(401).body(new Message("deu errado", null, false)).badRequest().build();
-         }
-    }
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@PatchMapping(value = "/editarProduto", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<Boolean> editarftProduto(@RequestParam("produtoId") Integer produtoId,
+			@RequestPart(value = "imagens", required = false) List<MultipartFile> imgs,
+			@RequestParam("nome") String nome, @RequestParam("qtd") Integer qtd,
+			@RequestParam("precoUni") Float precoUni, @RequestParam("descricao") String descricao,
+			@RequestParam("categoria") String categoria) {
+		try {
+			final var produto = ProdutoDTO.builder()
+				.id(produtoId)
+				.nome(nome)
+				.qtd(qtd)
+				.precoUni(precoUni)
+				.descricao(descricao)
+				.categoria(categoria != null ? Enum.valueOf(com.app.vdc.demo.Model.Categorias.class, categoria) : null)
+				.build();
+			return ResponseEntity.status(200).body(this.produto.EditarProduto(produtoId, imgs, produto));
+		}
+		catch (Exception e) {
+			return ResponseEntity.status(401).body(new Message("deu errado", null, false)).badRequest().build();
+		}
+	}
 
-    @GetMapping("/{id}")
-    ResponseEntity<ProdutoResponse> produtoPorId(@PathVariable int id){
-         return ResponseEntity.status(200).body(this.produto.PegarPorId(id));
-    }
+	@GetMapping("/{id}")
+	ResponseEntity<ProdutoResponse> produtoPorId(@PathVariable int id) {
+		return ResponseEntity.status(200).body(this.produto.PegarPorId(id));
+	}
 
-    @DeleteMapping("/deletarProduto")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Boolean> deletarProduto(@RequestParam("produtoId") Integer produtoId) {
-        try {
-            this.produto.RemoverProduto(produtoId);
-            return ResponseEntity.ok(true);
-        } catch (Exception e) {
-            return ResponseEntity.ok(false);
-        }
-    }
+	@DeleteMapping("/deletarProduto")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public ResponseEntity<Boolean> deletarProduto(@RequestParam("produtoId") Integer produtoId) {
+		try {
+			this.produto.RemoverProduto(produtoId);
+			return ResponseEntity.ok(true);
+		}
+		catch (Exception e) {
+			return ResponseEntity.ok(false);
+		}
+	}
+
 }

@@ -6,14 +6,15 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix = "archive")
 public class FileStorageProduct {
-    private String sobeImg;
 
-    public String getSobeImg() {
-        return sobeImg;
-    }
+	private String sobeImg;
 
-    public void setSobeImg(String sobeImg) {
-        this.sobeImg = sobeImg;
-    }
-    
+	public String getSobeImg() {
+		return sobeImg;
+	}
+
+	public void setSobeImg(String sobeImg) {
+		this.sobeImg = sobeImg;
+	}
+
 }

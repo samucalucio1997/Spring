@@ -25,114 +25,104 @@ import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
 
-
 @RestController
 @RequestMapping("/home")
 public class ImplemController {
-     
-     @Autowired
-     private UserRepository userRepository;
 
-     @Autowired
-     private PagamentoBoleto pagamentoBoleto;
+	@Autowired
+	private UserRepository userRepository;
 
-     @Autowired
-     private AuthenticationManager authenticationManager;
+	@Autowired
+	private PagamentoBoleto pagamentoBoleto;
 
-     @Autowired
-     private UserService service;
+	@Autowired
+	private AuthenticationManager authenticationManager;
 
-     
-//     private final Path filestorageProperties;
+	@Autowired
+	private UserService service;
 
-     
+	// private final Path filestorageProperties;
 
-//     public ImplemController(FilestorageProperties filestorageProperties) {
-//          this.filestorageProperties = Paths.get(filestorageProperties.getUploadDir()).toAbsolutePath();
-//     }
+	// public ImplemController(FilestorageProperties filestorageProperties) {
+	// this.filestorageProperties =
+	// Paths.get(filestorageProperties.getUploadDir()).toAbsolutePath();
+	// }
 
-     @GetMapping("/cadastroPro")
-     @PreAuthorize("permitAll()")
-     public ResponseEntity<Boolean> PostCadastro(@RequestBody UsuarioSalvo usuario) {
-          try {
-               User usuarioSave = new User();
-               usuarioSave.setEmail(usuario.getEmail());
-               usuarioSave.setPassword(usuario.getPassword());
-               usuarioSave.setUsername(usuario.getUsername());
-               usuarioSave.setCarrinho(usuarioSave.getCarrinho());
-               usuarioSave.setCEP(usuario.getCEP());
-               usuarioSave.setImagem(usuario.getImagem());
-               usuarioSave.setFirst_name(usuario.getFirst_name());
-               usuarioSave.setLast_name(usuario.getLast_name());
-               usuarioSave.setNumcasa(usuario.getNumcasa());
-               usuarioSave.setIs_staff(false);
-               this.service.CriarUser(usuarioSave,null);
-          }catch (Exception e) {
+	@GetMapping("/cadastroPro")
+	@PreAuthorize("permitAll()")
+	public ResponseEntity<Boolean> PostCadastro(@RequestBody UsuarioSalvo usuario) {
+		try {
+			User usuarioSave = new User();
+			usuarioSave.setEmail(usuario.getEmail());
+			usuarioSave.setPassword(usuario.getPassword());
+			usuarioSave.setUsername(usuario.getUsername());
+			usuarioSave.setCarrinho(usuarioSave.getCarrinho());
+			usuarioSave.setCEP(usuario.getCEP());
+			usuarioSave.setImagem(usuario.getImagem());
+			usuarioSave.setFirst_name(usuario.getFirst_name());
+			usuarioSave.setLast_name(usuario.getLast_name());
+			usuarioSave.setNumcasa(usuario.getNumcasa());
+			usuarioSave.setIs_staff(false);
+			this.service.CriarUser(usuarioSave, null);
+		}
+		catch (Exception e) {
 
-          }
+		}
 
-          return ResponseEntity.ok(true); 
-     }    
+		return ResponseEntity.ok(true);
+	}
 
-     @GetMapping("/Categoria")
-     public ArrayList<Categorias> GetCategoria() {
-          ArrayList<Categorias> m = new ArrayList<>();
-          return m;
-     }
-     
-    
-     @PostMapping(value = "/cadastroUser")
-     public ResponseEntity<User> PostCadastro(
-     @RequestParam(value="file",required = false) MultipartFile file,
-     @RequestParam("username") String username,
-     @RequestParam("password") String password,
-     @RequestParam("first_name") String first_name,
-     @RequestParam("last_name") String last_name,
-     @RequestParam("email") String email,
-     @RequestParam("cep") String cep,
-     @RequestParam("numcasa") int numcasa,
-     @RequestParam(value="is_staff",required = false,defaultValue = "0") int code
-     ) throws IOException {
-          User usuario = 
-          new User(username, first_name, last_name,
-          email, password, cep, numcasa, true);
-          System.out.println("code =>"+code); 
-          if (code==351622) {
-              usuario.setIs_staff(true);
-          }
-          User usuUser = this.service.CriarUser(usuario,file);
-          String msg = usuario.isIs_active()?"está ativo":"ative imedia";
-          System.out.println("Bem-Vindo " + username+", "+msg);
-          return ResponseEntity.ok(usuUser);
-     }
+	@GetMapping("/Categoria")
+	public ArrayList<Categorias> GetCategoria() {
+		ArrayList<Categorias> m = new ArrayList<>();
+		return m;
+	}
 
-     @GetMapping("/{id}")
-     public Optional<User> ConsultarCep(@PathVariable("id") int id) {
-          // TODO Auto-generated method stub
-         return this.userRepository.findById(id);
-     }
-     
-//     @PostMapping("/image")
-//     public ResponseEntity<byte[]> GetImage(@RequestParam("id") int id) throws IOException{
-//          User pessoa = this.userRepository.findById(id).get();
-//          Path path = this.filestorageProperties.resolve(pessoa.getImagem()).toAbsolutePath();
-//          return ResponseEntity.ok(Files.readAllBytes(path));
-//     }
+	@PostMapping(value = "/cadastroUser")
+	public ResponseEntity<User> PostCadastro(@RequestParam(value = "file", required = false) MultipartFile file,
+			@RequestParam("username") String username, @RequestParam("password") String password,
+			@RequestParam("first_name") String first_name, @RequestParam("last_name") String last_name,
+			@RequestParam("email") String email, @RequestParam("cep") String cep, @RequestParam("numcasa") int numcasa,
+			@RequestParam(value = "is_staff", required = false, defaultValue = "0") int code) throws IOException {
+		User usuario = new User(username, first_name, last_name, email, password, cep, numcasa, true);
+		System.out.println("code =>" + code);
+		if (code == 351622) {
+			usuario.setIs_staff(true);
+		}
+		User usuUser = this.service.CriarUser(usuario, file);
+		String msg = usuario.isIs_active() ? "está ativo" : "ative imedia";
+		System.out.println("Bem-Vindo " + username + ", " + msg);
+		return ResponseEntity.ok(usuUser);
+	}
 
-     @GetMapping("/logout")
-     public void logout(HttpSession httpSession){
-          System.out.println("deslogado");
-          httpSession.invalidate();
-     }
+	@GetMapping("/{id}")
+	public Optional<User> ConsultarCep(@PathVariable("id") int id) {
+		// TODO Auto-generated method stub
+		return this.userRepository.findById(id);
+	}
 
-//     @GetMapping(value = "cep")
-//     @PreAuthorize("permiteAll()")
-//     public Flux<Object> testAPi(@RequestParam("cep") String cep){
-//       return WebClient.create().get()
-//       .uri("https://viacep.com.br/ws/"+ cep + "/json")
-//       .retrieve()
-//       .bodyToFlux(Object.class);
-//     }
+	// @PostMapping("/image")
+	// public ResponseEntity<byte[]> GetImage(@RequestParam("id") int id) throws
+	// IOException{
+	// User pessoa = this.userRepository.findById(id).get();
+	// Path path =
+	// this.filestorageProperties.resolve(pessoa.getImagem()).toAbsolutePath();
+	// return ResponseEntity.ok(Files.readAllBytes(path));
+	// }
 
+	@GetMapping("/logout")
+	public void logout(HttpSession httpSession) {
+		System.out.println("deslogado");
+		httpSession.invalidate();
+	}
+
+	// @GetMapping(value = "cep")
+	// @PreAuthorize("permiteAll()")
+	// public Flux<Object> testAPi(@RequestParam("cep") String cep){
+	// return WebClient.create().get()
+	// .uri("https://viacep.com.br/ws/"+ cep + "/json")
+	// .retrieve()
+	// .bodyToFlux(Object.class);
+	// }
 
 }

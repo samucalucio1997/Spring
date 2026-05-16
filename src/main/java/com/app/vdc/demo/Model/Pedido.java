@@ -3,61 +3,61 @@ package com.app.vdc.demo.Model;
 import javax.persistence.*;
 import java.time.LocalTime;
 
-
 @Entity
 public class Pedido {
-   @Id
-   @GeneratedValue(strategy = GenerationType.IDENTITY)
-   private Long id;
-   private LocalTime dataCriacao;
-   @ManyToOne(cascade = CascadeType.ALL)
-   private User cliente;
-   @OneToOne(cascade = CascadeType.ALL)
-   private Carrinho car;
 
-   
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-   public Long getId() {
-      return id;
-   }
+	private LocalTime dataCriacao;
 
-   public void setId(Long id) {
-      this.id = id;
-   }
+	@ManyToOne(cascade = CascadeType.ALL)
+	private User cliente;
 
-   public LocalTime getDataCriacao() {
-      return dataCriacao;
-   }
+	@OneToOne(cascade = CascadeType.ALL)
+	private Carrinho car;
 
-   public void setDataCriacao(LocalTime dataCriacao) {
-      this.dataCriacao = dataCriacao;
-   }
+	public Long getId() {
+		return id;
+	}
 
-   public Carrinho getCar() {
-      return car;
-   }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-   public void setCar(Carrinho car) {
-      this.car = car;
-   }
+	public LocalTime getDataCriacao() {
+		return dataCriacao;
+	}
 
-   public boolean isIs_finished() {
-      return is_finished;
-   }
+	public void setDataCriacao(LocalTime dataCriacao) {
+		this.dataCriacao = dataCriacao;
+	}
 
-   public void setIs_finished(boolean is_finished) {
-      this.is_finished = is_finished;
-   }
+	public Carrinho getCar() {
+		return car;
+	}
 
-   public User getCliente() {
-      return cliente;
-   }
+	public void setCar(Carrinho car) {
+		this.car = car;
+	}
 
-   public void setCliente(User cliente) {
-      this.cliente = cliente;
-   }
+	public boolean isIs_finished() {
+		return is_finished;
+	}
 
-   private boolean is_finished;
+	public void setIs_finished(boolean is_finished) {
+		this.is_finished = is_finished;
+	}
 
-   
+	public User getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(User cliente) {
+		this.cliente = cliente;
+	}
+
+	private boolean is_finished;
+
 }

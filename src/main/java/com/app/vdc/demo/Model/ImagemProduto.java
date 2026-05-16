@@ -1,33 +1,39 @@
 package com.app.vdc.demo.Model;
 
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
 @Entity
 public class ImagemProduto {
-   @Id
-   @GeneratedValue(strategy = GenerationType.IDENTITY) 
-   private int id;
-   
-   private String path;
 
-   private String nomeArquivo;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int id;
 
-    public String getNomeArquivo() { return nomeArquivo; }
+	private String path;
 
-    public void setNomeArquivo(String nomeArquivo) { this.nomeArquivo = nomeArquivo; }
+	private String nomeArquivo;
 
-    public String getPath() {
-      return path;
-   }
+	public String getNomeArquivo() {
+		return nomeArquivo;
+	}
 
-   public void setPath(String path) {
-      this.path = path;
-   }
+	public void setNomeArquivo(String nomeArquivo) {
+		this.nomeArquivo = nomeArquivo;
+	}
 
-   public int getId() {
-      return id;
-   }
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+	public int getId() {
+		return id;
+	}
+
 }

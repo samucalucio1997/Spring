@@ -1,21 +1,22 @@
 package com.app.vdc.demo.Security;
 
 public class AuthToken {
-    private String token;
 
-    public AuthToken() {
-    }
+	private String token;
 
-    public AuthToken(String token) {
-        this.token = token;
-    }
+	public AuthToken() {
+	}
 
-    public String getToken() {
-        return token;
-    }
+	public AuthToken(String token) {
+		this.token = token;
+	}
 
-    public void setToken(String token) {
-        this.token = token;
-    }
-    
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
 }

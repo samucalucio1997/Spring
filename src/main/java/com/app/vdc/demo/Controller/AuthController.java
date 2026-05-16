@@ -23,90 +23,83 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final GoogleTokenService googleTokenService;
+	private final GoogleTokenService googleTokenService;
 
-    private final AuthenticationManager authenticationManager;
+	private final AuthenticationManager authenticationManager;
 
-    private final UserDetailsService userDetailsService;
+	private final UserDetailsService userDetailsService;
 
-    @PreAuthorize("permitAll()")
-    @PostMapping("/google")
-    public UserLoginReturn authenticateWithGoogle(@RequestParam("token") String token) {
-        try {
-            final var user = googleTokenService.verify(token);
-            final var usuarioDto = UsuarioDto.builder()
-                    .email(user.getEmail())
-                    .nome(user.getNome())
-                    .role("ROLE_USER")
-                    .build();
+	@PreAuthorize("permitAll()")
+	@PostMapping("/google")
+	public UserLoginReturn authenticateWithGoogle(@RequestParam("token") String token) {
+		try {
+			final var user = googleTokenService.verify(token);
+			final var usuarioDto = UsuarioDto.builder()
+				.email(user.getEmail())
+				.nome(user.getNome())
+				.role("ROLE_USER")
+				.build();
 
-            String jwtToken = TokenUtil.generate(user.getEmail());
-            return UserLoginReturn
-                    .builder()
-                    .token(jwtToken)
-                    .usuarioDto(usuarioDto)
-                    .build();
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao autenticar com Google: " + e.getMessage());
-        }
-    }
+			String jwtToken = TokenUtil.generate(user.getEmail());
+			return UserLoginReturn.builder().token(jwtToken).usuarioDto(usuarioDto).build();
+		}
+		catch (Exception e) {
+			throw new RuntimeException("Erro ao autenticar com Google: " + e.getMessage());
+		}
+	}
 
-    @PostMapping("/login")
-    @PreAuthorize("permitAll()")
-    public UserLoginReturn Authentica(
-            @RequestParam("username") String username,
-            @RequestParam("password") String password
-    ) throws IOException {
+	@PostMapping("/login")
+	@PreAuthorize("permitAll()")
+	public UserLoginReturn Authentica(@RequestParam("username") String username,
+			@RequestParam("password") String password) throws IOException {
 
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                new UsernamePasswordAuthenticationToken(username, password);
+		UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+				username, password);
 
-        Authentication auth = this.authenticationManager
-                .authenticate(usernamePasswordAuthenticationToken);
+		Authentication auth = this.authenticationManager.authenticate(usernamePasswordAuthenticationToken);
 
-        final var user =(User) auth.getPrincipal();
-        final var authorities = user.getAuthorities().stream().map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList());
+		final var user = (User) auth.getPrincipal();
+		final var authorities = user.getAuthorities()
+			.stream()
+			.map(GrantedAuthority::getAuthority)
+			.collect(Collectors.toList());
 
-        final var usuarioDto = UsuarioDto.builder()
-                .email(user.getEmail())
-                .nome(user.getUsername())
-                .role(authorities.get(0))
-                .build();
+		final var usuarioDto = UsuarioDto.builder()
+			.email(user.getEmail())
+			.nome(user.getUsername())
+			.role(authorities.get(0))
+			.build();
 
-        return UserLoginReturn
-                .builder()
-                .token(TokenUtil.encodeToken(user))
-                .usuarioDto(usuarioDto)
-                .build();
-    }
+		return UserLoginReturn.builder().token(TokenUtil.encodeToken(user)).usuarioDto(usuarioDto).build();
+	}
 
-    @GetMapping("/validate")
-    @PreAuthorize("permitAll()")
-    public boolean validarToken(@RequestParam("token") String token) {
-        try {
-            TokenUtil.getSubject(token); // lança exceção se inválido/expirado
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
+	@GetMapping("/validate")
+	@PreAuthorize("permitAll()")
+	public boolean validarToken(@RequestParam("token") String token) {
+		try {
+			TokenUtil.getSubject(token); // lança exceção se inválido/expirado
+			return true;
+		}
+		catch (Exception e) {
+			return false;
+		}
+	}
 
-    @GetMapping("/refresh")
-    public String refreshToken(
-            @RequestHeader(value = "Authorization", required = false) String authorization) {
-        try {
-            String token = authorization.substring(7);
-            String username = TokenUtil.getSubjectAllowExpired(token);
+	@GetMapping("/refresh")
+	public String refreshToken(@RequestHeader(value = "Authorization", required = false) String authorization) {
+		try {
+			String token = authorization.substring(7);
+			String username = TokenUtil.getSubjectAllowExpired(token);
 
-            var userDetails = this.userDetailsService.loadUserByUsername(username);
-            // se sua User for a classe com.app.vdc.demo.Model.User, faça o cast:
-            User user = (User) userDetails;
+			var userDetails = this.userDetailsService.loadUserByUsername(username);
+			// se sua User for a classe com.app.vdc.demo.Model.User, faça o cast:
+			User user = (User) userDetails;
 
-            return TokenUtil.encodeToken(user);
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao atualizar o token: " + e.getMessage());
-        }
-    }
+			return TokenUtil.encodeToken(user);
+		}
+		catch (Exception e) {
+			throw new RuntimeException("Erro ao atualizar o token: " + e.getMessage());
+		}
+	}
 
 }

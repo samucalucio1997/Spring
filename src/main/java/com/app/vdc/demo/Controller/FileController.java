@@ -16,12 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class FileController {
 
-    private final AwsService awsService;
+	private final AwsService awsService;
 
-    @GetMapping(value = "/img")
-    public ResponseEntity<InputStreamResource> getFile(@RequestParam(name = "nomeArquivo") String nomeArquivo){
-        return ResponseEntity.ok()
-                        .contentType(MediaType.valueOf(MediaType.IMAGE_PNG_VALUE))
-                        .body(awsService.getFileUrl(nomeArquivo));
-    }
+	@GetMapping(value = "/img")
+	public ResponseEntity<InputStreamResource> getFile(@RequestParam(name = "nomeArquivo") String nomeArquivo) {
+		return ResponseEntity.ok()
+			.contentType(MediaType.valueOf(MediaType.IMAGE_PNG_VALUE))
+			.body(awsService.getFileUrl(nomeArquivo));
+	}
+
 }
