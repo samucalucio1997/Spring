@@ -16,19 +16,20 @@ jobs:
           distribution: temurin
           java-version: 17
           cache: maven
+          cache-dependency-path: '**/pom.xml'
 
-      - name: Cache NVD Data
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2/repository/org/owasp/dependency-check-data
-          key: ${{ runner.os }}-nvd-data-${{ github.run_id }}
-          restore-keys: |
-            ${{ runner.os }}-nvd-data-
+#      - name: Cache NVD Data
+#        uses: actions/cache@v4
+#        with:
+#          path: ~/.m2/repository/org/owasp/dependency-check-data
+#          key: ${{ runner.os }}-nvd-data-${{ github.run_id }}
+#          restore-keys: |
+#            ${{ runner.os }}-nvd-data-
 
       - name: Run dependency check
-        env:
-          NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
-        run: mvn org.owasp:dependency-check-maven:check -Dformat=HTML -DnvdApiKey=${{ secrets.NVD_API_KEY }} -DnvdApiDelay=8000
+#        env:
+#          NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
+        run: mvn org.owasp:dependency-check-maven:check -Dformat=HTML -DnvdApiDelay=8000
 
       - name: Upload report
         uses: actions/upload-artifact@v4
