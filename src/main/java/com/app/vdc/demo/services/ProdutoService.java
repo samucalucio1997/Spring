@@ -156,7 +156,25 @@ public class ProdutoService implements ProdutoIS {
 			}
 
 			if (!imgs.isEmpty()) {
-				this.imagemService.salvarImagem(imgs, listaImagens);
+//				this.imagemService.salvarImagem(imgs, listaImagens);
+                final var imagensProdutos = new ArrayList<ImagemProduto>();
+                imgs.stream().forEach(n -> {
+                    try {
+                        final var key = UUID.randomUUID().toString();
+                        awsService.uploadFileToS3Bucket("bucket-imagens-estoque-gerencia", key, n.getInputStream());
+                        final var imagemProdutoDTO = ImagemProdutoDTO.builder()
+                                .path(key)
+                                .nomeArquivo(n.getOriginalFilename())
+                                .build();
+                        imagensProdutos.add(ImageTransformerUtils.imageDTOToImageDomain(imagemProdutoDTO));
+                    }
+                    catch (IllegalStateException e) {
+                        throw new IllegalStateException("erro no estado ao enviar o input stream para o S3", e);
+                    }
+                    catch (IOException e) {
+                        throw new RuntimeException("Houve um problema ao enviar o input stream para o S3", e);
+                    }
+                });
 			}
 			final var produtoDomain = modelMapper.map(produto, Produto.class);
 
@@ -198,7 +216,25 @@ public class ProdutoService implements ProdutoIS {
 		produtoAtual.setQtd(produtoDTO.getQtd());
 
 		if (!imgs.isEmpty()) {
-			this.imagemService.salvarImagem(imgs, listaImagens);
+//			this.imagemService.salvarImagem(imgs, listaImagens);
+            final var imagensProdutos = new ArrayList<ImagemProduto>();
+            imgs.stream().forEach(n -> {
+                try {
+                    final var key = UUID.randomUUID().toString();
+                    awsService.uploadFileToS3Bucket("bucket-imagens-estoque-gerencia", key, n.getInputStream());
+                    final var imagemProdutoDTO = ImagemProdutoDTO.builder()
+                            .path(key)
+                            .nomeArquivo(n.getOriginalFilename())
+                            .build();
+                    imagensProdutos.add(ImageTransformerUtils.imageDTOToImageDomain(imagemProdutoDTO));
+                }
+                catch (IllegalStateException e) {
+                    throw new IllegalStateException("erro no estado ao enviar o input stream para o S3", e);
+                }
+                catch (IOException e) {
+                    throw new RuntimeException("Houve um problema ao enviar o input stream para o S3", e);
+                }
+            });
 		}
 
 		if (!listaImagens.isEmpty()) {
