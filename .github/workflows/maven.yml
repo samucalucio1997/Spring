@@ -35,5 +35,8 @@ jobs:
           cache: maven
           cache-dependency-path: '**/pom.xml'
 
+      - name: duplicate code check
+        run: mvn -B pmd:cpd-check
+
       - name: Build
         run: mvn -B -DskipTests verify
