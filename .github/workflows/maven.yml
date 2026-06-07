@@ -38,8 +38,15 @@ jobs:
       - name: Duplicate code check
         run: mvn -B pmd:cpd-check
 
+      - name: Install Graphviz
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y graphviz
+
       - name: Generate the UML diagram
-        run: mvn -B plantuml:generate
+        run: |
+          export MAVEN_OPTS="--add-exports java.desktop/com.sun.imageio.plugins.png=ALL-UNNAMED"
+          mvn -B plantuml:generate
 
       - name: Build
         run: mvn -B -DskipTests verify
