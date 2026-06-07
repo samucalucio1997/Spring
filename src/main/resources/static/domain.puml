@@ -1,0 +1,49 @@
+@startuml
+
+class Usuario {
+    id
+    nome
+    email
+    username
+}
+
+class Carrinho {
+    id
+}
+
+class Produto {
+    id
+    nome
+    descricao
+    preco
+    quantidade
+}
+
+class Pedido {
+    id
+    dataCriacao
+    finalizado
+}
+
+class ImagemProduto {
+    id
+    path
+    nomeArquivo
+}
+
+class Endereco {
+    cep
+    logradouro
+    bairro
+    localidade
+    uf
+}
+
+Usuario "1" -- "1" Carrinho
+Usuario "1" -- "*" Pedido
+Carrinho "*" -- "*" Produto
+Pedido "1" -- "1" Carrinho
+Produto "1" -- "*" ImagemProduto
+Usuario "*" -- "1" Endereco
+
+@enduml

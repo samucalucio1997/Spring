@@ -193,6 +193,32 @@
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>com.github.jeluard</groupId>
+                <artifactId>plantuml-maven-plugin</artifactId>
+                <version>1.2</version>
+
+                <configuration>
+                    <sourceFiles>
+                        <directory>${project.basedir}/src/main/resources/static</directory>
+                        <includes>
+                            <include>**/*.puml</include>
+                        </includes>
+                    </sourceFiles>
+
+                    <outputDirectory>
+                        ${project.build.directory}/plantuml
+                    </outputDirectory>
+                </configuration>
+
+                <dependencies>
+                    <dependency>
+                        <groupId>net.sourceforge.plantuml</groupId>
+                        <artifactId>plantuml</artifactId>
+                        <version>1.2025.3</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
                 <groupId>io.spring.javaformat</groupId>
                 <artifactId>spring-javaformat-maven-plugin</artifactId>
                 <version>0.0.47</version>

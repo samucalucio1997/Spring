@@ -35,8 +35,11 @@ jobs:
           cache: maven
           cache-dependency-path: '**/pom.xml'
 
-      - name: duplicate code check
+      - name: Duplicate code check
         run: mvn -B pmd:cpd-check
+
+      - name: Generate the UML diagram
+        run: mvn -B plantuml:generate
 
       - name: Build
         run: mvn -B -DskipTests verify
