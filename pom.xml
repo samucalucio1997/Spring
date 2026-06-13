@@ -237,8 +237,23 @@
                 <artifactId>maven-pmd-plugin</artifactId>
                 <version>3.26.0</version>
                 <configuration>
-                    <minimumTokens>100</minimumTokens>
+                    <targetJdk>17</targetJdk>
+
+                    <failOnViolation>true</failOnViolation>
+                    <printFailingErrors>true</printFailingErrors>
+
+                    <rulesets>
+                        <ruleset>src/main/resources/pmd-rules.xml</ruleset>
+                    </rulesets>
                 </configuration>
+                <executions>
+                    <execution>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
