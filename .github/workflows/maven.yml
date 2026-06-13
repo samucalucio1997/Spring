@@ -58,11 +58,12 @@ jobs:
       - name: Generate PMD Report
         run: mvn -B pmd:pmd
 
-      - name: Download PMD Report
+      - name: Upload PMD Report
         uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: pmd-report-code
-          path: target/reports/pmd.xml
+          name: pmd-report
+          path: target/site/pmd.html
 
       - name: Code smells PMD check
         run: mvn -B pmd:check
