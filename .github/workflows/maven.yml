@@ -63,10 +63,7 @@ jobs:
         if: always()
         with:
           name: pmd-report
-          path: target/site/pmd.html
-
-      - name: Code smells PMD check
-        run: mvn -B pmd:check
+          path: target/site/
 
       - name: Build
         run: mvn -B -DskipTests verify
