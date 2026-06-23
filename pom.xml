@@ -24,6 +24,7 @@
         <java.version>17</java.version>
         <spring-cloud.version>2021.0.8</spring-cloud.version>
         <awsjavasdk.version>2.29.50</awsjavasdk.version>
+        <sonar.organization>samucalucio1997spring</sonar.organization>
     </properties>
 
     <!-- BOMs -->
@@ -254,6 +255,11 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>3.9.1.2184</version>
             </plugin>
         </plugins>
     </build>
