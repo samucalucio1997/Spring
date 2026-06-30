@@ -42,6 +42,7 @@ public class PagamentoBoleto implements PagamentoIS {
 			return response.getBody();
 		}
 		catch (Exception e) {
+			System.out.println(e.getMessage());
 			e.printStackTrace();
 			return null;
 		}
@@ -50,6 +51,7 @@ public class PagamentoBoleto implements PagamentoIS {
 	@Override
 	public void sendPaymentRegister(String paymentId) {
 		// this.kafkaTemplate.send("payments", paymentId);
+		System.out.println("Pagamento registrado com ID: " + paymentId + " concluido");
 	}
 
 	private String getChave() {

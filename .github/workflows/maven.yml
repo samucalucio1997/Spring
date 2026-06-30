@@ -35,40 +35,40 @@ jobs:
           cache: maven
           cache-dependency-path: '**/pom.xml'
 
-      - name: Duplicate code check
-        run: mvn -B pmd:cpd-check
-
-      - name: Install Graphviz
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y graphviz
-
-      - name: Generate the UML diagram
-        run: |
-          export MAVEN_OPTS="--add-exports java.desktop/com.sun.imageio.plugins.png=ALL-UNNAMED"
-          mvn -B plantuml:generate    
-
-      - name: Download UML Diagrams
-        uses: actions/upload-artifact@v4
-        with:
-          name: plantuml-diagrams
-          path: target/plantuml/
-          if-no-files-found: warn
-
-      - name: Generate PMD Report
-        run: mvn -B pmd:pmd
-
-      - name: Upload PMD Report
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: pmd-report
-          path: | 
-            target/pmd.xml
-            target/site/**
-
-      - name: Pmd code smells check
-        run: mvn -B pmd:check
+#      - name: Duplicate code check
+#        run: mvn -B pmd:cpd-check
+#
+#      - name: Install Graphviz
+#        run: |
+#          sudo apt-get update
+#          sudo apt-get install -y graphviz
+#
+#      - name: Generate the UML diagram
+#        run: |
+#          export MAVEN_OPTS="--add-exports java.desktop/com.sun.imageio.plugins.png=ALL-UNNAMED"
+#          mvn -B plantuml:generate
+#
+#      - name: Download UML Diagrams
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: plantuml-diagrams
+#          path: target/plantuml/
+#          if-no-files-found: warn
+#
+#      - name: Generate PMD Report
+#        run: mvn -B pmd:pmd
+#
+#      - name: Upload PMD Report
+#        uses: actions/upload-artifact@v4
+#        if: always()
+#        with:
+#          name: pmd-report
+#          path: |
+#            target/pmd.xml
+#            target/site/**
+#
+#      - name: Pmd code smells check
+#        run: mvn -B pmd:check
 
       - name: Build
         run: mvn -B -DskipTests verify

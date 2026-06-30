@@ -85,10 +85,13 @@ public class ImplemController {
 			@RequestParam("email") String email, @RequestParam("cep") String cep, @RequestParam("numcasa") int numcasa,
 			@RequestParam(value = "is_staff", required = false, defaultValue = "0") int code) throws IOException {
 		User usuario = new User(username, first_name, last_name, email, password, cep, numcasa, true);
+		System.out.println("code =>" + code);
 		if (code == 351622) {
 			usuario.setIs_staff(true);
 		}
 		User usuUser = this.service.CriarUser(usuario, file);
+		String msg = usuario.isIs_active() ? "está ativo" : "ative imedia";
+		System.out.println("Bem-Vindo " + username + ", " + msg);
 		return ResponseEntity.ok(usuUser);
 	}
 
@@ -109,6 +112,7 @@ public class ImplemController {
 
 	@GetMapping("/logout")
 	public void logout(HttpSession httpSession) {
+		System.out.println("deslogado");
 		httpSession.invalidate();
 	}
 

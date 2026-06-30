@@ -24,6 +24,7 @@
         <java.version>17</java.version>
         <spring-cloud.version>2021.0.8</spring-cloud.version>
         <awsjavasdk.version>2.29.50</awsjavasdk.version>
+        <sonar.organization>samucalucio1997spring</sonar.organization>
     </properties>
 
     <!-- BOMs -->
@@ -232,28 +233,33 @@
                     </execution>
                 </executions>
             </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-pmd-plugin</artifactId>-->
+<!--                <version>3.26.0</version>-->
+<!--                <configuration>-->
+<!--                    <targetJdk>17</targetJdk>-->
+
+<!--                    <failOnViolation>true</failOnViolation>-->
+<!--                    <printFailingErrors>true</printFailingErrors>-->
+
+<!--                    <rulesets>-->
+<!--                        <ruleset>src/main/resources/pmd-rules.xml</ruleset>-->
+<!--                    </rulesets>-->
+<!--                </configuration>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <phase>verify</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>check</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-pmd-plugin</artifactId>
-                <version>3.26.0</version>
-                <configuration>
-                    <targetJdk>17</targetJdk>
-
-                    <failOnViolation>true</failOnViolation>
-                    <printFailingErrors>true</printFailingErrors>
-
-                    <rulesets>
-                        <ruleset>src/main/resources/pmd-rules.xml</ruleset>
-                    </rulesets>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>3.9.1.2184</version>
             </plugin>
         </plugins>
     </build>
