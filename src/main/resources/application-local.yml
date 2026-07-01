@@ -26,8 +26,8 @@ spring:
       #          registry:
       #            url: http://localhost:8081
       #            ssl:
-      #              keystore:
-      #                location: classpath:keystore.jks
+      #              keystore.properties:
+      #                location: classpath:keystore.properties.jks
       #                password: keystorepassword
       #                type: JKS
       #              key:
