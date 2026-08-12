@@ -27,7 +27,7 @@ public class ImagemService implements ImagemIS {
 		imgs.stream().forEach(n -> {
 			try {
 				final var key = UUID.randomUUID().toString();
-				awsService.uploadFileToS3Bucket("bucket-imagens-estoque-gerencia", key, n.getInputStream());
+				awsService.uploadFileToS3Bucket("bucket-imagens-estoque-gerencia", secretKey, n.getInputStream());
 				final var imagemProdutoDTO = ImagemProdutoDTO.builder()
 					.path(key)
 					.nomeArquivo(n.getOriginalFilename())

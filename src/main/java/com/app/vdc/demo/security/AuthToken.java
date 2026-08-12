@@ -1,4 +1,4 @@
-package com.app.vdc.demo.Security;
+package com.app.vdc.demo.security;
 
 public class AuthToken {
 

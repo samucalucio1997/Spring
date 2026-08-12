@@ -13,6 +13,12 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+  #authserver:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8080/realms/master
 
   kafka:
     producer:
@@ -89,8 +95,8 @@ logging:
   level:
     org.springframework.web.cors: DEBUG
 
-file:
-  upload_dir: "src/main/resources/static/images-perfil"
-
-archive:
-  sobe_img: "src/main/resources/static/images-products"
+#file:
+#  upload_dir: "src/main/resources/static/images-perfil"
+#
+#archive:
+#  sobe_img: "src/main/resources/static/images-products"

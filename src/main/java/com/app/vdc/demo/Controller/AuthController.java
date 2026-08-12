@@ -1,7 +1,7 @@
 package com.app.vdc.demo.Controller;
 
 import com.app.vdc.demo.Model.User;
-import com.app.vdc.demo.Security.TokenUtil;
+import com.app.vdc.demo.security.TokenUtil;
 import com.app.vdc.demo.dto.UserLoginReturn;
 import com.app.vdc.demo.dto.UsuarioDto;
 import com.app.vdc.demo.services.GoogleTokenService;

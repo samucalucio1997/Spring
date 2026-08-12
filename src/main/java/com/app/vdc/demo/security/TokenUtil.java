@@ -1,12 +1,10 @@
-package com.app.vdc.demo.Security;
+package com.app.vdc.demo.security;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.Date;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
 
 import com.app.vdc.demo.Model.User;
 import com.auth0.jwt.JWT;

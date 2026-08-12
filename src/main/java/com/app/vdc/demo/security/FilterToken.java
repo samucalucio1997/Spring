@@ -1,7 +1,6 @@
-package com.app.vdc.demo.Security;
+package com.app.vdc.demo.security;
 
 import java.io.IOException;
-import java.util.Iterator;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
