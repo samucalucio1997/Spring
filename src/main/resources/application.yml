@@ -18,7 +18,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: http://localhost:8080/realms/master
+          issuer-uri: http://localhost:8080/realms/master
 
   kafka:
     producer:

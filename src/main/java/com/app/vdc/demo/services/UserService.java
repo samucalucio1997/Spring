@@ -23,38 +23,42 @@ import com.app.vdc.demo.Model.User;
 import com.app.vdc.demo.repository.UserRepository;
 
 @Service
-public class UserService implements UserDetailsService {
+public class UserService
+//        implements UserDetailsService
+{
 
 	@Autowired
 	private UserRepository Consumer;
 
-	private final Path fileStoraged;
-
-	public UserService(FilestorageProperties fileStoraged) {
-		this.fileStoraged = Paths.get(fileStoraged.getUploadDir()).toAbsolutePath().normalize();
-	}
+//	private final Path fileStoraged;
+//
+//	public UserService(FilestorageProperties fileStoraged) {
+//		this.fileStoraged = Paths.get(fileStoraged.getUploadDir()).toAbsolutePath().normalize();
+//	}
 
 	public User CriarUser(User usuario, MultipartFile file) throws IOException {
 		User user = (User) Consumer.findByUsername(usuario.getUsername());
 		if (user != null) {
 			throw new RuntimeException("Usuario já existe");
 		}
-		if (file != null && !file.isEmpty()) {
-			String nomeArquivo = file.getOriginalFilename();
-			Path pasta = fileStoraged.resolve(nomeArquivo).toAbsolutePath().normalize();
-			file.transferTo(pasta);
-			usuario.setImagem(nomeArquivo);
-		}
+
+//		if (file != null && !file.isEmpty()) {
+//			String nomeArquivo = file.getOriginalFilename();
+//			Path pasta = fileStoraged.resolve(nomeArquivo).toAbsolutePath().normalize();
+//			file.transferTo(pasta);
+//			usuario.setImagem(nomeArquivo);
+//		}
+
 		usuario.setPassword(new BCryptPasswordEncoder().encode(usuario.getPassword()));
 		this.Consumer.save(usuario);
 		return usuario;
 	}
 
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		// TODO Auto-generated method stub
-		return Consumer.findByUsername(username);
-	}
+//	@Override
+//	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//		// TODO Auto-generated method stub
+//		return Consumer.findByUsername(username);
+//	}
 
 	// @Override
 	// public boolean AdicionarCarrinho(Produto produto, User cliente) {

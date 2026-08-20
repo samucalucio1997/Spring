@@ -1,6 +1,5 @@
 package com.app.vdc.demo.Controller;
 
-import com.app.vdc.demo.Config.FilestorageProperties;
 import com.app.vdc.demo.Model.Categorias;
 import com.app.vdc.demo.Model.User;
 import com.app.vdc.demo.repository.UserRepository;
@@ -12,14 +11,11 @@ import com.app.vdc.demo.dto.UsuarioSalvo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Paths;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.util.Map;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -35,8 +31,8 @@ public class ImplemController {
 	@Autowired
 	private PagamentoBoleto pagamentoBoleto;
 
-	@Autowired
-	private AuthenticationManager authenticationManager;
+//	@Autowired
+//	private AuthenticationManager authenticationManager;
 
 	@Autowired
 	private UserService service;
@@ -48,29 +44,29 @@ public class ImplemController {
 	// Paths.get(filestorageProperties.getUploadDir()).toAbsolutePath();
 	// }
 
-	@GetMapping("/cadastroPro")
-	@PreAuthorize("permitAll()")
-	public ResponseEntity<Boolean> PostCadastro(@RequestBody UsuarioSalvo usuario) {
-		try {
-			User usuarioSave = new User();
-			usuarioSave.setEmail(usuario.getEmail());
-			usuarioSave.setPassword(usuario.getPassword());
-			usuarioSave.setUsername(usuario.getUsername());
-			usuarioSave.setCarrinho(usuarioSave.getCarrinho());
-			usuarioSave.setCEP(usuario.getCEP());
-			usuarioSave.setImagem(usuario.getImagem());
-			usuarioSave.setFirst_name(usuario.getFirst_name());
-			usuarioSave.setLast_name(usuario.getLast_name());
-			usuarioSave.setNumcasa(usuario.getNumcasa());
-			usuarioSave.setIs_staff(false);
-			this.service.CriarUser(usuarioSave, null);
-		}
-		catch (Exception e) {
-
-		}
-
-		return ResponseEntity.ok(true);
-	}
+//	@GetMapping("/cadastroPro")
+//	@PreAuthorize("permitAll()")
+//	public ResponseEntity<Boolean> PostCadastro(@RequestBody UsuarioSalvo usuario) {
+//		try {
+//			User usuarioSave = new User();
+//			usuarioSave.setEmail(usuario.getEmail());
+//			usuarioSave.setPassword(usuario.getPassword());
+//			usuarioSave.setUsername(usuario.getUsername());
+//			usuarioSave.setCarrinho(usuarioSave.getCarrinho());
+//			usuarioSave.setCEP(usuario.getCEP());
+//			usuarioSave.setImagem(usuario.getImagem());
+//			usuarioSave.setFirst_name(usuario.getFirst_name());
+//			usuarioSave.setLast_name(usuario.getLast_name());
+//			usuarioSave.setNumcasa(usuario.getNumcasa());
+//			usuarioSave.setIs_staff(false);
+//			this.service.CriarUser(usuarioSave, null);
+//		}
+//		catch (Exception e) {
+//
+//		}
+//
+//		return ResponseEntity.ok(true);
+//	}
 
 	@GetMapping("/Categoria")
 	public ArrayList<Categorias> GetCategoria() {
@@ -79,6 +75,7 @@ public class ImplemController {
 	}
 
 	@PostMapping(value = "/cadastroUser")
+    @PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<User> PostCadastro(@RequestParam(value = "file", required = false) MultipartFile file,
 			@RequestParam("username") String username, @RequestParam("password") String password,
 			@RequestParam("first_name") String first_name, @RequestParam("last_name") String last_name,

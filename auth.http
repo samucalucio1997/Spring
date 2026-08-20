@@ -1,0 +1,9 @@
+### Login no Keycloak
+POST http://localhost:8080/realms/master/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+client_id=angular-frontend&username=samuel&password=Teste123!&grant_type=password
+
+### API
+GET http://localhost:8082/auth/me
+Authorization: Bearer
