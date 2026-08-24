@@ -13,12 +13,13 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-  #authserver:
+  # Authserver (Keycloak): a API atua apenas como resource server e valida o JWT
+  # buscando as chaves publicas em <issuer-uri>/protocol/openid-connect/certs
   security:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8080/realms/master
+          issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8080/realms/ecommerce}
 
   kafka:
     producer:
@@ -56,9 +57,9 @@ chave:
 
 AWS_REGION: us-east-2
 
-client:
-  google:
-    id:
+# client-id usado para ler as roles de resource_access.<client-id>.roles no token
+keycloak:
+  client-id: ${KEYCLOAK_CLIENT_ID:angular-frontend}
 
 bucket-aws:
     nome: bucket-imagens-estoque-gerencia

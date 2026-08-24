@@ -8,6 +8,25 @@ services:
     depends_on:
       - kafka
       - db
+      - keycloak
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0
+    container_name: keycloak
+    command: ["start-dev", "--import-realm"]
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      # garante que o issuer do token seja sempre http://localhost:8080, tanto para o
+      # browser quanto para a API rodando dentro da rede do compose
+      KC_HOSTNAME: localhost
+      KC_HOSTNAME_PORT: 8080
+      KC_HOSTNAME_STRICT: "false"
+      KC_HTTP_ENABLED: "true"
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./docker/keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json:ro
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.2.0

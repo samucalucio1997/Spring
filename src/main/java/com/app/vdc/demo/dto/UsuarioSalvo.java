@@ -8,9 +8,9 @@ public class UsuarioSalvo extends User {
 
 	private String telefone;
 
-	public UsuarioSalvo(String username, String first_name, String last_name, String email, String password, String cEP,
-			int numcasa, boolean is_active) {
-		super(username, first_name, last_name, email, password, cEP, numcasa, is_active);
+	public UsuarioSalvo(String keycloakId, String username, String first_name, String last_name, String email,
+			String cEP, int numcasa, boolean is_active) {
+		super(keycloakId, username, first_name, last_name, email, cEP, numcasa, is_active);
 	}
 
 	public String getTelefone() {

@@ -1,91 +1,46 @@
 package com.app.vdc.demo.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.JwtDecoders;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfigurations {
 
-//	@Autowired
-//	private FilterToken filter;
+	private final KeycloakJwtAuthenticationConverter jwtAuthenticationConverter;
+
+	public SecurityConfigurations(KeycloakJwtAuthenticationConverter jwtAuthenticationConverter) {
+		this.jwtAuthenticationConverter = jwtAuthenticationConverter;
+	}
 
 	@Bean
-	public SecurityFilterChain SecurityFilterChain(HttpSecurity http) throws Exception {
-		http.cors()
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		return http.cors()
 			.and()
+			// API stateless autenticada por Bearer token: nao ha sessao/cookie a proteger
 			.csrf()
 			.disable()
 			.sessionManagement()
 			.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and()
-			.authorizeHttpRequests(authorize -> {
-				try {
-					authorize.antMatchers(HttpMethod.POST, "/home/cadastroUser")
-						.permitAll()
-						.antMatchers(HttpMethod.POST, "/auth/login")
-						.permitAll()
-						.antMatchers(HttpMethod.GET, "/auth/refresh")
-						.permitAll()
-						.antMatchers(HttpMethod.POST, "/auth/google")
-						.permitAll()
-						.antMatchers(HttpMethod.POST, "/pagamento/cartao-debito")
-						.permitAll()
-						.antMatchers(HttpMethod.GET, "/files/*")
-						.permitAll()
-						.antMatchers(HttpMethod.GET, "/home/logout")
-						.permitAll()
-						.antMatchers(HttpMethod.GET, "/produto/produtos")
-						.permitAll()
-						.antMatchers(HttpMethod.GET, "/produto/{id}")
-						.permitAll()
-						.antMatchers(HttpMethod.POST, "/produto/criaCliente")
-						.permitAll()
-						.antMatchers(HttpMethod.GET, "/actuator/*")
-						.permitAll()
-						.antMatchers(HttpMethod.GET, "/swagger-ui.html")
-						.permitAll()
-						.anyRequest()
-						.authenticated();
-				}
-				catch (Exception e) {
-					throw new RuntimeException(e);
-				}
-			});
-
-//		return http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class).build();
-        return http.oauth2ResourceServer(oauth2 ->
-                oauth2.jwt(Customizer.withDefaults())).build();
-	}
-
-//	@Bean
-//	public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
-//			throws Exception {
-//		return authenticationConfiguration.getAuthenticationManager();
-//	}
-
-//    @Bean
-//    public JwtDecoder jwtDecoder() {
-//        return JwtDecoders.fromIssuerLocation(issuerUri);
-//    }
-
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
+			.authorizeHttpRequests(authorize -> authorize.antMatchers(HttpMethod.GET, "/produto/produtos", "/produto/*")
+				.permitAll()
+				.antMatchers(HttpMethod.GET, "/files/*")
+				.permitAll()
+				.antMatchers("/actuator/health", "/actuator/health/**", "/actuator/info")
+				.permitAll()
+				.anyRequest()
+				.authenticated())
+			.oauth2ResourceServer(
+					oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(this.jwtAuthenticationConverter)))
+			.build();
 	}
 
 }

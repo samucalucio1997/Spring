@@ -28,7 +28,7 @@ public class ProdutoController {
 	@Autowired
 	private PagamentoBoleto pagamentoBoleto;
 
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping(value = "/cadastraProduto", consumes = "multipart/form-data")
 	public ResponseEntity<Boolean> CadRegs(@RequestPart(value = "img", required = false) List<MultipartFile> file,
 			@RequestPart(value = "produto") ProdutoDTO produto) throws IOException {
@@ -48,7 +48,7 @@ public class ProdutoController {
 		return this.produto.ListarPro(categoria, precoMin, precoMax, pageable);
 	}
 
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@PreAuthorize("hasRole('ADMIN')")
 	@PatchMapping(value = "/editarProduto", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Boolean> editarftProduto(@RequestParam("produtoId") Integer produtoId,
 			@RequestPart(value = "imagens", required = false) List<MultipartFile> imgs,
@@ -77,7 +77,7 @@ public class ProdutoController {
 	}
 
 	@DeleteMapping("/deletarProduto")
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Boolean> deletarProduto(@RequestParam("produtoId") Integer produtoId) {
 		try {
 			this.produto.RemoverProduto(produtoId);

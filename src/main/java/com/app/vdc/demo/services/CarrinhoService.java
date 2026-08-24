@@ -26,7 +26,7 @@ public class CarrinhoService implements CarrinhoIS {
 			newItem = new Carrinho(new ArrayList<>());
 		}
 		List<Produto> novo = newItem.getProdutos();
-		if (cliente.isIs_staff() && produto != null) {
+		if (cliente.isIs_active() && produto != null) {
 			novo.add(produto);
 			carrinho.save(newItem);
 			return true;

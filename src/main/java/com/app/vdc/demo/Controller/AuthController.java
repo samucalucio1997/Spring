@@ -1,123 +1,35 @@
 package com.app.vdc.demo.Controller;
 
-import com.app.vdc.demo.Model.User;
-import com.app.vdc.demo.dto.UserLoginReturn;
-import com.app.vdc.demo.dto.UsuarioDto;
+import java.util.List;
+
+import com.app.vdc.demo.dto.UsuarioLogado;
+
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
-import com.app.vdc.demo.services.GoogleTokenService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+/**
+ * O login e o refresh de token sao responsabilidade do Keycloak. A API apenas valida o
+ * access token recebido e expoe os dados do usuario autenticado.
+ */
 @RestController
 @RequestMapping("/auth")
-@PreAuthorize("permitAll()")
-@RequiredArgsConstructor
 public class AuthController {
 
-	private final GoogleTokenService googleTokenService;
+	@GetMapping("/me")
+	public UsuarioLogado me(@AuthenticationPrincipal Jwt jwt, Authentication authentication) {
+		List<String> roles = authentication.getAuthorities()
+			.stream()
+			.map(GrantedAuthority::getAuthority)
+			.filter(authority -> authority.startsWith("ROLE_"))
+			.toList();
 
-//	private final AuthenticationManager authenticationManager;
-
-//	private final UserDetailsService userDetailsService;
-
-//	@PreAuthorize("permitAll()")
-//	@PostMapping("/google")
-//	public UserLoginReturn authenticateWithGoogle(@RequestParam("token") String token) {
-//		try {
-//			final var user = googleTokenService.verify(token);
-//			final var usuarioDto = UsuarioDto.builder()
-//				.email(user.getEmail())
-//				.nome(user.getNome())
-//				.role("ROLE_USER")
-//				.build();
-//
-//			String jwtToken = TokenUtil.generate(user.getEmail());
-//			return UserLoginReturn.builder().token(jwtToken).usuarioDto(usuarioDto).build();
-//		}
-//		catch (Exception e) {
-//			throw new RuntimeException("Erro ao autenticar com Google: " + e.getMessage());
-//		}
-//	}
-
-//	@PostMapping("/login")
-//	@PreAuthorize("permitAll()")
-//	public UserLoginReturn Authentica(@RequestParam("username") String username,
-//			@RequestParam("password") String password) throws IOException {
-//
-//		UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-//				username, password);
-//
-//		Authentication auth = this.authenticationManager.authenticate(usernamePasswordAuthenticationToken);
-//
-//		final var user = (User) auth.getPrincipal();
-//		final var authorities = user.getAuthorities()
-//			.stream()
-//			.map(GrantedAuthority::getAuthority)
-//			.collect(Collectors.toList());
-//
-//		final var usuarioDto = UsuarioDto.builder()
-//			.email(user.getEmail())
-//			.nome(user.getUsername())
-//			.role(authorities.get(0))
-//			.build();
-//
-//		return UserLoginReturn.builder().token(TokenUtil.encodeToken(user)).usuarioDto(usuarioDto).build();
-//	}
-
-//	@GetMapping("/validate")
-//	@PreAuthorize("permitAll()")
-//	public boolean validarToken(@RequestParam("token") String token) {
-//		try {
-//			TokenUtil.getSubject(token); // lança exceção se inválido/expirado
-//			return true;
-//		}
-//		catch (Exception e) {
-//			return false;
-//		}
-//	}
-
-//	@GetMapping("/refresh")
-//	public String refreshToken(@RequestHeader(value = "Authorization", required = false) String authorization) {
-//		try {
-//			String token = authorization.substring(7);
-//			String username = TokenUtil.getSubjectAllowExpired(token);
-//
-//			var userDetails = this.userDetailsService.loadUserByUsername(username);
-//			// se sua User for a classe com.app.vdc.demo.Model.User, faça o cast:
-//			User user = (User) userDetails;
-//
-//			return TokenUtil.encodeToken(user);
-//		}
-//		catch (Exception e) {
-//			throw new RuntimeException("Erro ao atualizar o token: " + e.getMessage());
-//		}
-//	}
-
-
-    @GetMapping("/me")
-    public Map<String, Object> me(
-            @AuthenticationPrincipal Jwt jwt) {
-
-        for (Map.Entry<String, Object> claim : jwt.getClaims().entrySet()) {
-            System.out.println(claim.getKey() + ": " + claim.getValue());
-        }
-
-        return Map.of(
-                "id", jwt.getSubject(),
-                "username", jwt.getClaimAsString("preferred_username"),
-                "email", jwt.getClaimAsString("email")
-        );
-    }
+		return new UsuarioLogado(jwt.getSubject(), jwt.getClaimAsString("preferred_username"),
+				jwt.getClaimAsString("name"), jwt.getClaimAsString("email"), roles);
+	}
 
 }

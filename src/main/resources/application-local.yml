@@ -14,6 +14,15 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
+  # Dentro do compose o token continua sendo emitido com iss=localhost (o browser fala
+  # com o Keycloak por ali), mas as chaves publicas sao buscadas pela rede interna.
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8080/realms/miniecommerce}
+          jwk-set-uri: ${KEYCLOAK_JWK_SET_URI:http://keycloak:8080/realms/miniecommerce/protocol/openid-connect/certs}
+
   kafka:
     producer:
       #      acks: all
@@ -50,9 +59,8 @@ chave:
 
 AWS_REGION: us-east-2
 
-client:
-  google:
-    id:
+keycloak:
+  client-id: ${KEYCLOAK_CLIENT_ID:angular-frontend}
 
 bucket-aws:
   nome: bucket-imagens-estoque-gerencia

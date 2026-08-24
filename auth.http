@@ -1,9 +1,45 @@
-### Login no Keycloak
-POST http://localhost:8080/realms/master/protocol/openid-connect/token
+@keycloak = http://localhost:8080
+@realm = ecommerce
+@api = http://localhost:8082
+
+### 1. Login no Keycloak (password grant, apenas para testes locais)
+# @name login
+POST {{keycloak}}/realms/{{realm}}/protocol/openid-connect/token
+#Origin: http://localhost:4200
 Content-Type: application/x-www-form-urlencoded
 
-client_id=angular-frontend&username=samuel&password=Teste123!&grant_type=password
+client_id=angular-frontend&grant_type=password&username=samuca&password=Texuco#21
 
-### API
-GET http://localhost:8082/auth/me
-Authorization: Bearer
+#> {% client.global.set("access_token", response.body.access_token);
+#   client.global.set("refresh_token", response.body.refresh_token); %}
+
+### 2. Dados do usuario autenticado (roles ja convertidas para ROLE_*)
+GET {{api}}/auth/me
+Authorization: Bearer {{access_token}}
+
+### 3. Cria o perfil local a partir do token
+POST {{api}}/home/perfil?cep=01001000&numcasa=42
+Authorization: Bearer {{access_token}}
+
+### 4. Perfil local do usuario autenticado
+GET {{api}}/home/perfil
+Authorization: Bearer {{access_token}}
+
+### 5. Endpoint publico (nao exige token)
+GET {{api}}/produto/produtos
+
+### 6. Endpoint restrito a ROLE_ADMIN
+DELETE {{api}}/produto/deletarProduto?produtoId=1
+Authorization: Bearer {{access_token}}
+
+### 7. Renovar o access token
+POST {{keycloak}}/realms/{{realm}}/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+client_id=angular-frontend&grant_type=refresh_token&refresh_token={{refresh_token}}
+
+### 8. Logout (encerra a sessao no Keycloak)
+POST {{keycloak}}/realms/{{realm}}/protocol/openid-connect/logout
+Content-Type: application/x-www-form-urlencoded
+
+client_id=angular-frontend&refresh_token={{refresh_token}}
